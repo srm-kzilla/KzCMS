@@ -37,4 +37,5 @@ export default ({ app }: { app: express.Application }): void => {
 
   // Load API routes
   app.use(config.api.prefix, routes());
+
 };
