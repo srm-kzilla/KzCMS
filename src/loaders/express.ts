@@ -3,6 +3,7 @@ import express from 'express';
 import helmet from 'helmet';
 import config from '../config';
 import routes from '../api';
+import { rateLimit } from 'express-rate-limit';
 
 export default ({ app }: { app: express.Application }): void => {
   /**
@@ -35,6 +36,15 @@ export default ({ app }: { app: express.Application }): void => {
   app.use(express.json());
 
   app.use(express.urlencoded({ extended: true }));
+
+  const limiter = rateLimit({
+    windowMs: 1 * 60 * 1000,
+    max: 100,
+    standardHeaders: true,
+    legacyHeaders: false,
+  });
+
+  app.use(limiter);
 
   // Load API routes
   app.use(config.api.prefix, routes());
