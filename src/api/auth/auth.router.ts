@@ -1,6 +1,5 @@
 import { Router } from 'express';
 import { getUser, addNewUser, loginExistingUser } from './auth.controller';
-import { add } from 'winston';
 
 export default (): Router => {
   const app = Router();

@@ -16,7 +16,7 @@ export async function handleGetUser(user: User) {
 export async function handleAddNewUser(signup: Signup) {
   const data = await handleGetUser(signup);
   if (data === null) {
-    const collection = await database().then(db => db.collection('cms'));
+    const collection = await database().then(db => db.collection('<Sample DB>'));
 
     const saltRounds = 10;
     const hash = await bcrypt.hash(signup.password, saltRounds);
