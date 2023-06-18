@@ -1,16 +1,14 @@
 import { Router } from 'express';
-import { getProjects, getProject, createProject, createProjects } from './projects.controller';
+import { updateProject, deleteProject, postImage, deleteImage } from './projects.controller';
 
 export default (): Router => {
   const app = Router();
 
-  // GET routes
-  app.get('/', getProjects);
-  app.get('/:slug', getProject);
+  app.put('/:slug', updateProject);
+  app.delete('/:slug', deleteProject);
 
-  // POST routes
-  app.post('/', createProject);
-  app.post('/:slug', createProjects);
+  app.post('/image', postImage);
+  app.delete('/image', deleteImage);
 
   return app;
 };

@@ -1,83 +1,89 @@
+import { handleDeleteImage, handleDeleteProject, handlePostImage, handleUpdateProject } from './projects.service';
 import { Request, Response } from 'express';
-import { handleCreateProject, handleCreateProjects, handleGetAllProjects, handleGetProject } from './projects.service';
 
-export const getProjects = async (req: Request, res: Response): Promise<void> => {
-  try {
-    const data = await handleGetAllProjects();
-    res.status(200).json({
-      success: true,
-      data,
-    });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({
-      success: false,
-      message: 'Unable to get projects',
-    });
-  }
-};
-
-export const getProject = async (
+export const updateProject = async (
   req: Request & {
-    params: {
-      slug: string;
+    body: {
+      title: string;
+      description: string;
+      link: string;
+      author: string;
     };
   },
   res: Response,
 ): Promise<void> => {
   try {
-    const data = await handleGetProject(req.params.slug);
-    res.status(200).json({
-      success: true,
-      data,
-    });
+    const data = await handleUpdateProject(req.params.slug, req.body);
+    res.status(200).json(data);
   } catch (error) {
-    console.log(error);
+    console.log(`Error while updating Project: ${error}`);
     res.status(500).json({
-      success: true,
-      message: 'Unable to get projects',
+      success: false,
+      message: `Error while updating Project: ${error}`,
     });
   }
 };
 
-export const createProject = async (
+export const deleteProject = async (
   req: Request & {
     body: {
       slug: string;
-      name: string;
     };
   },
   res: Response,
 ): Promise<void> => {
   try {
-    const data = await handleCreateProject(req.body);
-    res.status(200).json({
-      success: true,
-      message: 'Project created',
-      data,
-    });
+    const data = await handleDeleteProject(req.params.slug);
+    res.status(200).json(data);
   } catch (error) {
-    console.log(error);
+    console.log(`Error while updating Project: ${error}`);
     res.status(500).json({
-      success: true,
-      message: 'Unable to get projects',
+      success: false,
+      message: `Error while updating Project: ${error}`,
     });
   }
 };
 
-export const createProjects = async (req: Request, res: Response): Promise<void> => {
+export const postImage = async (
+  req: Request & {
+    body: {
+      slug: string;
+      title: string;
+      image: File;
+    };
+  },
+  res: Response,
+): Promise<void> => {
   try {
-    const data = await handleCreateProjects();
-    res.status(200).json({
-      success: true,
-      message: 'Projects created',
-      data,
-    });
+    const data = await handlePostImage(req.body);
+    res.status(200).json(data);
   } catch (error) {
-    console.log(error);
+    console.log(`Error while updating Project: ${error}`);
     res.status(500).json({
-      success: true,
-      message: 'Unable to get projects',
+      success: false,
+      message: `Error while updating Project: ${error}`,
+    });
+  }
+};
+
+export const deleteImage = async (
+  req: Request & {
+    body: {
+      slug: string;
+      title: string;
+      imageUrl: string;
+    };
+  },
+  res: Response,
+): Promise<void> => {
+  try {
+    const data = await handleDeleteImage(req.body.slug, req.body.title, req.body.imageUrl);
+    res.status(200).json(data);
+  } catch (error) {
+    console.log(`Error while updating Project: ${error}`);
+    res.status(500).json({
+      success: false,
+      message: `Error while updating Project: ${error}`,
     });
   }
 };
