@@ -9,6 +9,6 @@ export default (): Router => {
   app.use('/auth', authRouter());
   app.use('/projects', projectsRouter());
   app.use('/users', adminRouter());
-  
+
   return app;
 };
