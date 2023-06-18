@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import authRouter from './auth/auth.router';
-import projectRouter from './projects/project.router';
+import projectRouter from './projects/projects.router';
 export default (): Router => {
   const app = Router();
 

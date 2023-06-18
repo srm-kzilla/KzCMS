@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { updateProject, deleteProject, postImage, deleteImage } from './project.controller';
+import { updateProject, deleteProject, postImage, deleteImage } from './projects.controller';
 
 export default (): Router => {
   const app = Router();

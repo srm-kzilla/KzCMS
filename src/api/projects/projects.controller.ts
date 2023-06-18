@@ -1,4 +1,4 @@
-import { handleDeleteImage, handleDeleteProject, handlePostImage, handleUpdateProject } from './project.service';
+import { handleDeleteImage, handleDeleteProject, handlePostImage, handleUpdateProject } from './projects.service';
 import { Request, Response } from 'express';
 
 export const updateProject = async (
