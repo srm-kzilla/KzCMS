@@ -13,7 +13,7 @@ export const updateProject = async (
   res: Response,
 ): Promise<void> => {
   try {
-    const data = handleUpdateProject(req.body);
+    const data = await handleUpdateProject(req.params.slug, req.body);
     res.status(200).json(data);
   } catch (error) {
     console.log(`Error while updating Project: ${error}`);
@@ -33,7 +33,7 @@ export const deleteProject = async (
   res: Response,
 ): Promise<void> => {
   try {
-    const data = handleDeleteProject(req.body.slug);
+    const data = await handleDeleteProject(req.params.slug);
     res.status(200).json(data);
   } catch (error) {
     console.log(`Error while updating Project: ${error}`);
@@ -47,6 +47,7 @@ export const deleteProject = async (
 export const postImage = async (
   req: Request & {
     body: {
+      slug: string;
       title: string;
       image: File;
     };
@@ -54,7 +55,7 @@ export const postImage = async (
   res: Response,
 ): Promise<void> => {
   try {
-    const data = handlePostImage(req.body.title, req.body.image);
+    const data = await handlePostImage(req.body);
     res.status(200).json(data);
   } catch (error) {
     console.log(`Error while updating Project: ${error}`);
@@ -70,13 +71,13 @@ export const deleteImage = async (
     body: {
       slug: string;
       title: string;
-      imageUrl: File;
+      imageUrl: string;
     };
   },
   res: Response,
 ): Promise<void> => {
   try {
-    const data = handleDeleteImage(req.body.slug, req.body.title, req.body.imageUrl);
+    const data = await handleDeleteImage(req.body.slug, req.body.title, req.body.imageUrl);
     res.status(200).json(data);
   } catch (error) {
     console.log(`Error while updating Project: ${error}`);
