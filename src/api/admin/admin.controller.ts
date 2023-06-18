@@ -1,10 +1,10 @@
 import { Request, Response } from 'express';
-import { handleDeleteUser, handleGetUser, handleUpdateUser } from './admin.service';
+import { handleDeleteUser, handleGetUsers, handleUpdateUser } from './admin.service';
 
 export const getUsers = (req: Request, res: Response) => {
-  const data = handleGetUser();
+  const data = handleGetUsers();
   res.status(200).json({
-    status: 'success',
+    success: true,
     data,
   });
 };
@@ -12,14 +12,15 @@ export const getUsers = (req: Request, res: Response) => {
 export const updateUser = (req: Request, res: Response) => {
   const data = handleUpdateUser();
   res.status(200).json({
-    status: 'success',
-    data,
+    success: true,
+    message: 'User Updated Successfully',
   });
 };
 
 export const deleteUser = (req: Request, res: Response) => {
   const data = handleDeleteUser();
   res.status(200).json({
-    status: 'success',
+    success: true,
+    message: 'User Deleted Successfully',
   });
 };

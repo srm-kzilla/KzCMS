@@ -1,14 +1,19 @@
-export const handleGetUser = () => {
+interface User {
+  name: String;
+  age: number;
+}
+
+export const handleGetUsers = (): User[] => {
   return [
     {
       name: 'Utkarshini',
-      age: '19',
+      age: 19,
     },
   ];
 };
 
-export const handleUpdateUser = () => {
-  return { name: 'john', age: '23' };
+export const handleUpdateUser = (): User => {
+  return { name: 'john', age: 23 };
 };
 
-export const handleDeleteUser = () => {};
+export const handleDeleteUser = (): void => {};
