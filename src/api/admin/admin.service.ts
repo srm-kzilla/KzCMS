@@ -2,7 +2,7 @@ import database from '../../loaders/database';
 import { Admin } from './admin.model';
 
 export async function handleUpdateUser(admin: Admin) {
-  const collection = await database().then(db => db.collection('<Samole DB>'));
+  const collection = await database().then(db => db.collection('<SAMPLE DB>'));
   const response = await collection.findOne({ email: admin.email });
   if (!response) {
     console.log('User not found!!');

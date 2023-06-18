@@ -5,7 +5,7 @@ export default (): Router => {
   const app = Router();
 
   app.get('/get', getUser);
-  app.get('/signup', addNewUser);
+  app.post('/signup', addNewUser);
   app.get('/login', loginExistingUser);
 
   return app;
