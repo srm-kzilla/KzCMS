@@ -27,7 +27,6 @@ export const deleteUser = (req: Request, res: Response) => {
 
 export const verifyUser = async (req: Request, res: Response): Promise<void> => {
   try {
-    // const { userId } = req.params;
     const data = await handleVerifyUser();
     res.status(200).json({
       success: true,
