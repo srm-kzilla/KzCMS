@@ -26,8 +26,15 @@ const envSchema = z.object({
   prefix: z.string().optional().default('/api'),
 });
 
+/**
+ * Parses the environment variables using the schema defined above
+ */
+
 const parsedSchema = envSchema.parse(process.env);
 
+/**
+ * Exports the Updated Schema
+ */
 export default {
   NODE_ENV: parsedSchema.NODE_ENV,
 
