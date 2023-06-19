@@ -1,12 +1,8 @@
 require('dotenv').config();
-
-process.env.NODE_ENV = process.env.NODE_ENV || 'development';
-
 import { z } from 'zod';
 
 const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'production']).default('development'),
-
   /**
    * Enforce the port to be an positive integer | optional | default: 5050
    */
@@ -25,13 +21,27 @@ const envSchema = z.object({
   /**
    * Enforce the log level to be one of the following: error, warn, info, http, verbose, debug, silly | optional | default: silly
    */
-  logs: z.object({
-    level: z.enum(['error', 'warn', 'info', 'http', 'verbose', 'debug', 'silly']).optional().default('silly'),
-  }),
+  level: z.enum(['error', 'warn', 'info', 'http', 'verbose', 'debug', 'silly']).optional().default('silly'),
 
-  api: z.object({
-    prefix: z.string().optional().default('/api'),
-  }),
+  prefix: z.string().optional().default('/api'),
 });
 
-export default envSchema.parse(process.env);
+const parsedSchema = envSchema.parse(process.env);
+
+export default {
+  NODE_ENV: parsedSchema.NODE_ENV,
+
+  port: parsedSchema.port,
+
+  databaseURL: parsedSchema.databaseURL,
+
+  JWT_SECRET: parsedSchema.JWT_SECRET,
+
+  logs: {
+    level: parsedSchema.level,
+  },
+
+  api: {
+    prefix: parsedSchema.prefix,
+  },
+};
