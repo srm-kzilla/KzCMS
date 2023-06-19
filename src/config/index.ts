@@ -2,33 +2,36 @@ require('dotenv').config();
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
-export default {
-  /**
-   * Port the app should run on
-   */
-  port: parseInt(process.env.PORT) || 5050,
+import { z } from 'zod';
+
+const envSchema = z.object({
+  NODE_ENV: z.enum(['development', 'production']).default('development'),
 
   /**
-   * Database the app should connect to
+   * Enforce the port to be an positive integer | optional | default: 5050
    */
-  databaseURL: process.env.MONGODB_URI,
+  port: z.number().int().positive().optional().default(5050),
 
   /**
-   * The secret sauce to validate JWT
+   *  Validates if the string provided is a valid MongoDB connection string | required
    */
-  jwtSecret: process.env.JWT_SECRET,
+  databaseURL: z.string().startsWith('mongodb+srv://').includes('mongodb.net'),
 
   /**
-   * Used by Winston logger
+   * Validates if the string provided is a valid JWT secret | required
    */
-  logs: {
-    level: process.env.LOG_LEVEL || 'silly',
-  },
+  JWT_SECRET: z.string().regex(/^[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+$/),
 
   /**
-   * API configs
+   * Enforce the log level to be one of the following: error, warn, info, http, verbose, debug, silly | optional | default: silly
    */
-  api: {
-    prefix: '/api',
-  },
-};
+  logs: z.object({
+    level: z.enum(['error', 'warn', 'info', 'http', 'verbose', 'debug', 'silly']).optional().default('silly'),
+  }),
+
+  api: z.object({
+    prefix: z.string().optional().default('/api'),
+  }),
+});
+
+export default envSchema.parse(process.env);
