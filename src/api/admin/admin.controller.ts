@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { handleDeleteUser, handleGetUsers, handleUpdateUser } from './admin.service';
+import { handleDeleteUser, handleGetUsers, handleUpdateUser, handleUpdateUserProjects } from './admin.service';
 
 export const getUsers = (req: Request, res: Response) => {
   const data = handleGetUsers();
@@ -24,3 +24,12 @@ export const deleteUser = (req: Request, res: Response) => {
     message: 'User Deleted Successfully',
   });
 };
+
+export async function updateUserProjects(req: Request, res: Response) {
+  const data = await handleUpdateUserProjects();
+  if (data != null) {
+    res.status(200).json({
+      data,
+    });
+  }
+}

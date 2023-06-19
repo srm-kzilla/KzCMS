@@ -17,3 +17,7 @@ export const handleUpdateUser = (): User => {
 };
 
 export const handleDeleteUser = (): void => {};
+
+export async function handleUpdateUserProjects() {
+  return [{ name: 'Aditya', password: 'asdfghjkl123' }];
+}
