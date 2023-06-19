@@ -1,6 +1,9 @@
 interface User {
-  name: String;
+  name: string;
   age: number;
+}
+interface UserWithVerification extends User {
+  verified: boolean;
 }
 
 export const handleGetUsers = (): User[] => {
@@ -17,6 +20,14 @@ export const handleUpdateUser = (): User => {
 };
 
 export const handleDeleteUser = (): void => {};
+
+export const handleVerifyUser = (): UserWithVerification => {
+  return {
+    name: 'john',
+    age: 23,
+    verified: true,
+  };
+};
 
 export async function handleUpdateUserProjects() {
   return [{ name: 'Aditya', password: 'asdfghjkl123' }];
