@@ -28,3 +28,7 @@ export const handleVerifyUser = (): UserWithVerification => {
 };
 
 export const handleDeleteUser = (): void => {};
+
+export async function handleUpdateUserProjects() {
+  return [{ name: 'Aditya', password: 'asdfghjkl123' }];
+}
