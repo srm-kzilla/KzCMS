@@ -25,6 +25,14 @@ export const deleteUser = (req: Request, res: Response) => {
   });
 };
 
+export const verifyUser = (req: Request, res: Response) => {
+  const data = handleVerifyUser();
+  res.status(200).json({
+    success: true,
+    data,
+  });
+};
+
 export async function updateUserProjects(req: Request, res: Response) {
   const data = await handleUpdateUserProjects();
   if (data != null) {
