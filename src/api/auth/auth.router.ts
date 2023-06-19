@@ -1,10 +1,11 @@
 import { Router } from 'express';
-import {getUser} from  './auth.controller';
+import { addNewUser, loginExistingUser } from './auth.controller';
 
-export default (): Router => { 
+export default (): Router => {
   const app = Router();
 
-  app.get("/", getUser)
+  app.post('/signup', addNewUser);
+  app.get('/login', loginExistingUser);
 
   return app;
 };
