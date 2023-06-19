@@ -27,6 +27,4 @@ export const handleVerifyUser = (): UserWithVerification => {
   };
 };
 
-export const handleDeleteUser = (): void => {
-  console.log('User Deleted');
-};
+export const handleDeleteUser = (): void => {};
