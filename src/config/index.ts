@@ -1,34 +1,31 @@
 require('dotenv').config();
+import { z } from 'zod';
 
-process.env.NODE_ENV = process.env.NODE_ENV || 'development';
+const envSchema = z.object({
+  NODE_ENV: z.enum(['development', 'production']).default('development'),
+  port: z.number().int().positive().optional().default(5050),
+  databaseURL: z.string().startsWith('mongodb+srv://').includes('mongodb.net'),
+  JWT_SECRET: z.string().regex(/^[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+$/),
+  level: z.enum(['error', 'warn', 'info', 'http', 'verbose', 'debug', 'silly']).optional().default('silly'),
+  prefix: z.string().optional().default('/api'),
+});
+
+const parsedSchema = envSchema.parse(process.env);
 
 export default {
-  /**
-   * Port the app should run on
-   */
-  port: parseInt(process.env.PORT) || 5050,
+  NODE_ENV: parsedSchema.NODE_ENV,
 
-  /**
-   * Database the app should connect to
-   */
-  databaseURL: process.env.MONGODB_URI,
+  port: parsedSchema.port,
 
-  /**
-   * The secret sauce to validate JWT
-   */
-  jwtSecret: process.env.JWT_SECRET,
+  databaseURL: parsedSchema.databaseURL,
 
-  /**
-   * Used by Winston logger
-   */
+  JWT_SECRET: parsedSchema.JWT_SECRET,
+
   logs: {
-    level: process.env.LOG_LEVEL || 'silly',
+    level: parsedSchema.level,
   },
 
-  /**
-   * API configs
-   */
   api: {
-    prefix: '/api',
+    prefix: parsedSchema.prefix,
   },
 };
