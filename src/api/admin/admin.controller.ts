@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { handleDeleteUser, handleGetUsers, handleUpdateUser } from './admin.service';
+import { handleDeleteUser, handleGetUsers, handleUpdateUser, handleVerifyUser } from './admin.service';
 
 export const getUsers = (req: Request, res: Response) => {
   const data = handleGetUsers();
@@ -23,4 +23,20 @@ export const deleteUser = (req: Request, res: Response) => {
     success: true,
     message: 'User Deleted Successfully',
   });
+};
+
+export const verifyUser = async (req: Request, res: Response): Promise<void> => {
+  try {
+    // const { userId } = req.params;
+    const data = await handleVerifyUser();
+    res.status(200).json({
+      success: true,
+      data,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Internal Server Error',
+    });
+  }
 };
