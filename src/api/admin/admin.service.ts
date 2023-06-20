@@ -1,3 +1,5 @@
+import database from '../../loaders/database';
+
 interface User {
   name: string;
   age: number;
@@ -19,7 +21,9 @@ export const handleUpdateUser = (): User => {
   return { name: 'john', age: 23 };
 };
 
-export const handleDeleteUser = (): void => {};
+export async function handleDeleteUser(email: string) {
+  const user = await (await database()).collection('users').updateOne({ email }, { $set: { isDeleted: true } });
+}
 
 export const handleVerifyUser = (): UserWithVerification => {
   return {
