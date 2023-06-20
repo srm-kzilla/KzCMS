@@ -1,5 +1,11 @@
 import { Request, Response } from 'express';
-import { handleDeleteUser, handleGetUsers, handleUpdateUser, handleUpdateUserProjects, handleVerifyUser } from './admin.service';
+import {
+  handleDeleteUser,
+  handleGetUsers,
+  handleUpdateUser,
+  handleUpdateUserProjects,
+  handleVerifyUser,
+} from './admin.service';
 
 export const getUsers = (req: Request, res: Response) => {
   const data = handleGetUsers();
@@ -25,12 +31,22 @@ export const deleteUser = (req: Request, res: Response) => {
   });
 };
 
-export const verifyUser = (req: Request, res: Response) => {
-  const data = handleVerifyUser();
-  res.status(200).json({
-    success: true,
-    data,
-  });
+export const verifyUser = async (req: Request, res: Response) => {
+  const { email, verify } = req.body;
+  const status = verify ? 'verified' : 'unverfied';
+  const success = await handleVerifyUser(email, verify);
+
+  if (success) {
+    res.status(200).json({
+      success: true,
+      message: `User ${status} Successfully`,
+    });
+  } else {
+    res.status(400).json({
+      success: false,
+      message: 'Unable to verify user',
+    });
+  }
 };
 
 export async function updateUserProjects(req: Request, res: Response) {

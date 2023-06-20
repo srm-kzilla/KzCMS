@@ -1,9 +1,8 @@
+import database from '../../loaders/database';
+
 interface User {
   name: string;
   age: number;
-}
-interface UserWithVerification extends User {
-  verified: boolean;
 }
 
 export const handleGetUsers = (): User[] => {
@@ -19,14 +18,14 @@ export const handleUpdateUser = (): User => {
   return { name: 'john', age: 23 };
 };
 
-export const handleDeleteUser = (): void => {};
+export const handleDeleteUser = (): void => {
+  //
+};
 
-export const handleVerifyUser = (): UserWithVerification => {
-  return {
-    name: 'john',
-    age: 23,
-    verified: true,
-  };
+export const handleVerifyUser = async (email: string, verify: boolean): Promise<boolean> => {
+  const success = await (await database()).collection('users').updateOne({ email }, { $set: { verified: verify } });
+
+  return success.modifiedCount === 1;
 };
 
 export async function handleUpdateUserProjects() {
