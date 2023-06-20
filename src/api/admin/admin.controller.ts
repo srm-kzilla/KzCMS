@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { handleDeleteUser, handleGetUsers, handleUpdateUser, handleUpdateUserProjects,handleVerifyUser } from './admin.service';
 
+
 export const getUsers = (req: Request, res: Response) => {
   const data = handleGetUsers();
   res.status(200).json({
