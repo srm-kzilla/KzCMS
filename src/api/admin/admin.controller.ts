@@ -6,6 +6,7 @@ import {
   handleUpdateUserProjects,
   handleVerifyUser,
 } from './admin.service';
+import LoggerInstance from '../../loaders/logger';
 
 export const getUsers = (req: Request, res: Response) => {
   const data = handleGetUsers();
@@ -33,18 +34,27 @@ export const deleteUser = (req: Request, res: Response) => {
 
 export const verifyUser = async (req: Request, res: Response) => {
   const { email, verify } = req.body;
-  const status = verify ? 'verified' : 'unverfied';
-  const success = await handleVerifyUser(email, verify);
 
-  if (success) {
-    res.status(200).json({
-      success: true,
-      message: `User ${status} Successfully`,
-    });
-  } else {
+  const userStatus = verify ? 'verified' : 'unverified';
+
+  try {
+    const success = await handleVerifyUser(email, verify);
+    if (success) {
+      res.status(200).json({
+        success: true,
+        message: `User ${userStatus} successfully`,
+      });
+      return;
+    }
     res.status(400).json({
       success: false,
-      message: 'Unable to verify user',
+      message: 'User verification failed',
+    });
+  } catch (error) {
+    LoggerInstance.error(error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to verify user',
     });
   }
 };
