@@ -23,7 +23,7 @@ export const handleDeleteUser = (): void => {
 };
 
 export const handleVerifyUser = async (email: string, verify: boolean): Promise<boolean> => {
-  const success = await (await database()).collection('users').updateOne({ email }, { $set: { verified: verify } });
+  const success = await (await database()).collection('users').updateOne({ email }, { $set: { isVerified: verify } });
 
   return success.modifiedCount === 1;
 };

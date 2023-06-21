@@ -14,7 +14,7 @@ export function validateRequest(location: RequestLocation, schema: z.AnyZodObjec
         _location = req.body;
         break;
       case 'params':
-        _location = req.url;
+        _location = req.params;
         break;
     }
     try {
@@ -22,7 +22,7 @@ export function validateRequest(location: RequestLocation, schema: z.AnyZodObjec
       next();
     } catch (error) {
       const message = error.errors[0];
-      return res.status(400).json({ error: message });
+      return res.status(421).json({ error: message });
     }
   };
 }
