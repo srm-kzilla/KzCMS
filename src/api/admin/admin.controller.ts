@@ -1,7 +1,5 @@
 import { Request, Response } from 'express';
 
-import { handleDeleteUser, handleGetUsers, handleUpdateUser, handleUpdateUserProjects,handleVerifyUser } from './admin.service';
-
 import {
   handleDeleteUser,
   handleGetUsers,
@@ -9,6 +7,7 @@ import {
   handleUpdateUserProjects,
   handleVerifyUser,
 } from './admin.service';
+
 import LoggerInstance from '../../loaders/logger';
 
 export const getUsers = (req: Request, res: Response) => {
