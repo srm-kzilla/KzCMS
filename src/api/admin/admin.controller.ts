@@ -39,22 +39,21 @@ export const verifyUser = async (req: Request, res: Response) => {
 
   try {
     const success = await handleVerifyUser(email, verify);
-    if (success) {
-      res.status(200).json({
-        success: true,
-        message: `User ${userStatus} successfully`,
-      });
-      return;
+    if (!success) {
+      throw {
+        statusCode: 400,
+        message: 'Verification failed',
+      };
     }
-    res.status(400).json({
-      success: false,
-      message: 'User verification failed',
+    res.status(200).json({
+      success: true,
+      message: `User ${userStatus} successfully`,
     });
   } catch (error) {
     LoggerInstance.error(error);
-    res.status(500).json({
+    res.status(error.statusCode).json({
       success: false,
-      message: 'Failed to verify user',
+      message: error.message,
     });
   }
 };
