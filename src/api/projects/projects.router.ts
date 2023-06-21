@@ -19,7 +19,7 @@ export default (): Router => {
   app.post('/', createProject);
   app.post('/:slug', createProjects);
 
-  app.put('/:slug', updateProject);
+  app.patch('/:slug', updateProject);
   app.delete('/:slug', deleteProject);
 
   app.post('/image', postImage);
