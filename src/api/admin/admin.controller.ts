@@ -38,22 +38,16 @@ export const verifyUser = async (req: Request, res: Response) => {
   const userStatus = verify ? 'verified' : 'unverified';
 
   try {
-    const success = await handleVerifyUser(email, verify);
-    if (!success) {
-      throw {
-        statusCode: 400,
-        message: 'Verification failed',
-      };
-    }
+    await handleVerifyUser(email, verify);
     res.status(200).json({
       success: true,
       message: `User ${userStatus} successfully`,
     });
   } catch (error) {
     LoggerInstance.error(error);
-    res.status(error.statusCode).json({
+    res.status(error.statusCode ?? 500).json({
       success: false,
-      message: error.message,
+      message: error.message ?? 'Internal Server Error',
     });
   }
 };

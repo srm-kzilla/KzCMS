@@ -22,10 +22,15 @@ export const handleDeleteUser = (): void => {
   //
 };
 
-export const handleVerifyUser = async (email: string, verify: boolean): Promise<boolean> => {
+export const handleVerifyUser = async (email: string, verify: boolean): Promise<void> => {
   const success = await (await database()).collection('users').updateOne({ email }, { $set: { isVerified: verify } });
 
-  return success.modifiedCount === 1;
+  if (!(success.modifiedCount == 1)) {
+    throw {
+      statusCode: 400,
+      message: 'User verification failed',
+    };
+  }
 };
 
 export async function handleUpdateUserProjects() {
