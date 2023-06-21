@@ -7,7 +7,7 @@ export default (): Router => {
   const app = Router();
 
   app.post('/signup', validateRequest('body', newUserSchema), addNewUser);
-  app.get('/login', loginExistingUser);
+  app.post('/login', loginExistingUser);
 
   return app;
 };
