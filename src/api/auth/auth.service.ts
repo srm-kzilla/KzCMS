@@ -33,7 +33,7 @@ export async function handleExistingUser({ email, password }: authParamType): Pr
 
   if (res) {
     const token = jwt.sign({ email: email }, config.JWT_SECRET, {
-      expiresIn: '7d',
+      expiresIn: '30d',
     });
     return { status: 200, email: email, message: token };
   } else {
