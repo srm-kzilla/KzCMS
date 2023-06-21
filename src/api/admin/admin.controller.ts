@@ -6,7 +6,6 @@ import {
   handleUpdateUserProjects,
   handleVerifyUser,
 } from './admin.service';
-import { userInfo } from 'os';
 
 export const getUsers = (req: Request, res: Response) => {
   const data = handleGetUsers();
@@ -32,11 +31,8 @@ export const deleteUser = async (req: Request, res: Response) => {
       success: true,
       message: 'User Deleted Successfully',
     });
-  } catch (error) {
-    return res.status(error.statusCode).json({
-      success: false,
-      message: error.message,
-    });
+  } catch (err) {
+    res.status(err.statusCode ?? 500).json({ success: false, message: err.message ?? 'internal server error' });
   }
 };
 
