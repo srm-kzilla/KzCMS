@@ -1,11 +1,24 @@
 import db from '../../loaders/database';
 import bcrypt from 'bcrypt';
-import { authParamType } from './auth.schema';
+import { userScemaType } from '../types/auth.schema';
+import { authParamType } from '../../shared/types/admin/admin.schema';
 import { userType } from '../types/user';
 import generateToken from '../../shared/middlewares/jwt';
 
-export async function handleAddNewUser(email, password) {
-  return { email: email, password: password };
+export async function handleAddNewUser(signup: userScemaType) {
+  const data = await (await db()).collection('users').findOne({ email: signup.email });
+  if (!data) {
+    throw { statusCode: 409, message: 'This email already exists', success: false };
+  }
+  const collection = (await db()).collection('users');
+
+  const saltRounds = 10;
+  const hash = await bcrypt.hash(signup.password, saltRounds);
+
+  await collection.insertOne({
+    ...signup,
+    password: hash,
+  });
 }
 
 export async function handleExistingUser({ email, password }: authParamType): Promise<string> {
