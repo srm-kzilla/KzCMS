@@ -1,7 +1,7 @@
 import { z } from 'zod';
 export const userSchema = z.object({
   email: z.string().email(),
-  hash: z.string().min(5, { message: 'Must be 5 characters long or more' }),
+  password: z.string().min(5, { message: 'Must be 5 characters long or more' }),
   created_at: z.coerce.date().optional(),
   isAdmin: z.boolean().optional().default(false),
   isVerified: z.boolean().optional().default(false),
