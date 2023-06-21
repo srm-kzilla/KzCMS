@@ -2,7 +2,7 @@ import db from '../../loaders/database';
 import config from '../../config';
 import bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
-import { authParamType } from '../types/auth';
+import { authParamType } from './auth.schema';
 import { userType } from '../types/user';
 import Logger from '../../loaders/logger';
 
