@@ -1,6 +1,9 @@
 import db from '../../loaders/database';
 import bcrypt from 'bcrypt';
 import { userScemaType } from '../types/auth.schema';
+import { authParamType } from '../../shared/types/admin/admin.schema';
+import { userType } from '../types/user';
+import generateToken from '../../shared/middlewares/jwt';
 
 export async function handleAddNewUser(signup: userScemaType) {
   const data = await (await db()).collection('users').findOne({ email: signup.email });
@@ -16,16 +19,6 @@ export async function handleAddNewUser(signup: userScemaType) {
     ...signup,
     password: hash,
   });
-}
-
-export async function handleLoginUser(login: userScemaType) {
-  return { email: login.email, password: login.password };
-import { authParamType } from './auth.schema';
-import { userType } from '../types/user';
-import generateToken from '../../shared/middlewares/jwt';
-
-export async function handleAddNewUser(email, password) {
-  return { email: email, password: password };
 }
 
 export async function handleExistingUser({ email, password }: authParamType): Promise<string> {

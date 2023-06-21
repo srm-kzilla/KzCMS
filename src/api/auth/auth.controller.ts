@@ -1,8 +1,6 @@
 import { Router, Request, Response } from 'express';
-import { handleAddNewUser, handleLoginUser } from './auth.service';
-import { Request, Response } from 'express';
 import { handleAddNewUser, handleExistingUser } from './auth.service';
-import { authParamType } from './auth.schema';
+import { authParamType } from '../../shared/types/admin/admin.schema';
 
 import LoggerInstance from '../../loaders/logger';
 
