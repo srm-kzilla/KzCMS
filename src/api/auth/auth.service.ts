@@ -1,9 +1,8 @@
 import db from '../../loaders/database';
-import config from '../../config';
 import bcrypt from 'bcrypt';
-import * as jwt from 'jsonwebtoken';
 import { authParamType } from './auth.schema';
 import { userType } from '../types/user';
+import generateToken from '../../shared/middlewares/jwt';
 
 export async function handleAddNewUser(email, password) {
   return { email: email, password: password };
@@ -24,9 +23,7 @@ export async function handleExistingUser({ email, password }: authParamType): Pr
   res = await bcrypt.compare(password, data.password); // for testing use "TestingPassword" for test@gmail.com
 
   if (res) {
-    const token = jwt.sign({ email: email }, config.JWT_SECRET, {
-      expiresIn: '30d',
-    });
+    const token: string = generateToken(email);
     return { status: 200, email: email, message: token };
   } else {
     return { status: 401, email: email, message: 'Incorrect Password / Not Allowed' };
