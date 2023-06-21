@@ -7,7 +7,7 @@ export default (): Router => {
   const app = Router();
 
   app.use('/auth', authRouter());
-  app.use('/users', adminRouter());
+  app.use('/admin', adminRouter());
   app.use('/projects', projectsRouter());
 
   return app;

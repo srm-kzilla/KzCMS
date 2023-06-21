@@ -18,9 +18,9 @@ export const handleUpdateUser = (): User => {
   return { name: 'john', age: 23 };
 };
 
-export const handleDeleteUser = (): void => {
-  //
-};
+export async function handleDeleteUser(email: string) {
+  await (await database()).collection('users').updateOne({ email }, { $set: { isDeleted: true } });
+}
 
 export const handleVerifyUser = async (email: string, verify: boolean): Promise<void> => {
   const success = await (await database()).collection('users').updateOne({ email }, { $set: { isVerified: verify } });

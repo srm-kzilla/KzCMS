@@ -24,12 +24,18 @@ export const updateUser = (req: Request, res: Response) => {
   });
 };
 
-export const deleteUser = (req: Request, res: Response) => {
-  const data = handleDeleteUser();
-  res.status(200).json({
-    success: true,
-    message: 'User Deleted Successfully',
-  });
+export const deleteUser = async (req: Request, res: Response) => {
+  const user = req.body.email;
+  try {
+    await handleDeleteUser(user);
+    res.status(200).json({
+      success: true,
+      message: 'User Deleted Successfully',
+    });
+  } catch (error) {
+    LoggerInstance.error(error);
+    res.status(error.statusCode ?? 500).json({ success: false, message: error.message ?? 'internal server error' });
+  }
 };
 
 export const verifyUser = async (req: Request, res: Response) => {
