@@ -58,7 +58,7 @@ export const handleUpdateProject = async (
   },
 ): Promise<UpdatedProjectData & any> => {
   const projectsCollection = (await database()).collection('projects');
-  const project = await projectsCollection.findOne({ projectSlug: slug });
+  const project = await projectsCollection.findOne({ projectSlug: slug, 'data.title': data.title });
   if (project) {
     const filter = { _id: new ObjectId(project._id), 'data.title': data.title };
 
@@ -70,7 +70,7 @@ export const handleUpdateProject = async (
 
     return { success: true, slug, updatedProject: updatedProject.value };
   } else {
-    return { success: false, message: `Project with slug "${slug}" not found`, data };
+    return { success: false, message: `Project with slug '${slug}' or title '${data.title}' not found`, data };
   }
 };
 
