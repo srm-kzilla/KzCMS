@@ -9,6 +9,7 @@ import {
   handlePostImage,
   handleUpdateProject,
 } from './projects.service';
+import LoggerInstance from '../../loaders/logger';
 
 export const getProjects = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -95,9 +96,9 @@ export const updateProject = async (
   req: Request & {
     body: {
       title: string;
-      description: string;
-      link: string;
-      author: string;
+      description?: string;
+      link?: string;
+      author?: string;
     };
   },
   res: Response,
@@ -106,7 +107,7 @@ export const updateProject = async (
     const data = await handleUpdateProject(req.params.slug, req.body);
     res.status(200).json(data);
   } catch (error) {
-    console.log(`Error while updating Project: ${error}`);
+    LoggerInstance.error(`Error while updating Project: ${error}`);
     res.status(500).json({
       success: false,
       message: `Error while updating Project: ${error}`,
