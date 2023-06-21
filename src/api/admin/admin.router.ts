@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { deleteUser, getUsers, updateUser, updateUserProjects, verifyUser } from './admin.controller';
 import { validateRequest } from '../../shared/middlewares/validator';
-import { deleteUserSchema } from '../../types/admin/admin-schema';
+import { deleteUserSchema } from '../../types/admin/schema';
 
 export default (): Router => {
   const app = Router();

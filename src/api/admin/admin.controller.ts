@@ -6,6 +6,7 @@ import {
   handleUpdateUserProjects,
   handleVerifyUser,
 } from './admin.service';
+import { userInfo } from 'os';
 
 export const getUsers = (req: Request, res: Response) => {
   const data = handleGetUsers();
@@ -24,16 +25,17 @@ export const updateUser = (req: Request, res: Response) => {
 };
 
 export const deleteUser = async (req: Request, res: Response) => {
-  const userId = req.body.email;
+  const user = req.body.email;
   try {
-    const user = await handleDeleteUser(userId);
+    await handleDeleteUser(user);
     return res.status(200).json({
       success: true,
       message: 'User Deleted Successfully',
     });
   } catch (error) {
-    return res.status(500).json({
+    return res.status(error.statusCode).json({
       success: false,
+      message: error.message,
     });
   }
 };

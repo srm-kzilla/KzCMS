@@ -22,7 +22,7 @@ export const handleUpdateUser = (): User => {
 };
 
 export async function handleDeleteUser(email: string) {
-  const user = await (await database()).collection('users').updateOne({ email }, { $set: { isDeleted: true } });
+  await (await database()).collection('users').updateOne({ email }, { $set: { isDeleted: true } });
 }
 
 export const handleVerifyUser = (): UserWithVerification => {
