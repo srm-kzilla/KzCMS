@@ -38,12 +38,24 @@ export const deleteUser = async (req: Request, res: Response) => {
   }
 };
 
-export const verifyUser = (req: Request, res: Response) => {
-  const data = handleVerifyUser();
-  res.status(200).json({
-    success: true,
-    data,
-  });
+export const verifyUser = async (req: Request, res: Response) => {
+  const { email, verify } = req.body;
+
+  const userStatus = verify ? 'verified' : 'unverified';
+
+  try {
+    await handleVerifyUser(email, verify);
+    res.status(200).json({
+      success: true,
+      message: `User ${userStatus} successfully`,
+    });
+  } catch (error) {
+    LoggerInstance.error(error);
+    res.status(error.statusCode ?? 500).json({
+      success: false,
+      message: error.message ?? 'Internal Server Error',
+    });
+  }
 };
 
 export async function updateUserProjects(req: Request, res: Response) {

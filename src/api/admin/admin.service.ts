@@ -4,9 +4,6 @@ interface User {
   name: string;
   age: number;
 }
-interface UserWithVerification extends User {
-  verified: boolean;
-}
 
 export const handleGetUsers = (): User[] => {
   return [
@@ -25,12 +22,15 @@ export async function handleDeleteUser(email: string) {
   await (await database()).collection('users').updateOne({ email }, { $set: { isDeleted: true } });
 }
 
-export const handleVerifyUser = (): UserWithVerification => {
-  return {
-    name: 'john',
-    age: 23,
-    verified: true,
-  };
+export const handleVerifyUser = async (email: string, verify: boolean): Promise<void> => {
+  const success = await (await database()).collection('users').updateOne({ email }, { $set: { isVerified: verify } });
+
+  if (!(success.modifiedCount == 1)) {
+    throw {
+      statusCode: 400,
+      message: 'User verification failed',
+    };
+  }
 };
 
 export async function handleUpdateUserProjects() {
