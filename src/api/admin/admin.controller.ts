@@ -6,6 +6,7 @@ import {
   handleUpdateUserProjects,
   handleVerifyUser,
 } from './admin.service';
+import LoggerInstance from '../../loaders/logger';
 
 export const getUsers = (req: Request, res: Response) => {
   const data = handleGetUsers();
@@ -27,12 +28,13 @@ export const deleteUser = async (req: Request, res: Response) => {
   const user = req.body.email;
   try {
     await handleDeleteUser(user);
-    return res.status(200).json({
+    res.status(200).json({
       success: true,
       message: 'User Deleted Successfully',
     });
-  } catch (err) {
-    res.status(err.statusCode ?? 500).json({ success: false, message: err.message ?? 'internal server error' });
+  } catch (error) {
+    LoggerInstance.error(error);
+    res.status(error.statusCode ?? 500).json({ success: false, message: error.message ?? 'internal server error' });
   }
 };
 
