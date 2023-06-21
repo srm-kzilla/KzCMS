@@ -2,7 +2,6 @@ import db from '../../loaders/database';
 import bcrypt from 'bcrypt';
 import { userScemaType } from '../../shared/types/auth/auth.schema';
 import { authParamType } from '../../shared/types/admin/admin.schema';
-import { userType } from '../../shared/types/user/user.schema';
 import generateToken from '../../shared/middlewares/jwt';
 
 export async function handleAddNewUser(signup: userScemaType) {

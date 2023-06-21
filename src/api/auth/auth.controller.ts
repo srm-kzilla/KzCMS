@@ -1,4 +1,4 @@
-import { Router, Request, Response } from 'express';
+import { Request, Response } from 'express';
 import { handleAddNewUser, handleExistingUser } from './auth.service';
 import { authParamType } from '../../shared/types/admin/admin.schema';
 
