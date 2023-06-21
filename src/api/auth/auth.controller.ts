@@ -10,7 +10,7 @@ export const addNewUser = async (req: Request, res: Response) => {
   res.status(newUser.status).send(newUser);
   }catch(error){
     LoggerInstance.error(error);
-    res.status(error.statusCode ?? 500).json({ success: false, message: error.message ?? 'internal server error' });
+    res.status(error.statusCode ?? 500).json({ success: false, message: error.message ?? 'Internal server error' });
   }
 };
 
