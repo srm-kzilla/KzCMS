@@ -1,48 +1,36 @@
 import db from '../../loaders/database';
 import bcrypt from 'bcrypt';
-import { userScemaType } from '../types/auth/schema';
-
-export async function handleGetUser(user: userScemaType) {
-  const data = await (await db()).collection('users').findOne({ email: user.email });
-  return data;
-}
+import { userScemaType } from '../types/auth.schema';
+import Logger from '../../loaders/logger';
 
 export async function handleAddNewUser(signup: userScemaType) {
-  const collection = (await db()).collection('users');
+  try {
+    const data = await (await db()).collection('users').findOne({ email: signup.email });
+    if (data !== null) {
+      return { status: 409, error: 'This email already exists', success: false };
+    }
+    const collection = (await db()).collection('users');
 
-  const saltRounds = 10;
-  const hash = await bcrypt.hash(signup.password, saltRounds);
-  const currentDateTime = new Date();
+    const saltRounds = 10;
+    const hash = await bcrypt.hash(signup.password, saltRounds);
+    const currentDateTime = new Date();
 
-  await collection.insertOne({
-    email: signup.email,
-    password: hash,
-    created_at: currentDateTime,
-    isAdmin: false,
-    isVerified: false,
-    isDeleted: false,
-  });
+    await collection.insertOne({
+      email: signup.email,
+      password: hash,
+      created_at: currentDateTime,
+      isAdmin: false,
+      isVerified: false,
+      isDeleted: false,
+    });
 
-  return signup.email;
+    return { status: 200, email: signup.email, error: 'New user added successfully', success: true };
+  } catch (error) {
+    Logger.error(error);
+    return { status: 500, email: signup.email, message: 'User could not be added', success: false };
+  }
 }
 
-export async function handleLoginExistingUser(login: userScemaType) {
-  const data = await handleGetUser(login);
-  if (data === null) {
-    console.log('User does not exist!!');
-  } else {
-    const collection = (await db()).collection('users');
-    const userData = await collection.findOne({ email: login.email });
-    try {
-      const result = bcrypt.compareSync(login.password, userData.password);
-      if (result) {
-        console.log('User logged in');
-      } else {
-        console.log('Password Incorrect');
-      }
-    } catch {
-      console.log('Details entered are incorrect!!');
-    }
-    return login.email;
-  }
+export async function handleLoginUser(login: userScemaType) {
+  return { email: login.email, password: login.password };
 }
