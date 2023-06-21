@@ -1,14 +1,17 @@
 import { Router } from 'express';
 import { deleteUser, getUsers, updateUser, updateUserProjects, verifyUser } from './admin.controller';
+import { validateRequest } from '../../shared/middlewares/validator';
+import { verifyUserSchema } from '../../types/admin/admin.schema';
+import { deleteUserSchema } from '../../types/admin/schema';
 
 export default (): Router => {
   const app = Router();
 
+  app.patch('/verify', validateRequest('body', verifyUserSchema), verifyUser);
   app.patch('/:user', updateUserProjects);
-  app.put('/:user/verify', verifyUser);
   app.get('/', getUsers);
   app.patch('/:user', updateUser);
-  app.delete('/:user', deleteUser);
+  app.delete('/user', validateRequest('body', deleteUserSchema), deleteUser);
 
   return app;
 };
