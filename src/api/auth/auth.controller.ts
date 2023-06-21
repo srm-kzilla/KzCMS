@@ -7,7 +7,7 @@ export const addNewUser = async (req: Request, res: Response) => {
   const user = req.body;
   try{
   const newUser = await handleAddNewUser(user);
-  res.status(newUser.status).send(newUser);
+  res.status(newUser.status).json(newUser);
   }catch(error){
     LoggerInstance.error(error);
     res.status(error.statusCode ?? 500).json({ success: false, message: error.message ?? 'Internal server error' });

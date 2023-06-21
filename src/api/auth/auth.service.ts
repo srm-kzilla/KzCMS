@@ -27,7 +27,7 @@ export async function handleAddNewUser(signup: userScemaType) {
     return { status: 200, email: signup.email, error: 'New user added successfully', success: true };
   } catch (error) {
     Logger.error(error);
-    return { status: 500, email: signup.email, message: 'User could not be added', success: false };
+    throw { status: 500, email: signup.email, message: 'User could not be added', success: false };
   }
 }
 
