@@ -17,6 +17,5 @@ export default async (): Promise<Db> => {
   if (!db) {
     db = await initializeClient();
   }
-
   return db;
 };
