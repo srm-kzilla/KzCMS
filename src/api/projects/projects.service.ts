@@ -63,15 +63,22 @@ export const handleUpdateProject = async (
     const filter = { _id: new ObjectId(project._id), 'data.title': data.title };
 
     const update = {
-      $set: { 'data.$': { ...data } },
+      $set: {
+        'data.$.title': data.title,
+        'data.$.description': data.description,
+        'data.$.link': data.link,
+        'data.$.author': data.author,
+      },
     };
 
-    const updatedProject = await projectsCollection.findOneAndUpdate(filter, update, { returnDocument: 'after' });
+    const updatedProject = await projectsCollection.findOneAndUpdate(filter, update, {
+      returnDocument: 'after',
+      projection: { _id: 0 },
+    });
 
-    return { success: true, slug, updatedProject: updatedProject.value };
-  } else {
-    return { success: false, message: `Project with slug '${slug}' or title '${data.title}' not found`, data };
+    return { updatedProject: updatedProject.value };
   }
+  throw { success: false, message: `Project with slug '${slug}' or title '${data.title}' not found`, data };
 };
 
 export const handleDeleteProject = async (slug: string): Promise<unknown> => {
