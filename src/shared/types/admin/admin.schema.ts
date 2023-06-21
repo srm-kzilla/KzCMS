@@ -14,5 +14,9 @@ export const authGetSchema = z.object({
   email: z.string().email(),
 });
 
+export const deleteUserSchema = z.object({
+  email: z.string().email(),
+});
+
 export type authParamType = z.infer<typeof authSchema>;
 export type authGetUserType = z.infer<typeof authGetSchema>;
