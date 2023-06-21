@@ -11,10 +11,11 @@ export async function handleAddNewUser(email, password) {
 export async function handleExistingUser({ email, password }: authParamType): Promise<{
   status: number;
   email: string;
+  token?: string;
   message: string;
 }> {
   let res: boolean;
-  const data: userType = await (await db()).collection('users').findOne({ email: email });
+  const data = await (await db()).collection('users').findOne({ email: email });
 
   if (data === null) {
     return { status: 404, email: email, message: 'User Does Not Exsist' };
@@ -24,7 +25,7 @@ export async function handleExistingUser({ email, password }: authParamType): Pr
 
   if (res) {
     const token: string = generateToken(email);
-    return { status: 200, email: email, message: token };
+    return { status: 200, email: email, token: token, message: 'Login Successful' };
   } else {
     return { status: 401, email: email, message: 'Incorrect Password / Not Allowed' };
   }
