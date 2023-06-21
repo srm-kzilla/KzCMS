@@ -1,3 +1,6 @@
+import { ObjectId } from 'mongodb';
+import database from '../../loaders/database';
+
 interface Project {
   slug: string;
   name: string;
@@ -10,11 +13,9 @@ interface ImageData {
 }
 
 interface UpdatedProjectData {
-  slug: string;
   data: {
     title: string;
     description: string;
-    imageURL: string;
     link: string;
     author: string;
   };
@@ -51,14 +52,26 @@ export const handleUpdateProject = async (
   slug: string,
   data: {
     title: string;
-    description: string;
-    imageURL: string;
-    link: string;
-    author: string;
+    description?: string;
+    link?: string;
+    author?: string;
   },
-): Promise<UpdatedProjectData> => {
-  //update the project here
-  return { slug, data };
+): Promise<UpdatedProjectData & any> => {
+  const projectsCollection = (await database()).collection('projects');
+  const project = await projectsCollection.findOne({ projectSlug: slug });
+  if (project) {
+    const filter = { _id: new ObjectId(project._id), 'data.title': data.title };
+
+    const update = {
+      $set: { 'data.$': { ...data } },
+    };
+
+    const updatedProject = await projectsCollection.findOneAndUpdate(filter, update, { returnDocument: 'after' });
+
+    return { success: true, slug, updatedProject: updatedProject.value };
+  } else {
+    return { success: false, message: `Project with slug "${slug}" not found`, data };
+  }
 };
 
 export const handleDeleteProject = async (slug: string): Promise<unknown> => {
