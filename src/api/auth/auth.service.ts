@@ -8,25 +8,16 @@ export async function handleAddNewUser(email, password) {
   return { email: email, password: password };
 }
 
-export async function handleExistingUser({ email, password }: authParamType): Promise<{
-  status: number;
-  email: string;
-  token?: string;
-  message: string;
-}> {
-  let res: boolean;
+export async function handleExistingUser({ email, password }: authParamType): Promise<string> {
   const data = await (await db()).collection('users').findOne({ email: email });
 
-  if (data === null) {
-    return { status: 404, email: email, message: 'User Does Not Exsist' };
+  if (!data) {
+    throw { statusCode: 404, email, message: 'User Does Not Exsist' };
   }
 
-  res = await bcrypt.compare(password, data.password); // for testing use "TestingPassword" for test@gmail.com
-
-  if (res) {
-    const token: string = generateToken(email);
-    return { status: 200, email: email, token: token, message: 'Login Successful' };
-  } else {
-    return { status: 401, email: email, message: 'Incorrect Password / Not Allowed' };
+  const res = await bcrypt.compare(password, data.password); // for testing use "TestingPassword" for test@gmail.com
+  if (!res) {
+    throw { statusCode: 401, email: email, message: 'Incorrect Password / Not Allowed' };
   }
+  return generateToken(email);
 }
