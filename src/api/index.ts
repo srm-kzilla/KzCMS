@@ -8,8 +8,14 @@ export default (): Router => {
   const app = Router();
 
   app.use('/auth', authRouter());
-  app.use('/admin', authenticateToken(true), adminRouter());
-  app.use('/projects', authenticateToken(false), projectsRouter());
+  app.use(
+    '/admin',
+    authenticateToken({
+      verifyAdmin: true,
+    }),
+    adminRouter(),
+  );
+  app.use('/projects', authenticateToken(), projectsRouter());
 
   return app;
 };

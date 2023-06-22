@@ -3,7 +3,7 @@ import db from '../../loaders/database';
 import { verifyToken } from './jwt';
 import LoggerInstance from '../../loaders/logger';
 
-export default function authenticateToken(verifyAdmin: boolean) {
+export default function authenticateToken({ verifyAdmin } = { verifyAdmin: false }) {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
       const authHeader = req.headers['authorization'];
