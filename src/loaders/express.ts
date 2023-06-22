@@ -1,9 +1,10 @@
 import cors from 'cors';
 import express from 'express';
 import helmet from 'helmet';
-import config from '../config';
-import routes from '../api';
+
+import routes from '@/api';
 import { rateLimit } from 'express-rate-limit';
+import config from '@/config';
 
 export default ({ app }: { app: express.Application }): void => {
   /**

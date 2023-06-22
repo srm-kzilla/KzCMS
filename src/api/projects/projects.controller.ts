@@ -9,7 +9,7 @@ import {
   handlePostImage,
   handleUpdateProject,
 } from './projects.service';
-import LoggerInstance from '../../loaders/logger';
+import LoggerInstance from '@/loaders/logger';
 
 export const getProjects = async (req: Request, res: Response): Promise<void> => {
   try {

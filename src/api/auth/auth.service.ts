@@ -1,8 +1,8 @@
-import db from '../../loaders/database';
+import db from '@/loaders/database';
 import bcrypt from 'bcrypt';
-import { userScemaType } from '../../shared/types/auth/auth.schema';
-import { authParamType } from '../../shared/types/admin/admin.schema';
-import generateToken from '../../shared/middlewares/jwt';
+import { userScemaType } from '@/shared/types/auth/auth.schema';
+import { authParamType } from '@/shared/types/admin/admin.schema';
+import generateToken from '@/shared/middlewares/jwt';
 
 export async function handleAddNewUser(signup: userScemaType) {
   const data = await (await db()).collection('users').findOne({ email: signup.email });

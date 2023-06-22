@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
 import { handleAddNewUser, handleExistingUser } from './auth.service';
-import { authParamType } from '../../shared/types/admin/admin.schema';
+import { authParamType } from '@/shared/types/admin/admin.schema';
 
-import LoggerInstance from '../../loaders/logger';
+import LoggerInstance from '@/loaders/logger';
 
 export const addNewUser = async (req: Request, res: Response) => {
   const user = req.body;
