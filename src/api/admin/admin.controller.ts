@@ -9,7 +9,7 @@ import {
 } from './admin.service';
 
 import LoggerInstance from '@/loaders/logger';
-import { SERVER_ERROR } from '@/shared/errors';
+import { ERRORS } from '@/shared/errors';
 
 export const getUsers = (req: Request, res: Response) => {
   const data = handleGetUsers();
@@ -38,8 +38,8 @@ export const deleteUser = async (req: Request, res: Response) => {
   } catch (error) {
     LoggerInstance.error(error);
     res
-      .status(error.statusCode ?? SERVER_ERROR.code)
-      .json({ success: false, message: error.message ?? SERVER_ERROR.message });
+      .status(error.statusCode ?? ERRORS.SERVER_ERROR.code)
+      .json({ success: false, message: error.message ?? ERRORS.SERVER_ERROR.message });
   }
 };
 
@@ -56,10 +56,9 @@ export const verifyUser = async (req: Request, res: Response) => {
     });
   } catch (error) {
     LoggerInstance.error(error);
-    res.status(error.statusCode ?? SERVER_ERROR.code).json({
-      success: false,
-      message: error.message ?? SERVER_ERROR.message,
-    });
+    res
+      .status(error.statusCode ?? ERRORS.SERVER_ERROR.code)
+      .json({ success: false, message: error.message ?? ERRORS.SERVER_ERROR.message });
   }
 };
 

@@ -10,7 +10,7 @@ import {
   handleUpdateProject,
 } from './projects.service';
 import LoggerInstance from '@/loaders/logger';
-import { SERVER_ERROR } from '@/shared/errors';
+import { ERRORS } from '@/shared/errors';
 
 export const getProjects = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -21,10 +21,9 @@ export const getProjects = async (req: Request, res: Response): Promise<void> =>
     });
   } catch (error) {
     LoggerInstance.error(error);
-    res.status(error.statusCode ?? SERVER_ERROR.code).json({
-      success: false,
-      message: error.message ?? SERVER_ERROR.message,
-    });
+    res
+      .status(error.statusCode ?? ERRORS.SERVER_ERROR.code)
+      .json({ success: false, message: error.message ?? ERRORS.SERVER_ERROR.message });
   }
 };
 
@@ -44,10 +43,9 @@ export const getProject = async (
     });
   } catch (error) {
     LoggerInstance.error(error);
-    res.status(error.statusCode ?? SERVER_ERROR.code).json({
-      success: false,
-      message: error.message ?? SERVER_ERROR.message,
-    });
+    res
+      .status(error.statusCode ?? ERRORS.SERVER_ERROR.code)
+      .json({ success: false, message: error.message ?? ERRORS.SERVER_ERROR.message });
   }
 };
 
@@ -69,10 +67,9 @@ export const createProject = async (
     });
   } catch (error) {
     LoggerInstance.error(error);
-    res.status(error.statusCode ?? SERVER_ERROR.code).json({
-      success: false,
-      message: error.message ?? SERVER_ERROR.message,
-    });
+    res
+      .status(error.statusCode ?? ERRORS.SERVER_ERROR.code)
+      .json({ success: false, message: error.message ?? ERRORS.SERVER_ERROR.message });
   }
 };
 
@@ -86,10 +83,9 @@ export const createProjects = async (req: Request, res: Response): Promise<void>
     });
   } catch (error) {
     LoggerInstance.error(error);
-    res.status(error.statusCode ?? SERVER_ERROR.code).json({
-      success: false,
-      message: error.message ?? SERVER_ERROR.message,
-    });
+    res
+      .status(error.statusCode ?? ERRORS.SERVER_ERROR.code)
+      .json({ success: false, message: error.message ?? ERRORS.SERVER_ERROR.message });
   }
 };
 
@@ -109,10 +105,9 @@ export const updateProject = async (
     res.status(200).json(data);
   } catch (error) {
     LoggerInstance.error(`Error while updating Project: ${error}`);
-    res.status(error.statusCode ?? SERVER_ERROR.code).json({
-      success: false,
-      message: error.message ?? SERVER_ERROR.message,
-    });
+    res
+      .status(error.statusCode ?? ERRORS.SERVER_ERROR.code)
+      .json({ success: false, message: error.message ?? ERRORS.SERVER_ERROR.message });
   }
 };
 
@@ -129,10 +124,9 @@ export const deleteProject = async (
     res.status(200).json(data);
   } catch (error) {
     LoggerInstance.error(error);
-    res.status(error.statusCode ?? SERVER_ERROR.code).json({
-      success: false,
-      message: error.message ?? SERVER_ERROR.message,
-    });
+    res
+      .status(error.statusCode ?? ERRORS.SERVER_ERROR.code)
+      .json({ success: false, message: error.message ?? ERRORS.SERVER_ERROR.message });
   }
 };
 
@@ -151,10 +145,9 @@ export const postImage = async (
     res.status(200).json(data);
   } catch (error) {
     LoggerInstance.error(error);
-    res.status(error.statusCode ?? SERVER_ERROR.code).json({
-      success: false,
-      message: error.message ?? SERVER_ERROR.message,
-    });
+    res
+      .status(error.statusCode ?? ERRORS.SERVER_ERROR.code)
+      .json({ success: false, message: error.message ?? ERRORS.SERVER_ERROR.message });
   }
 };
 
@@ -173,9 +166,8 @@ export const deleteImage = async (
     res.status(200).json(data);
   } catch (error) {
     LoggerInstance.error(error);
-    res.status(error.statusCode ?? SERVER_ERROR.code).json({
-      success: false,
-      message: error.message ?? SERVER_ERROR.message,
-    });
+    res
+      .status(error.statusCode ?? ERRORS.SERVER_ERROR.code)
+      .json({ success: false, message: error.message ?? ERRORS.SERVER_ERROR.message });
   }
 };

@@ -3,7 +3,7 @@ import { handleAddNewUser, handleExistingUser } from './auth.service';
 import { authParamType } from '@/shared/types/admin/admin.schema';
 
 import LoggerInstance from '@/loaders/logger';
-import { SERVER_ERROR } from '@/shared/errors';
+import { ERRORS } from '@/shared/errors';
 
 export const addNewUser = async (req: Request, res: Response) => {
   const user = req.body;
@@ -15,10 +15,9 @@ export const addNewUser = async (req: Request, res: Response) => {
     });
   } catch (error) {
     LoggerInstance.error(error);
-    res.status(error.statusCode ?? SERVER_ERROR.code).json({
-      success: false,
-      message: error.message ?? SERVER_ERROR.message,
-    });
+    res
+      .status(error.statusCode ?? ERRORS.SERVER_ERROR.code)
+      .json({ success: false, message: error.message ?? ERRORS.SERVER_ERROR.message });
   }
 };
 
@@ -33,9 +32,8 @@ export const loginExistingUser = async (req: Request, res: Response) => {
     });
   } catch (error) {
     LoggerInstance.error(error);
-    res.status(error.statusCode ?? SERVER_ERROR.code).json({
-      success: false,
-      message: error.message ?? SERVER_ERROR.message,
-    });
+    res
+      .status(error.statusCode ?? ERRORS.SERVER_ERROR.code)
+      .json({ success: false, message: error.message ?? ERRORS.SERVER_ERROR.message });
   }
 };
