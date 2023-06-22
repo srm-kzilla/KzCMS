@@ -27,7 +27,7 @@ export async function handleExistingUser({ email, password }: authParamType): Pr
     throw { statusCode: 404, email, message: 'User Does Not Exsist' };
   }
 
-  const res = await bcrypt.compare(password, data.password); // for testing use "TestingPassword" for test@gmail.com
+  const res = await bcrypt.compare(password, data.password);
   if (!res) {
     throw { statusCode: 401, email: email, message: 'Incorrect Password / Not Allowed' };
   }

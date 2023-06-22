@@ -19,7 +19,6 @@ export const addNewUser = async (req: Request, res: Response) => {
 };
 
 export const loginExistingUser = async (req: Request, res: Response) => {
-
   try {
     const userObj: authParamType = { email: req.body.email, password: req.body.password };
     const token = await handleExistingUser(userObj);
@@ -32,7 +31,7 @@ export const loginExistingUser = async (req: Request, res: Response) => {
     LoggerInstance.error(err);
     res.status(err.statusCode ?? 500).json({
       success: false,
-      message: err.message ?? 'Internal Server Error'
-    })
+      message: err.message ?? 'Internal Server Error',
+    });
   }
 };
