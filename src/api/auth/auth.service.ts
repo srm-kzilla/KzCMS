@@ -6,7 +6,7 @@ import generateToken from '../../shared/middlewares/jwt';
 
 export async function handleAddNewUser(signup: userScemaType) {
   const data = await (await db()).collection('users').findOne({ email: signup.email });
-  if (!data) {
+  if (data) {
     throw { statusCode: 409, message: 'This email already exists', success: false };
   }
   const collection = (await db()).collection('users');
