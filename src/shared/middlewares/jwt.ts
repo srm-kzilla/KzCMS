@@ -1,10 +1,9 @@
 import config from '@/config';
 import * as JWT from 'jsonwebtoken';
+import { JWT_CONFIG } from '../constants';
 
 export default function generateToken(email: string): string {
-  return JWT.sign({ email }, config.JWT_SECRET, {
-    expiresIn: '30d',
-  });
+  return JWT.sign({ email }, config.JWT_SECRET, JWT_CONFIG);
 }
 
 export function verifyToken(token: string) {

@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { verifyToken } from './jwt';
 import LoggerInstance from '@/loaders/logger';
 import db from '@/loaders/database';
+import { SERVER_ERROR } from '../errors';
 
 export default function authenticateToken({ verifyAdmin } = { verifyAdmin: false }) {
   return async (req: Request, res: Response, next: NextFunction) => {
@@ -38,7 +39,10 @@ export default function authenticateToken({ verifyAdmin } = { verifyAdmin: false
       next();
     } catch (error) {
       LoggerInstance.error(error);
-      res.status(error.statusCode ?? 500).json({ success: false, message: error.message ?? 'Internal server error' });
+      res.status(error.statusCode ?? SERVER_ERROR.code).json({
+        success: false,
+        message: error.message ?? SERVER_ERROR.message,
+      });
     }
   };
 }

@@ -3,6 +3,7 @@ import { handleAddNewUser, handleExistingUser } from './auth.service';
 import { authParamType } from '@/shared/types/admin/admin.schema';
 
 import LoggerInstance from '@/loaders/logger';
+import { SERVER_ERROR } from '@/shared/errors';
 
 export const addNewUser = async (req: Request, res: Response) => {
   const user = req.body;
@@ -14,7 +15,10 @@ export const addNewUser = async (req: Request, res: Response) => {
     });
   } catch (error) {
     LoggerInstance.error(error);
-    res.status(error.statusCode ?? 500).json({ success: false, message: error.message ?? 'Internal server error' });
+    res.status(error.statusCode ?? SERVER_ERROR.code).json({
+      success: false,
+      message: error.message ?? SERVER_ERROR.message,
+    });
   }
 };
 
@@ -27,11 +31,11 @@ export const loginExistingUser = async (req: Request, res: Response) => {
       message: 'Login Successful',
       token,
     });
-  } catch (err) {
-    LoggerInstance.error(err);
-    res.status(err.statusCode ?? 500).json({
+  } catch (error) {
+    LoggerInstance.error(error);
+    res.status(error.statusCode ?? SERVER_ERROR.code).json({
       success: false,
-      message: err.message ?? 'Internal Server Error',
+      message: error.message ?? SERVER_ERROR.message,
     });
   }
 };
