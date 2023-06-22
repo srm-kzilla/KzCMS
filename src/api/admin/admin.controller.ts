@@ -9,6 +9,7 @@ import {
 } from './admin.service';
 
 import LoggerInstance from '@/loaders/logger';
+import { ERRORS } from '@/shared/errors';
 
 export const getUsers = (req: Request, res: Response) => {
   const data = handleGetUsers();
@@ -36,7 +37,9 @@ export const deleteUser = async (req: Request, res: Response) => {
     });
   } catch (error) {
     LoggerInstance.error(error);
-    res.status(error.statusCode ?? 500).json({ success: false, message: error.message ?? 'internal server error' });
+    res
+      .status(error.statusCode ?? ERRORS.SERVER_ERROR.code)
+      .json({ success: false, message: error.message ?? ERRORS.SERVER_ERROR.message });
   }
 };
 
@@ -53,10 +56,9 @@ export const verifyUser = async (req: Request, res: Response) => {
     });
   } catch (error) {
     LoggerInstance.error(error);
-    res.status(error.statusCode ?? 500).json({
-      success: false,
-      message: error.message ?? 'Internal Server Error',
-    });
+    res
+      .status(error.statusCode ?? ERRORS.SERVER_ERROR.code)
+      .json({ success: false, message: error.message ?? ERRORS.SERVER_ERROR.message });
   }
 };
 

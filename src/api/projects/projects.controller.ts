@@ -10,6 +10,7 @@ import {
   handleUpdateProject,
 } from './projects.service';
 import LoggerInstance from '@/loaders/logger';
+import { ERRORS } from '@/shared/errors';
 
 export const getProjects = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -19,11 +20,10 @@ export const getProjects = async (req: Request, res: Response): Promise<void> =>
       data,
     });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({
-      success: false,
-      message: 'Unable to get projects',
-    });
+    LoggerInstance.error(error);
+    res
+      .status(error.statusCode ?? ERRORS.SERVER_ERROR.code)
+      .json({ success: false, message: error.message ?? ERRORS.SERVER_ERROR.message });
   }
 };
 
@@ -42,11 +42,10 @@ export const getProject = async (
       data,
     });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({
-      success: true,
-      message: 'Unable to get projects',
-    });
+    LoggerInstance.error(error);
+    res
+      .status(error.statusCode ?? ERRORS.SERVER_ERROR.code)
+      .json({ success: false, message: error.message ?? ERRORS.SERVER_ERROR.message });
   }
 };
 
@@ -67,11 +66,10 @@ export const createProject = async (
       data,
     });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({
-      success: true,
-      message: 'Unable to get projects',
-    });
+    LoggerInstance.error(error);
+    res
+      .status(error.statusCode ?? ERRORS.SERVER_ERROR.code)
+      .json({ success: false, message: error.message ?? ERRORS.SERVER_ERROR.message });
   }
 };
 
@@ -84,11 +82,10 @@ export const createProjects = async (req: Request, res: Response): Promise<void>
       data,
     });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({
-      success: true,
-      message: 'Unable to get projects',
-    });
+    LoggerInstance.error(error);
+    res
+      .status(error.statusCode ?? ERRORS.SERVER_ERROR.code)
+      .json({ success: false, message: error.message ?? ERRORS.SERVER_ERROR.message });
   }
 };
 
@@ -108,10 +105,9 @@ export const updateProject = async (
     res.status(200).json(data);
   } catch (error) {
     LoggerInstance.error(`Error while updating Project: ${error}`);
-    res.status(500).json({
-      success: false,
-      message: `Error while updating Project: ${error}`,
-    });
+    res
+      .status(error.statusCode ?? ERRORS.SERVER_ERROR.code)
+      .json({ success: false, message: error.message ?? ERRORS.SERVER_ERROR.message });
   }
 };
 
@@ -127,11 +123,10 @@ export const deleteProject = async (
     const data = await handleDeleteProject(req.params.slug);
     res.status(200).json(data);
   } catch (error) {
-    console.log(`Error while updating Project: ${error}`);
-    res.status(500).json({
-      success: false,
-      message: `Error while updating Project: ${error}`,
-    });
+    LoggerInstance.error(error);
+    res
+      .status(error.statusCode ?? ERRORS.SERVER_ERROR.code)
+      .json({ success: false, message: error.message ?? ERRORS.SERVER_ERROR.message });
   }
 };
 
@@ -149,11 +144,10 @@ export const postImage = async (
     const data = await handlePostImage(req.body);
     res.status(200).json(data);
   } catch (error) {
-    console.log(`Error while updating Project: ${error}`);
-    res.status(500).json({
-      success: false,
-      message: `Error while updating Project: ${error}`,
-    });
+    LoggerInstance.error(error);
+    res
+      .status(error.statusCode ?? ERRORS.SERVER_ERROR.code)
+      .json({ success: false, message: error.message ?? ERRORS.SERVER_ERROR.message });
   }
 };
 
@@ -171,10 +165,9 @@ export const deleteImage = async (
     const data = await handleDeleteImage(req.body.slug, req.body.title, req.body.imageUrl);
     res.status(200).json(data);
   } catch (error) {
-    console.log(`Error while updating Project: ${error}`);
-    res.status(500).json({
-      success: false,
-      message: `Error while updating Project: ${error}`,
-    });
+    LoggerInstance.error(error);
+    res
+      .status(error.statusCode ?? ERRORS.SERVER_ERROR.code)
+      .json({ success: false, message: error.message ?? ERRORS.SERVER_ERROR.message });
   }
 };
