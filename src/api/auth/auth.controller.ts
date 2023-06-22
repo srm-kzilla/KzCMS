@@ -1,11 +1,8 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { handleAddNewUser, handleExistingUser } from './auth.service';
 import { authParamType } from '@/shared/types/admin/admin.schema';
 
-import LoggerInstance from '@/loaders/logger';
-import { ERRORS } from '@/shared/errors';
-
-export const addNewUser = async (req: Request, res: Response) => {
+export const addNewUser = async (req: Request, res: Response, next: NextFunction) => {
   const user = req.body;
   try {
     await handleAddNewUser(user);
@@ -14,14 +11,11 @@ export const addNewUser = async (req: Request, res: Response) => {
       message: 'User created successfully',
     });
   } catch (error) {
-    LoggerInstance.error(error);
-    res
-      .status(error.statusCode ?? ERRORS.SERVER_ERROR.code)
-      .json({ success: false, message: error.message ?? ERRORS.SERVER_ERROR.message });
+    next(error);
   }
 };
 
-export const loginExistingUser = async (req: Request, res: Response) => {
+export const loginExistingUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userObj: authParamType = { email: req.body.email, password: req.body.password };
     const token = await handleExistingUser(userObj);
@@ -31,9 +25,6 @@ export const loginExistingUser = async (req: Request, res: Response) => {
       token,
     });
   } catch (error) {
-    LoggerInstance.error(error);
-    res
-      .status(error.statusCode ?? ERRORS.SERVER_ERROR.code)
-      .json({ success: false, message: error.message ?? ERRORS.SERVER_ERROR.message });
+    next(error);
   }
 };

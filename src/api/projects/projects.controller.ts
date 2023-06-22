@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import {
   handleCreateProject,
   handleCreateProjects,
@@ -12,7 +12,7 @@ import {
 import LoggerInstance from '@/loaders/logger';
 import { ERRORS } from '@/shared/errors';
 
-export const getProjects = async (req: Request, res: Response): Promise<void> => {
+export const getProjects = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const data = await handleGetAllProjects();
     res.status(200).json({
@@ -20,10 +20,7 @@ export const getProjects = async (req: Request, res: Response): Promise<void> =>
       data,
     });
   } catch (error) {
-    LoggerInstance.error(error);
-    res
-      .status(error.statusCode ?? ERRORS.SERVER_ERROR.code)
-      .json({ success: false, message: error.message ?? ERRORS.SERVER_ERROR.message });
+    next(error);
   }
 };
 
@@ -34,6 +31,7 @@ export const getProject = async (
     };
   },
   res: Response,
+  next: NextFunction,
 ): Promise<void> => {
   try {
     const data = await handleGetProject(req.params.slug);
@@ -42,10 +40,7 @@ export const getProject = async (
       data,
     });
   } catch (error) {
-    LoggerInstance.error(error);
-    res
-      .status(error.statusCode ?? ERRORS.SERVER_ERROR.code)
-      .json({ success: false, message: error.message ?? ERRORS.SERVER_ERROR.message });
+    next(error);
   }
 };
 
@@ -57,6 +52,7 @@ export const createProject = async (
     };
   },
   res: Response,
+  next: NextFunction,
 ): Promise<void> => {
   try {
     const data = await handleCreateProject(req.body);
@@ -66,14 +62,11 @@ export const createProject = async (
       data,
     });
   } catch (error) {
-    LoggerInstance.error(error);
-    res
-      .status(error.statusCode ?? ERRORS.SERVER_ERROR.code)
-      .json({ success: false, message: error.message ?? ERRORS.SERVER_ERROR.message });
+    next(error);
   }
 };
 
-export const createProjects = async (req: Request, res: Response): Promise<void> => {
+export const createProjects = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const data = await handleCreateProjects();
     res.status(200).json({
@@ -82,10 +75,7 @@ export const createProjects = async (req: Request, res: Response): Promise<void>
       data,
     });
   } catch (error) {
-    LoggerInstance.error(error);
-    res
-      .status(error.statusCode ?? ERRORS.SERVER_ERROR.code)
-      .json({ success: false, message: error.message ?? ERRORS.SERVER_ERROR.message });
+    next(error);
   }
 };
 
@@ -118,15 +108,13 @@ export const deleteProject = async (
     };
   },
   res: Response,
+  next: NextFunction,
 ): Promise<void> => {
   try {
     const data = await handleDeleteProject(req.params.slug);
     res.status(200).json(data);
   } catch (error) {
-    LoggerInstance.error(error);
-    res
-      .status(error.statusCode ?? ERRORS.SERVER_ERROR.code)
-      .json({ success: false, message: error.message ?? ERRORS.SERVER_ERROR.message });
+    next(error);
   }
 };
 
@@ -139,15 +127,13 @@ export const postImage = async (
     };
   },
   res: Response,
+  next: NextFunction,
 ): Promise<void> => {
   try {
     const data = await handlePostImage(req.body);
     res.status(200).json(data);
   } catch (error) {
-    LoggerInstance.error(error);
-    res
-      .status(error.statusCode ?? ERRORS.SERVER_ERROR.code)
-      .json({ success: false, message: error.message ?? ERRORS.SERVER_ERROR.message });
+    next(error);
   }
 };
 
@@ -160,14 +146,12 @@ export const deleteImage = async (
     };
   },
   res: Response,
+  next: NextFunction,
 ): Promise<void> => {
   try {
     const data = await handleDeleteImage(req.body.slug, req.body.title, req.body.imageUrl);
     res.status(200).json(data);
   } catch (error) {
-    LoggerInstance.error(error);
-    res
-      .status(error.statusCode ?? ERRORS.SERVER_ERROR.code)
-      .json({ success: false, message: error.message ?? ERRORS.SERVER_ERROR.message });
+    next(error);
   }
 };
