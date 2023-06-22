@@ -1,5 +1,5 @@
+import config from '@/config';
 import * as JWT from 'jsonwebtoken';
-import config from '../../config/';
 
 export default function generateToken(email: string): string {
   return JWT.sign({ email }, config.JWT_SECRET, {
@@ -10,5 +10,5 @@ export default function generateToken(email: string): string {
 export function verifyToken(token: string) {
   const data = JWT.verify(token, config.JWT_SECRET) as string;
 
-  return JSON.parse(data) as { email: string };
+  return data as unknown as { email: string };
 }

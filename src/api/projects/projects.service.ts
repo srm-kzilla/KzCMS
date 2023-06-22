@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb';
-import database from '../../loaders/database';
+import db from '@/loaders/database';
 
 interface Project {
   slug: string;
@@ -57,7 +57,7 @@ export const handleUpdateProject = async (
     author?: string;
   },
 ): Promise<UpdatedProjectData & any> => {
-  const projectsCollection = (await database()).collection('projects');
+  const projectsCollection = (await db()).collection('projects');
   const project = await projectsCollection.findOne({ projectSlug: slug, 'data.title': data.title });
   if (project) {
     const filter = { _id: new ObjectId(project._id), 'data.title': data.title };

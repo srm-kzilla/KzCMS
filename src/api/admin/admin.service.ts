@@ -1,4 +1,4 @@
-import database from '../../loaders/database';
+import db from '@/loaders/database';
 
 interface User {
   name: string;
@@ -19,11 +19,11 @@ export const handleUpdateUser = (): User => {
 };
 
 export async function handleDeleteUser(email: string) {
-  await (await database()).collection('users').updateOne({ email }, { $set: { isDeleted: true } });
+  await (await db()).collection('users').updateOne({ email }, { $set: { isDeleted: true } });
 }
 
 export const handleVerifyUser = async (email: string, verify: boolean): Promise<void> => {
-  const success = await (await database()).collection('users').updateOne({ email }, { $set: { isVerified: verify } });
+  const success = await (await db()).collection('users').updateOne({ email }, { $set: { isVerified: verify } });
 
   if (!(success.modifiedCount == 1)) {
     throw {

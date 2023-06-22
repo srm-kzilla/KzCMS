@@ -8,7 +8,7 @@ import {
   handleVerifyUser,
 } from './admin.service';
 
-import LoggerInstance from '../../loaders/logger';
+import LoggerInstance from '@/loaders/logger';
 
 export const getUsers = (req: Request, res: Response) => {
   const data = handleGetUsers();

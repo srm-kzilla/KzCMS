@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
-import db from '../../loaders/database';
 import { verifyToken } from './jwt';
-import LoggerInstance from '../../loaders/logger';
+import LoggerInstance from '@/loaders/logger';
+import db from '@/loaders/database';
 
 export default function authenticateToken({ verifyAdmin } = { verifyAdmin: false }) {
   return async (req: Request, res: Response, next: NextFunction) => {
@@ -17,7 +17,7 @@ export default function authenticateToken({ verifyAdmin } = { verifyAdmin: false
       const { email } = verifyToken(token);
 
       const data = await (await db()).collection('users').findOne({ email });
-
+      //
       if (!data) {
         LoggerInstance.error('User Not Found');
         throw { statusCode: 404, message: 'User Not Found' };

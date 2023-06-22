@@ -1,8 +1,8 @@
 import { Router } from 'express';
 import authRouter from './auth/auth.router';
-import adminRouter from './admin/admin.router';
+import authenticateToken from '@/shared/middlewares/authentication';
 import projectsRouter from './projects/projects.router';
-import authenticateToken from '../shared/middlewares/authentication';
+import adminRouter from './admin/admin.router';
 
 export default (): Router => {
   const app = Router();
