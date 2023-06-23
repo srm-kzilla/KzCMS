@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 
 import {
   handleDeleteUser,
@@ -7,9 +7,6 @@ import {
   handleUpdateUserProjects,
   handleVerifyUser,
 } from './admin.service';
-
-import LoggerInstance from '@/loaders/logger';
-import { ERRORS } from '@/shared/errors';
 
 export const getUsers = (req: Request, res: Response) => {
   const data = handleGetUsers();
@@ -27,7 +24,7 @@ export const updateUser = (req: Request, res: Response) => {
   });
 };
 
-export const deleteUser = async (req: Request, res: Response) => {
+export const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
   const user = req.body.email;
   try {
     await handleDeleteUser(user);
@@ -36,14 +33,11 @@ export const deleteUser = async (req: Request, res: Response) => {
       message: 'User Deleted Successfully',
     });
   } catch (error) {
-    LoggerInstance.error(error);
-    res
-      .status(error.statusCode ?? ERRORS.SERVER_ERROR.code)
-      .json({ success: false, message: error.message ?? ERRORS.SERVER_ERROR.message });
+    next(error);
   }
 };
 
-export const verifyUser = async (req: Request, res: Response) => {
+export const verifyUser = async (req: Request, res: Response, next: NextFunction) => {
   const { email, verify } = req.body;
 
   const userStatus = verify ? 'verified' : 'unverified';
@@ -55,10 +49,7 @@ export const verifyUser = async (req: Request, res: Response) => {
       message: `User ${userStatus} successfully`,
     });
   } catch (error) {
-    LoggerInstance.error(error);
-    res
-      .status(error.statusCode ?? ERRORS.SERVER_ERROR.code)
-      .json({ success: false, message: error.message ?? ERRORS.SERVER_ERROR.message });
+    next(error);
   }
 };
 

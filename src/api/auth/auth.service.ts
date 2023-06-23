@@ -24,12 +24,12 @@ export async function handleExistingUser({ email, password }: authParamType): Pr
   const data = await (await db()).collection('users').findOne({ email: email });
 
   if (!data) {
-    throw { statusCode: 404, email, message: 'User Does Not Exsist' };
+    throw { statusCode: 404, message: 'User Does Not Exsist' };
   }
 
   const res = await bcrypt.compare(password, data.password);
   if (!res) {
-    throw { statusCode: 401, email: email, message: 'Incorrect Password / Not Allowed' };
+    throw { statusCode: 401, message: 'Incorrect Password / Not Allowed' };
   }
   return generateToken(email);
 }
