@@ -1,29 +1,21 @@
 import { Router } from 'express';
-import {
-  getProjects,
-  getProject,
-  createProject,
-  createProjects,
-  updateProject,
-  deleteProject,
-  postImage,
-  deleteImage,
-} from './projects.controller';
+import { getProjects, getProject, createProject, updateProject, deleteProject } from './projects.controller';
+import authenticateToken from '@/shared/middlewares/authentication';
 
 export default (): Router => {
   const app = Router();
 
-  app.get('/', getProjects);
-  app.get('/:slug', getProject);
+  app.get('/', authenticateToken(), getProjects);
+  app.get('/:slug', authenticateToken(), getProject);
 
-  app.post('/', createProject);
-  app.post('/:slug', createProjects);
+  // TODO: NEED TO DO THIS IMAGES AFTER THE NEXT MEET
+  // app.post('/image', authenticateToken(), postImage);
+  // app.delete('/image', authenticateToken(), deleteImage); // ig it's update images now
 
-  app.patch('/:slug', updateProject);
-  app.delete('/:slug', deleteProject);
-
-  app.post('/image', postImage);
-  app.delete('/image', deleteImage);
+  // We Need to add a middleware to check if the user is admin for below routes
+  app.post('/', authenticateToken({ verifyAdmin: true }), createProject);
+  app.patch('/:slug', authenticateToken({ verifyAdmin: true }), updateProject);
+  app.delete('/:slug', authenticateToken({ verifyAdmin: true }), deleteProject);
 
   return app;
 };
