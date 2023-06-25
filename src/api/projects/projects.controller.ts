@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import LoggerInstance from '@/loaders/logger';
 import { ERRORS } from '@/shared/errors';
-import { baseProjectType, createProjectType } from '@/shared/types/project/project.schema';
+import { BaseProjectType, CreateProjectType } from '@/shared/types/project/project.schema';
 import {
   handleCreateProject,
   handleDeleteProject,
@@ -43,7 +43,7 @@ export const getProject = async (
 };
 
 export const createProject = async (
-  req: Request & createProjectType,
+  req: Request & CreateProjectType,
   res: Response,
   next: NextFunction,
 ): Promise<void> => {

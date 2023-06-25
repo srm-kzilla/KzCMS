@@ -1,22 +1,22 @@
 import { z } from 'zod';
 
-export const createProjectSchema = z.object({
+export const CreateProjectSchema = z.object({
   projectName: z.string(),
   teamName: z.string(),
 });
 
-export const baseProjecSchema = z.object({
+export const BaseProjecSchema = z.object({
   slug: z.string(),
   name: z.string(),
 });
 
-export const imageSchema = z.object({
+export const ImageSchema = z.object({
   slug: z.string(),
   title: z.string(),
   image: z.string(),
 });
 
-export const projectDataSchema = z.object({
+export const ProjectDataSchema = z.object({
   slug: z.string(),
   userAccess: z.array(z.string()),
   data: z.array(
@@ -30,7 +30,7 @@ export const projectDataSchema = z.object({
   ),
 });
 
-export const updateProjectDataSchema = z.object({
+export const UpdateProjectDataSchema = z.object({
   slug: z.string(),
   data: z.object({
     title: z.string(),
@@ -40,8 +40,8 @@ export const updateProjectDataSchema = z.object({
   }),
 });
 
-export type createProjectType = z.infer<typeof createProjectSchema>;
-export type baseProjectType = z.infer<typeof baseProjecSchema>;
-export type imageType = z.infer<typeof imageSchema>;
-export type updateProjectType = z.infer<typeof updateProjectDataSchema>;
-export type ProjectDataType = z.infer<typeof projectDataSchema>;
+export type CreateProjectType = z.infer<typeof CreateProjectSchema>;
+export type BaseProjectType = z.infer<typeof BaseProjecSchema>;
+export type ImageType = z.infer<typeof ImageSchema>;
+export type UpdateProjectType = z.infer<typeof UpdateProjectDataSchema>;
+export type ProjectDataType = z.infer<typeof ProjectDataSchema>;

@@ -1,9 +1,9 @@
 import db from '@/loaders/database';
-import { ProjectDataType, createProjectType, updateProjectType } from '@/shared/types/project/project.schema';
+import { ProjectDataType, CreateProjectType, UpdateProjectType } from '@/shared/types/project/project.schema';
 import { ObjectId } from 'mongodb';
 import slugify from 'slugify';
 
-export const handleCreateProject = async ({ projectName, teamName }: createProjectType): Promise<string> => {
+export const handleCreateProject = async ({ projectName, teamName }: CreateProjectType): Promise<string> => {
   const projectsCollection = (await db()).collection('projects');
   const slug = slugify(`${projectName} ${teamName}`, { lower: true, replacement: '-', trim: true });
   const project = await projectsCollection.findOne({ projectSlug: slug });
@@ -21,7 +21,7 @@ export const handleCreateProject = async ({ projectName, teamName }: createProje
   return slug;
 };
 
-export const handleUpdateProject = async ({ slug, data }: updateProjectType): Promise<ProjectDataType & any> => {
+export const handleUpdateProject = async ({ slug, data }: UpdateProjectType): Promise<ProjectDataType & any> => {
   const projectsCollection = (await db()).collection('projects');
   const project = await projectsCollection.findOne({ projectSlug: slug, 'data.title': data.title });
   if (!project) {
