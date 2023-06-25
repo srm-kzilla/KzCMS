@@ -8,12 +8,16 @@ import {
   handleVerifyUser,
 } from './admin.service';
 
-export const getUsers = (req: Request, res: Response) => {
-  const data = handleGetUsers();
-  res.status(200).json({
-    success: true,
-    data,
-  });
+export const getUsers = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const data = await handleGetUsers();
+    res.status(200).json({
+      success: true,
+      data,
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
 export const updateUser = (req: Request, res: Response) => {
