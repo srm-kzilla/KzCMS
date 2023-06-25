@@ -8,4 +8,10 @@ export const newUserSchema = z.object({
   isDeleted: z.boolean().optional().default(false),
 });
 
+export const loginSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(5, { message: 'Must be 5 characters long or more' }),
+});
+
 export type userScemaType = z.infer<typeof newUserSchema>;
+export type LoginType = z.infer<typeof loginSchema>;
