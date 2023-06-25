@@ -5,13 +5,8 @@ interface User {
   age: number;
 }
 
-export const handleGetUsers = (): User[] => {
-  return [
-    {
-      name: 'Utkarshini',
-      age: 19,
-    },
-  ];
+export const handleGetUsers = async (): Promise<void> => {
+  await (await db()).collection('users').find({}).toArray();
 };
 
 export const handleUpdateUser = (): User => {
