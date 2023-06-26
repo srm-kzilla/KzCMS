@@ -5,3 +5,7 @@ export const JWT_CONFIG = {
 export const STATUS = {
   OK: 200,
 };
+
+export const MESSAGES_TEXT = {
+  FETCH_USERS: 'Users Fetched Successfully',
+};
