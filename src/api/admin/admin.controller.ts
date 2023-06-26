@@ -3,6 +3,7 @@ import { NextFunction, Request, Response } from 'express';
 import {
   handleDeleteUser,
   handleGetUserDetails,
+  handleGetUserProjects,
   handleGetUsers,
   handleUpdateUser,
   handleUpdateUserProjects,
@@ -87,5 +88,29 @@ export async function getUserDetails(
     success: false,
     errorMessage: ERRORS.RESOURCE_NOT_FOUND.message.error_description,
     message: `user not found with id ${id}`,
+  });
+}
+
+export async function getUserProjects(
+  req: Request & {
+    params: {
+      userid: string;
+    };
+  },
+  res: Response,
+) {
+  const id = req.params.userid;
+  const projects = await handleGetUserProjects(id);
+  if (projects) {
+    return res.status(STATUS.OK).json({
+      success: true,
+      message: `User Projects found with id ${id}`,
+      projects,
+    });
+  }
+  return res.status(ERRORS.RESOURCE_NOT_FOUND.code).json({
+    success: false,
+    errorMessage: ERRORS.RESOURCE_NOT_FOUND.message.error_description,
+    message: `Projects for user not found with id ${id}`,
   });
 }

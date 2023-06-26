@@ -50,3 +50,19 @@ export async function handleGetUserDetails(id: string) {
   );
   return user;
 }
+
+export async function handleGetUserProjects(id: string) {
+  const oid = new ObjectId(id);
+  const user = await (await db()).collection('users').findOne(
+    { _id: oid },
+    {
+      projection: {
+        projects: 1,
+        _id: 0,
+      },
+    },
+  );
+  if (user) {
+    return user.projects;
+  }
+}
