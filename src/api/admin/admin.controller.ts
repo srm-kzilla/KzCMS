@@ -8,14 +8,20 @@ import {
   handleUpdateUserProjects,
   handleVerifyUser,
 } from './admin.service';
-import { STATUS } from '@/shared/constants';
+import { MESSAGES_TEXT, STATUS } from '@/shared/constants';
 
-export const getUsers = (req: Request, res: Response) => {
-  const data = handleGetUsers();
-  res.status(200).json({
-    success: true,
-    data,
-  });
+
+export const getUsers = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const data = await handleGetUsers();
+    res.status(STATUS.OK).json({
+      success: true,
+      message: MESSAGES_TEXT.FETCH_USERS,
+      data,
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
 export const updateUser = (req: Request, res: Response) => {
