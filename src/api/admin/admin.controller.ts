@@ -7,13 +7,14 @@ import {
   handleUpdateUserProjects,
   handleVerifyUser,
 } from './admin.service';
-import { STATUS_CODES } from '@/shared/constants';
+import { STATUS } from '@/shared/constants';
 
 export const getUsers = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const data = await handleGetUsers();
-    res.status(STATUS_CODES.OK).json({
+    res.status(STATUS.OK).json({
       success: true,
+      message: STATUS.MESSAGE,
       data,
     });
   } catch (error) {
