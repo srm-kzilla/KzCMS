@@ -14,7 +14,7 @@ import { STATUS } from '@/shared/constants';
 export const getProjects = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const data = await handleGetAllProjects();
-    res.status(200).json({
+    res.status(STATUS.OK).json({
       success: true,
       data,
     });

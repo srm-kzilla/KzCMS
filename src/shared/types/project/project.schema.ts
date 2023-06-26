@@ -23,7 +23,7 @@ export const ProjectDataSchema = z.object({
     z.object({
       title: z.string(),
       description: z.string(),
-      imageURL: z.string(),
+      imageURL: z.string().url(),
       link: z.string().url(),
       author: z.string(),
     }),
