@@ -48,7 +48,7 @@ export const createProject = async (
   next: NextFunction,
 ): Promise<void> => {
   try {
-    const data = await handleCreateProject({ projectName: req.body.projectName, teamName: req.body.teamName });
+    const data = await handleCreateProject({ projectName: req.body.projectName, typeName: req.body.typeName });
     res.status(200).json({
       success: true,
       message: 'Project created',

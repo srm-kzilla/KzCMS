@@ -3,18 +3,18 @@ import { ProjectDataType, CreateProjectType, UpdateProjectType } from '@/shared/
 import { ObjectId } from 'mongodb';
 import slugify from 'slugify';
 
-export const handleCreateProject = async ({ projectName, teamName }: CreateProjectType): Promise<string> => {
+export const handleCreateProject = async ({ projectName, typeName }: CreateProjectType): Promise<string> => {
   const projectsCollection = (await db()).collection('projects');
-  const slug = slugify(`${projectName} ${teamName}`, { lower: true, replacement: '-', trim: true });
+  const slug = slugify(`${projectName} ${typeName}`, { lower: true, replacement: '-', trim: true });
   const project = await projectsCollection.findOne({ projectSlug: slug });
 
   if (project) {
-    throw { success: false, message: `Project with slug '${slug}' already exists`, data: { projectName, teamName } };
+    throw { success: false, message: `Project with slug '${slug}' already exists`, data: { projectName, typeName } };
   }
 
   await projectsCollection.insertOne({
     projectSlug: slug,
-    projectName: `${projectName} | ${teamName}`,
+    projectName: `${projectName} | ${typeName}`,
     data: [],
   });
 

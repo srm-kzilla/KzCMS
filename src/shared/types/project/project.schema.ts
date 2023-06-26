@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 export const CreateProjectSchema = z.object({
   projectName: z.string(),
-  teamName: z.string(),
+  typeName: z.string(),
 });
 
 export const BaseProjectSchema = z.object({
