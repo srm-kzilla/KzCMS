@@ -3,7 +3,7 @@ import { Collection, WithId } from 'mongodb';
 
 export const handleGetUsers = async (): Promise<WithId<Document>[]> => {
   const collection: Collection<Document> = (await db()).collection('users');
-  return await collection.find({}).toArray();
+  return await collection.find({}, { projection: { password: 0 } }).toArray();
 };
 
 export const handleUpdateUser = () => {

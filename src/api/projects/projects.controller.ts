@@ -9,7 +9,7 @@ import {
   handleGetProject,
   handleUpdateProject,
 } from './projects.service';
-import { STATUS } from '@/shared/constants';
+import { STATUS_CODES } from '@/shared/constants';
 
 export const getProjects = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
@@ -89,7 +89,7 @@ export const deleteProject = async (
 ): Promise<void> => {
   try {
     await handleDeleteProject(req.params.slug);
-    res.status(STATUS.OK).json({
+    res.status(STATUS_CODES.OK).json({
       success: true,
       message: `project \`${req.params.slug}\` deleted`,
     });

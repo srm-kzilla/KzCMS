@@ -14,7 +14,7 @@ export const getUsers = async (req: Request, res: Response, next: NextFunction) 
     const data = await handleGetUsers();
     res.status(STATUS_CODES.OK).json({
       success: true,
-      message: MESSAGES_TEXT.USERS,
+      message: MESSAGES_TEXT.FETCH_USERS,
       data,
     });
   } catch (error) {
