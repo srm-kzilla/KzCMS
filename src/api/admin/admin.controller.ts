@@ -20,10 +20,10 @@ export const getUsers = async (req: Request, res: Response, next: NextFunction) 
   }
 };
 
-export const updateUser = (req: Request, res: Response, next: NextFunction) => {
+export const updateUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { email, password } = req.body;
-    handleUpdateUser(email, password);
+    await handleUpdateUser(email, password);
     res.status(200).json({
       success: true,
       message: 'User Updated Successfully',
