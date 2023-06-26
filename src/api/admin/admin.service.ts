@@ -1,4 +1,5 @@
 import db from '@/loaders/database';
+import { ERRORS } from '@/shared/errors';
 import { ObjectId } from 'mongodb';
 
 interface User {
@@ -48,8 +49,8 @@ export async function handleGetUserDetails(id: string) {
       },
     },
   );
-  if (user) {
-    return user;
+  if (!user) {
+    throw `{status: ${ERRORS.RESOURCE_NOT_FOUND.code}, error_description: ${ERRORS.RESOURCE_NOT_FOUND.message.error_description}, message: User with id ${id} not found}`;
   }
-  throw `User with id ${id} not found`;
+  return user;
 }
