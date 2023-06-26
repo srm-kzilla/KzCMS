@@ -5,7 +5,7 @@ export const CreateProjectSchema = z.object({
   teamName: z.string(),
 });
 
-export const BaseProjecSchema = z.object({
+export const BaseProjectSchema = z.object({
   slug: z.string(),
   name: z.string(),
 });
@@ -41,7 +41,7 @@ export const UpdateProjectDataSchema = z.object({
 });
 
 export type CreateProjectType = z.infer<typeof CreateProjectSchema>;
-export type BaseProjectType = z.infer<typeof BaseProjecSchema>;
+export type BaseProjectType = z.infer<typeof BaseProjectSchema>;
 export type ImageType = z.infer<typeof ImageSchema>;
 export type UpdateProjectType = z.infer<typeof UpdateProjectDataSchema>;
 export type ProjectDataType = z.infer<typeof ProjectDataSchema>;
