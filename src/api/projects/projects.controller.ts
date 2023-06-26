@@ -36,6 +36,7 @@ export const getProject = async (
     const data = await handleGetProject(req.params.slug);
     res.status(200).json({
       success: true,
+      slug: req.params.slug,
       data,
     });
   } catch (error) {
