@@ -2,11 +2,13 @@ import { NextFunction, Request, Response } from 'express';
 
 import {
   handleDeleteUser,
+  handleGetUserDetails,
   handleGetUsers,
   handleUpdateUser,
   handleUpdateUserProjects,
   handleVerifyUser,
 } from './admin.service';
+import { ObjectId } from 'mongodb';
 
 export const getUsers = (req: Request, res: Response) => {
   const data = handleGetUsers();
@@ -60,4 +62,25 @@ export async function updateUserProjects(req: Request, res: Response) {
       data,
     });
   }
+}
+
+export async function getUserDetails(
+  req: Request & {
+    params: {
+      userid: string;
+    };
+  },
+  res: Response,
+) {
+  const data = await handleGetUserDetails(req.params.userid);
+  if (data) {
+    return res.status(200).json({
+      success: true,
+      data,
+    });
+  }
+  return res.status(200).json({
+    success: false,
+    data,
+  });
 }

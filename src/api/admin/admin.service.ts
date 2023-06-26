@@ -1,4 +1,5 @@
 import db from '@/loaders/database';
+import { ObjectId } from 'mongodb';
 
 interface User {
   name: string;
@@ -35,4 +36,10 @@ export const handleVerifyUser = async (email: string, verify: boolean): Promise<
 
 export async function handleUpdateUserProjects() {
   return [{ name: 'Aditya', password: 'asdfghjkl123' }];
+}
+
+export async function handleGetUserDetails(id: string) {
+  const oid = new ObjectId(id);
+  const user = await (await db()).collection('users').findOne({ _id: oid });
+  return user;
 }
