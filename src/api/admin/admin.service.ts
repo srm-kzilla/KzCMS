@@ -48,5 +48,8 @@ export async function handleGetUserDetails(id: string) {
       },
     },
   );
-  return user;
+  if (user) {
+    return user;
+  }
+  throw `User with id ${id} not found`;
 }

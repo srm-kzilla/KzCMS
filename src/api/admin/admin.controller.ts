@@ -73,19 +73,19 @@ export async function getUserDetails(
     };
   },
   res: Response,
+  next: NextFunction,
 ) {
-  const id = req.params.userid;
-  const data = await handleGetUserDetails(id);
-  if (data) {
-    return res.status(STATUS.OK).json({
-      success: true,
-      message: `user found with id ${id}`,
-      data,
-    });
+  try {
+    const id = req.params.userid;
+    const data = await handleGetUserDetails(id);
+    if (data) {
+      return res.status(STATUS.OK).json({
+        success: true,
+        message: `user found with id ${id}`,
+        data,
+      });
+    }
+  } catch (error) {
+    next(error);
   }
-  return res.status(ERRORS.RESOURCE_NOT_FOUND.code).json({
-    success: false,
-    errorMessage: ERRORS.RESOURCE_NOT_FOUND.message.error_description,
-    message: `user not found with id ${id}`,
-  });
 }
