@@ -1,4 +1,6 @@
 import db from '@/loaders/database';
+import { ERRORS } from '@/shared/errors';
+import { ObjectId } from 'mongodb';
 
 interface User {
   name: string;
@@ -35,4 +37,23 @@ export const handleVerifyUser = async (email: string, verify: boolean): Promise<
 
 export async function handleUpdateUserProjects() {
   return [{ name: 'Aditya', password: 'asdfghjkl123' }];
+}
+
+export async function handleGetUserProjects(id: string) {
+  const oid = new ObjectId(id);
+  const user = await (await db()).collection('users').findOne(
+    { _id: oid },
+    {
+      projection: {
+        projects: 1,
+      },
+    },
+  );
+  if (!user) {
+    throw {
+      statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
+      message: `User not found with id ${id}`,
+    };
+  }
+  return user.projects;
 }
