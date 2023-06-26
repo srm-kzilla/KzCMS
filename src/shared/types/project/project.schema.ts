@@ -40,8 +40,15 @@ export const UpdateProjectDataSchema = z.object({
   }),
 });
 
+export const DeleteProjectSchema = z.object({
+  slug: z.string(),
+});
+
 export type CreateProjectType = z.infer<typeof CreateProjectSchema>;
 export type BaseProjectType = z.infer<typeof BaseProjectSchema>;
 export type ImageType = z.infer<typeof ImageSchema>;
 export type UpdateProjectType = z.infer<typeof UpdateProjectDataSchema>;
 export type ProjectDataType = z.infer<typeof ProjectDataSchema>;
+export type DeleteProjectType = {
+  params: z.infer<typeof DeleteProjectSchema>;
+};
