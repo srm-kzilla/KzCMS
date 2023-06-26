@@ -5,7 +5,7 @@
     "start": "node build/index.js",
     "build": "tsc &&  tsc-alias",
     "lint": "eslint . --ext .ts",
-    "dev": "tsc-watch --onSuccess \"concurrently 'tsc-alias -w' 'sleep 1.5 && node build/index.js' \""
+    "dev": "tsc-watch --onSuccess \"concurrently 'tsc-alias -w' 'node build/index.js'\""
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",

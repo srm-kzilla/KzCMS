@@ -1,15 +1,12 @@
 import db from '@/loaders/database';
+import { Collection, WithId } from 'mongodb';
 
-interface User {
-  name: string;
-  age: number;
-}
-
-export const handleGetUsers = async () => {
-  return await (await db()).collection('users').find({}).toArray();
+export const handleGetUsers = async (): Promise<WithId<Document>[]> => {
+  const collection: Collection<Document> = (await db()).collection('users');
+  return await collection.find({}).toArray();
 };
 
-export const handleUpdateUser = (): User => {
+export const handleUpdateUser = () => {
   return { name: 'john', age: 23 };
 };
 
