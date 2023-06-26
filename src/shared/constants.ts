@@ -8,4 +8,5 @@ export const STATUS_CODES = {
 
 export const MESSAGES_TEXT = {
   USERS: 'Users Fetched Successfully',
+  UPDATEUSER: 'User Updated Successfully',
 };

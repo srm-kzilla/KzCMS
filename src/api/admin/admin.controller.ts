@@ -26,9 +26,9 @@ export const updateUser = async (req: Request, res: Response, next: NextFunction
   try {
     const { email, password } = req.body;
     await handleUpdateUser(email, password);
-    res.status(200).json({
+    res.status(STATUS_CODES.OK).json({
       success: true,
-      message: 'User Updated Successfully',
+      message: MESSAGES_TEXT.UPDATEUSER,
     });
   } catch (error) {
     next(error);
