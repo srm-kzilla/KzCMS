@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import LoggerInstance from '@/loaders/logger';
 import { ERRORS } from '@/shared/errors';
-import { BaseProjectType, CreateProjectType } from '@/shared/types/project/project.schema';
+import { CreateProjectType, DeleteProjectType } from '@/shared/types/project/project.schema';
 import {
   handleCreateProject,
   handleDeleteProject,
@@ -81,10 +81,17 @@ export const updateProject = async (
   }
 };
 
-export const deleteProject = async (req: Request & string, res: Response, next: NextFunction): Promise<void> => {
+export const deleteProject = async (
+  req: Request & DeleteProjectType,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
   try {
-    const data = await handleDeleteProject(req.params.slug);
-    res.status(200).json(data);
+    await handleDeleteProject(req.params.slug);
+    res.status(200).json({
+      success: true,
+      message: `project \`${req.params.slug}\` deleted`,
+    });
   } catch (error) {
     next(error);
   }
