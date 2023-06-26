@@ -40,6 +40,13 @@ export async function handleUpdateUserProjects() {
 
 export async function handleGetUserDetails(id: string) {
   const oid = new ObjectId(id);
-  const user = await (await db()).collection('users').findOne({ _id: oid });
+  const user = await (await db()).collection('users').findOne(
+    { _id: oid },
+    {
+      projection: {
+        password: 0,
+      },
+    },
+  );
   return user;
 }
