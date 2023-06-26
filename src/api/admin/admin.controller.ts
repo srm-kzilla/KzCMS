@@ -9,6 +9,8 @@ import {
   handleVerifyUser,
 } from './admin.service';
 import { ObjectId } from 'mongodb';
+import { ERRORS } from '@/shared/errors';
+import { STATUS } from '@/shared/constants';
 
 export const getUsers = (req: Request, res: Response) => {
   const data = handleGetUsers();
@@ -72,15 +74,18 @@ export async function getUserDetails(
   },
   res: Response,
 ) {
-  const data = await handleGetUserDetails(req.params.userid);
+  const id = req.params.userid;
+  const data = await handleGetUserDetails(id);
   if (data) {
-    return res.status(200).json({
+    return res.status(STATUS.OK).json({
       success: true,
+      message: `user found with id ${id}`,
       data,
     });
   }
-  return res.status(200).json({
+  return res.status(ERRORS.RESOURCE_NOT_FOUND.code).json({
     success: false,
-    data,
+    errorMessage: ERRORS.RESOURCE_NOT_FOUND.message.error_description,
+    message: `user not found with id ${id}`,
   });
 }
