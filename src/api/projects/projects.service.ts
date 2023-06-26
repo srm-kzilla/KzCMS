@@ -1,80 +1,71 @@
-interface Project {
-  slug: string;
-  name: string;
-}
+import db from '@/loaders/database';
+import { ProjectDataType, CreateProjectType, UpdateProjectType } from '@/shared/types/project/project.schema';
+import { ObjectId } from 'mongodb';
+import slugify from 'slugify';
 
-interface ImageData {
-  slug: string;
-  title: string;
-  image: File;
-}
+export const handleCreateProject = async ({ projectName, typeName }: CreateProjectType): Promise<string> => {
+  if (!projectName || !typeName)
+    throw { statusCode: 400, success: false, message: 'Project name and type name both must be provided' };
+  const projectsCollection = (await db()).collection('projects');
+  const slug = slugify(`${projectName} ${typeName}`, { lower: true, replacement: '-', trim: true });
+  const project = await projectsCollection.findOne({ projectSlug: slug });
 
-interface UpdatedProjectData {
-  slug: string;
-  data: {
-    title: string;
-    description: string;
-    imageURL: string;
-    link: string;
-    author: string;
+  if (project) {
+    throw { success: false, message: `Project with slug '${slug}' already exists`, data: { projectName, typeName } };
+  }
+
+  await projectsCollection.insertOne({
+    projectSlug: slug,
+    projectName: `${projectName} | ${typeName}`,
+    data: [],
+  });
+
+  return slug;
+};
+
+export const handleUpdateProject = async ({ slug, data }: UpdateProjectType): Promise<ProjectDataType & any> => {
+  const projectsCollection = (await db()).collection('projects');
+  const project = await projectsCollection.findOne({ projectSlug: slug, 'data.title': data.title });
+  if (!project) {
+    throw { success: false, message: `Project with slug '${slug}' or title '${data.title}' not found`, data };
+  }
+  const filter = { _id: new ObjectId(project._id), 'data.title': data.title };
+
+  const update = {
+    $set: {
+      'data.$.title': data.title,
+      'data.$.description': data.description,
+      'data.$.link': data.link,
+      'data.$.author': data.author,
+    },
   };
-}
 
-interface ProjectData {
-  slug: string;
-  data: {
-    title: string;
-    description: string;
-    imageURL: string;
-    link: string;
-    author: string;
-  }[];
-}
+  const updatedProject = await projectsCollection.findOneAndUpdate(filter, update, {
+    returnDocument: 'after',
+    projection: { _id: 0 },
+  });
 
-export const handleGetAllProjects = async (): Promise<Project[]> => {
-  return [];
+  return { updatedProject: updatedProject.value };
+};
+export const handleGetAllProjects = async () => {};
+
+export const handleGetProject = async (slug: string) => {
+  return undefined;
 };
 
-export const handleGetProject = async (slug: string): Promise<ProjectData> => {
-  return { slug, data: [] };
+export const handleCreateProjects = async () => {
+  return undefined;
 };
 
-export const handleCreateProject = async (project: Project): Promise<Project> => {
-  return project;
-};
+export const handleDeleteProject = async (slug: string) => {
+  const result = await (await db())
+    .collection('projects')
+    .updateOne({ projectSlug: slug }, { $set: { isDeleted: true } });
 
-export const handleCreateProjects = async (): Promise<unknown[]> => {
-  return [];
-};
-
-export const handleUpdateProject = async (
-  slug: string,
-  data: {
-    title: string;
-    description: string;
-    imageURL: string;
-    link: string;
-    author: string;
-  },
-): Promise<UpdatedProjectData> => {
-  //update the project here
-  return { slug, data };
-};
-
-export const handleDeleteProject = async (slug: string): Promise<unknown> => {
-  //delete a specific project
-  return { success: true, message: `${slug} deleted` };
-};
-
-export const handlePostImage = async (data: {
-  slug: string;
-  title: string;
-  image: File;
-}): Promise<{ data: ImageData }> => {
-  // post an image
-  return { data };
-};
-
-export const handleDeleteImage = async (slug: string, title: string, imageUrl: string): Promise<unknown> => {
-  return { success: true, message: `${imageUrl} deleted from ${title} of project ${slug}` };
+  if (result.matchedCount !== 1 || result.modifiedCount !== 1) {
+    throw {
+      statusCode: 400,
+      message: 'Project deletion failed',
+    };
+  }
 };

@@ -1,9 +1,11 @@
 import cors from 'cors';
 import express from 'express';
 import helmet from 'helmet';
-import config from '../config';
-import routes from '../api';
+
+import routes from '@/api';
 import { rateLimit } from 'express-rate-limit';
+import config from '@/config';
+import { errorHandler } from '@/shared/middlewares/errorHandler';
 
 export default ({ app }: { app: express.Application }): void => {
   /**
@@ -46,6 +48,7 @@ export default ({ app }: { app: express.Application }): void => {
 
   app.use(limiter);
 
-  // Load API routes
   app.use(config.api.prefix, routes());
+
+  app.use(errorHandler);
 };

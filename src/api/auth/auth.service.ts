@@ -5,6 +5,11 @@ import { authParamType } from '@/shared/types/admin/admin.schema';
 import generateToken from '@/shared/middlewares/jwt';
 
 export async function handleAddNewUser(signup: userScemaType) {
+import { UserScemaType } from '@/shared/types/auth/auth.schema';
+import { AuthParamType } from '@/shared/types/admin/admin.schema';
+import generateToken from '@/shared/middlewares/jwt';
+
+export async function handleAddNewUser(signup: UserScemaType) {
   const data = await (await db()).collection('users').findOne({ email: signup.email });
   if (data) {
     throw { statusCode: 409, message: 'This email already exists', success: false };
@@ -22,6 +27,10 @@ export async function handleAddNewUser(signup: userScemaType) {
 }
 
 export async function handleExistingUser({ email, password }: authParamType): Promise<string> {
+  });
+}
+
+export async function handleExistingUser({ email, password }: AuthParamType): Promise<string> {
   const data = await (await db()).collection('users').findOne({ email: email });
 
   if (!data) {

@@ -1,5 +1,6 @@
 import db from '@/loaders/database';
 import { updateProjectSchemaType } from '@/shared/types/admin/admin.schema';
+
 interface User {
   name: string;
   age: number;
@@ -26,6 +27,9 @@ export const handleVerifyUser = async (email: string, verify: boolean): Promise<
   const success = await (await db()).collection('users').updateOne({ email }, { $set: { isVerified: verify } });
 
   if (!(success.modifiedCount == 1)) {
+  const result = await (await db()).collection('users').updateOne({ email }, { $set: { isVerified: verify } });
+
+  if (result.matchedCount !== 1 || result.modifiedCount !== 1) {
     throw {
       statusCode: 400,
       message: 'User verification failed',
