@@ -45,13 +45,6 @@ export const handleUpdateProject = async ({ slug, data }: UpdateProjectType): Pr
 
   return { updatedProject: updatedProject.value };
 };
-
-/**
- *
- * I HAVE REMOVED ALL TYPES OF INPUTS AND OUTPUTS FROM THE FUNCTIONS BELOW
- *
- */
-
 export const handleGetAllProjects = async () => {};
 
 export const handleGetProject = async (slug: string) => {
