@@ -1,6 +1,7 @@
 import db from '@/loaders/database';
 import { Collection, WithId } from 'mongodb';
 import bcrypt from 'bcrypt';
+import { ERRORS } from '@/shared/errors';
 
 export const handleGetUsers = async (): Promise<WithId<Document>[]> => {
   const collection: Collection<Document> = (await db()).collection('users');
@@ -10,7 +11,7 @@ export const handleGetUsers = async (): Promise<WithId<Document>[]> => {
 export const handleUpdateUser = async (email: string, password: string): Promise<void> => {
   const data = await (await db()).collection('users').findOne({ email: email });
   if (!data) {
-    throw { statusCode: 404, message: 'User Does Not Exsist' };
+    throw { statusCode: ERRORS.USER_NOT_FOUND.code, message: ERRORS.USER_NOT_FOUND.message };
   }
   const saltRounds = 10;
   const hash = await bcrypt.hash(password, saltRounds);
