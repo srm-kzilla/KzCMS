@@ -58,5 +58,14 @@ export const handleCreateProjects = async () => {
 };
 
 export const handleDeleteProject = async (slug: string) => {
-  return undefined;
+  const result = await (await db())
+    .collection('projects')
+    .updateOne({ projectSlug: slug }, { $set: { isDeleted: true } });
+
+  if (result.matchedCount !== 1 || result.modifiedCount !== 1) {
+    throw {
+      statusCode: 400,
+      message: 'Project deletion failed',
+    };
+  }
 };
