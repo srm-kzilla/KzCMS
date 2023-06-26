@@ -50,7 +50,10 @@ export async function handleGetUserDetails(id: string) {
     },
   );
   if (!user) {
-    throw `{status: ${ERRORS.RESOURCE_NOT_FOUND.code}, error_description: ${ERRORS.RESOURCE_NOT_FOUND.message.error_description}, message: User with id ${id} not found}`;
+    throw {
+      status: ERRORS.RESOURCE_NOT_FOUND.code,
+      message: `User with id ${id} not found`,
+    };
   }
   return user;
 }

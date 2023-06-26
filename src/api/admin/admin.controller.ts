@@ -8,8 +8,6 @@ import {
   handleUpdateUserProjects,
   handleVerifyUser,
 } from './admin.service';
-import { ObjectId } from 'mongodb';
-import { ERRORS } from '@/shared/errors';
 import { STATUS } from '@/shared/constants';
 
 export const getUsers = (req: Request, res: Response) => {
@@ -78,13 +76,11 @@ export async function getUserDetails(
   try {
     const id = req.params.userid;
     const data = await handleGetUserDetails(id);
-    if (data) {
-      return res.status(STATUS.OK).json({
-        success: true,
-        message: `user found with id ${id}`,
-        data,
-      });
-    }
+    return res.status(STATUS.OK).json({
+      success: true,
+      message: `user found with id ${id}`,
+      data,
+    });
   } catch (error) {
     next(error);
   }
