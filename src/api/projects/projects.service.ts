@@ -4,6 +4,8 @@ import { ObjectId } from 'mongodb';
 import slugify from 'slugify';
 
 export const handleCreateProject = async ({ projectName, typeName }: CreateProjectType): Promise<string> => {
+  if (!projectName || !typeName)
+    throw { statusCode: 400, success: false, message: 'Project name and type name both must be provided' };
   const projectsCollection = (await db()).collection('projects');
   const slug = slugify(`${projectName} ${typeName}`, { lower: true, replacement: '-', trim: true });
   const project = await projectsCollection.findOne({ projectSlug: slug });
