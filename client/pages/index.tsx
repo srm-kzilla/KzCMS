@@ -11,7 +11,7 @@ const NavbarOptions: NavbarPropsType = {
   options: [
     {
       title: 'All',
-      url: '/all',
+      url: '/',
     },
     {
       title: 'Main Website',
