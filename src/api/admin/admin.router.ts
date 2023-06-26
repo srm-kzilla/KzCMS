@@ -9,7 +9,7 @@ export default (): Router => {
   app.patch('/verify', validateRequest('body', VerifyUserSchema), verifyUser);
   app.patch('/:user', updateUserProjects);
   app.get('/', getUsers);
-  app.patch('/:user', updateUser);
+  app.patch('/user/update', updateUser);
   app.delete('/user', validateRequest('body', DeleteUserSchema), deleteUser);
 
   return app;

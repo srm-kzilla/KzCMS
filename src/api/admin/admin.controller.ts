@@ -20,12 +20,17 @@ export const getUsers = async (req: Request, res: Response, next: NextFunction) 
   }
 };
 
-export const updateUser = (req: Request, res: Response) => {
-  const data = handleUpdateUser();
-  res.status(200).json({
-    success: true,
-    message: 'User Updated Successfully',
-  });
+export const updateUser = (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { email, password } = req.body;
+    handleUpdateUser(email, password);
+    res.status(200).json({
+      success: true,
+      message: 'User Updated Successfully',
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
 export const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
