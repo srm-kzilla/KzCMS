@@ -2,7 +2,7 @@ import db from '@/loaders/database';
 import bcrypt from 'bcrypt';
 import { ERRORS } from '@/shared/errors';
 import { Collection, WithId, ObjectId } from 'mongodb';
-
+import { UpdateProjectSchemaType } from '@/shared/types/admin/admin.schema';
 
 interface User {
   name: string;
@@ -40,9 +40,43 @@ export const handleVerifyUser = async (email: string, verify: boolean): Promise<
   }
 };
 
-export async function handleUpdateUserProjects() {
-  return [{ name: 'Aditya', password: 'asdfghjkl123' }];
+export async function handleUpdateUserProjects(data: UpdateProjectSchemaType) {
+  const updated_project = await (await db())
+    .collection('projects')
+    .updateOne({ projectSlug: data.projectSlug }, { $set: { userAccess: data.new_user_access } });
+  if (!updated_project) {
+    throw { message: 'Project access could not be updated' };
+  }
+
+  const new_users = data.new_user_access;
+  const deleted_users = data.deleted_user_access;
+
+  for (let i = 0; i < new_users.length; i++) {
+    const user = await (await db()).collection('users').findOne({ email: new_users[i] });
+    if (user !== null) {
+      const user_projects = user.projects;
+      if (!user_projects.includes(data.projectSlug)) {
+        const success = await (await db())
+          .collection('users')
+          .updateOne({ email: new_users[i] }, { $push: { projects: data.projectSlug } });
+        if (!success) {
+          throw { message: 'User access could not be updated' };
+        }
+      }
+    }
+  }
+
+  for (let i = 0; i < deleted_users.length; i++) {
+    const success = await (await db())
+      .collection('users')
+      .updateOne({ email: deleted_users[i] }, { $pull: { projects: data.projectSlug } });
+    if (!success) {
+      throw { message: 'User access could not be updated' };
+    }
+  }
+  return new_users;
 }
+
 
 export async function handleGetUserProjects(id: string) {
   const oid = new ObjectId(id);

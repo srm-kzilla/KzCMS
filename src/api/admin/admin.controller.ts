@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from 'express';
-
 import {
   handleDeleteUser,
   handleGetUserProjects,
@@ -66,14 +65,19 @@ export const verifyUser = async (req: Request, res: Response, next: NextFunction
   }
 };
 
-export async function updateUserProjects(req: Request, res: Response) {
-  const data = await handleUpdateUserProjects();
-  if (data != null) {
+export async function updateUserProjects(req: Request, res: Response, next: NextFunction) {
+  try {
+    const data = await handleUpdateUserProjects(req.body);
     res.status(200).json({
-      data,
+      success: true,
+      message: 'User access updated successfully',
+      userAccess: data,
     });
+  } catch (error) {
+    next(error);  
   }
-}
+};
+
 
 export async function getUserProjects(
   req: Request & {
