@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 import LogoutCircleRLineIcon from 'remixicon-react/LogoutCircleRLineIcon';
 import MenuFoldLineIcon from 'remixicon-react/MenuFoldLineIcon';
 import MenuUnfoldLineIcon from 'remixicon-react/MenuUnfoldLineIcon';
+import UserFillIcon from 'remixicon-react/UserFillIcon';
 
 const Navbar = ({ navBarProps }: { navBarProps: NavbarPropsType }) => {
   const router = useRouter();
@@ -90,7 +91,7 @@ const Navbar = ({ navBarProps }: { navBarProps: NavbarPropsType }) => {
         <div className="w-full h-14 bg-[#2d2d2d] flex items-center justify-between gap-2 p-2">
           <div className="flex items-center gap-2">
             <div>
-              <Image className="rounded-full" width={40} height={40} src="/userIcon.jpg" alt="/" />
+              <UserFillIcon />
             </div>
             <div>
               <h1>CoolDude123</h1>
