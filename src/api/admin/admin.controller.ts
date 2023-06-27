@@ -11,7 +11,6 @@ import {
 } from './admin.service';
 import { MESSAGES_TEXT, STATUS } from '@/shared/constants';
 
-
 export const getUsers = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const data = await handleGetUsers();
@@ -100,19 +99,19 @@ export async function getUserDetails(
 
 export async function getUserProjects(
   req: Request & {
-      params: {
-        userid: string;
-      };
-    },
-    res: Response,
-    next: NextFunction,
-  ) {
-    try {
+    params: {
+      userid: string;
+    };
+  },
+  res: Response,
+  next: NextFunction,
+) {
+  try {
     const projects = await handleGetUserProjects(req.params.userid);
-      return res.status(STATUS.OK).json({
-        success: true,
-        projects,
-      });
+    return res.status(STATUS.OK).json({
+      success: true,
+      projects,
+    });
   } catch (error) {
     next(error);
   }

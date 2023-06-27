@@ -1,5 +1,13 @@
 import { Router } from 'express';
-import { deleteUser, getUserDetails, getUserProjects, getUsers, updateUser, updateUserProjects, verifyUser } from './admin.controller';
+import {
+  deleteUser,
+  getUserDetails,
+  getUserProjects,
+  getUsers,
+  updateUser,
+  updateUserProjects,
+  verifyUser,
+} from './admin.controller';
 import { validateRequest } from '@/shared/middlewares/validator';
 import { VerifyUserSchema, DeleteUserSchema, userDetailsSchema, AuthSchema } from '@/shared/types/admin/admin.schema';
 

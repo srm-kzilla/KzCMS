@@ -40,8 +40,8 @@ export default function authenticateToken({ verifyAdmin } = { verifyAdmin: false
     } catch (error) {
       LoggerInstance.error(error);
       res
-      .status(error.statusCode ?? ERRORS.SERVER_ERROR.code)
-      .json({ success: false, message: error.message ?? ERRORS.SERVER_ERROR.message });
+        .status(error.statusCode ?? ERRORS.SERVER_ERROR.code)
+        .json({ success: false, message: error.message ?? ERRORS.SERVER_ERROR.message });
     }
   };
 }

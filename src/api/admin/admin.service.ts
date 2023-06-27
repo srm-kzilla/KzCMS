@@ -8,7 +8,6 @@ interface User {
   age: number;
 }
 
-
 export const handleGetUsers = async (): Promise<WithId<Document>[]> => {
   const collection: Collection<Document> = (await db()).collection('users');
   return await collection.find({}, { projection: { password: 0 } }).toArray();
@@ -49,7 +48,6 @@ export async function handleGetUserProjects(id: string) {
     { _id: oid },
     {
       projection: {
-        password: 0,
         projects: 1,
       },
     },
@@ -62,7 +60,6 @@ export async function handleGetUserProjects(id: string) {
   }
   return user.projects;
 }
-
 
 export async function handleGetUserDetails(id: string) {
   const oid = new ObjectId(id);
