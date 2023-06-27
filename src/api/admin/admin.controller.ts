@@ -68,9 +68,9 @@ export const verifyUser = async (req: Request, res: Response, next: NextFunction
 export async function updateUserProjects(req: Request, res: Response, next: NextFunction) {
   try {
     const data = await handleUpdateUserProjects(req.body);
-    res.status(200).json({
+    res.status(STATUS.OK).json({
       success: true,
-      message: 'User access updated successfully',
+      message: MESSAGES_TEXT.UPDATE_USER,
       userAccess: data,
     });
   } catch (error) {

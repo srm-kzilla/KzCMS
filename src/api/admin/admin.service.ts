@@ -9,7 +9,6 @@ interface User {
   age: number;
 }
 
-
 export const handleGetUsers = async (): Promise<WithId<Document>[]> => {
   const collection: Collection<Document> = (await db()).collection('users');
   return await collection.find({}, { projection: { password: 0 } }).toArray();
@@ -45,7 +44,7 @@ export async function handleUpdateUserProjects(data: UpdateProjectSchemaType) {
     .collection('projects')
     .updateOne({ projectSlug: data.projectSlug }, { $set: { userAccess: data.new_user_access } });
   if (!updated_project) {
-    throw { message: 'Project access could not be updated' };
+    throw { statusCode: ERRORS.SERVER_ERROR.code, message: ERRORS.SERVER_ERROR.message };
   }
 
   const new_users = data.new_user_access;
@@ -60,7 +59,7 @@ export async function handleUpdateUserProjects(data: UpdateProjectSchemaType) {
           .collection('users')
           .updateOne({ email: new_users[i] }, { $push: { projects: data.projectSlug } });
         if (!success) {
-          throw { message: 'User access could not be updated' };
+          throw { statusCode: ERRORS.SERVER_ERROR.code, message: ERRORS.SERVER_ERROR.message };
         }
       }
     }
@@ -71,12 +70,11 @@ export async function handleUpdateUserProjects(data: UpdateProjectSchemaType) {
       .collection('users')
       .updateOne({ email: deleted_users[i] }, { $pull: { projects: data.projectSlug } });
     if (!success) {
-      throw { message: 'User access could not be updated' };
+      throw { statusCode: ERRORS.SERVER_ERROR.code, message: ERRORS.SERVER_ERROR.message};
     }
   }
   return new_users;
 }
-
 
 export async function handleGetUserProjects(id: string) {
   const oid = new ObjectId(id);
