@@ -2,12 +2,14 @@ import { NextFunction, Request, Response } from 'express';
 
 import {
   handleDeleteUser,
+  handleGetUserProjects,
   handleGetUsers,
   handleUpdateUser,
   handleUpdateUserProjects,
   handleVerifyUser,
 } from './admin.service';
 import { MESSAGES_TEXT, STATUS } from '@/shared/constants';
+
 
 export const getUsers = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -65,5 +67,25 @@ export async function updateUserProjects(req: Request, res: Response) {
     res.status(200).json({
       data,
     });
+  }
+}
+
+export async function getUserProjects(
+  req: Request & {
+    params: {
+      userid: string;
+    };
+  },
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const projects = await handleGetUserProjects(req.params.userid);
+    return res.status(STATUS.OK).json({
+      success: true,
+      projects,
+    });
+  } catch (error) {
+    next(error);
   }
 }
