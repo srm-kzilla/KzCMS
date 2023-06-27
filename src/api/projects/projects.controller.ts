@@ -34,8 +34,9 @@ export const getProject = async (
 ): Promise<void> => {
   try {
     const data = await handleGetProject(req.params.slug);
-    res.status(200).json({
+    res.status(STATUS.OK).json({
       success: true,
+      slug: req.params.slug,
       data,
     });
   } catch (error) {

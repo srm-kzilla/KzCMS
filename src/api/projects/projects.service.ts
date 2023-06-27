@@ -52,8 +52,11 @@ export const handleGetAllProjects = async () => {
   return projects as unknown as ProjectDataType[];
 };
 
-export const handleGetProject = async (slug: string) => {
-  return undefined;
+export const handleGetProject = async (projectSlug: string) => {
+  const projects = await (await db()).collection('projects').findOne({
+    projectSlug,
+  });
+  return projects as unknown as ProjectDataType;
 };
 
 export const handleCreateProjects = async () => {
