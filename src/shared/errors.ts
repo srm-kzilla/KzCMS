@@ -34,4 +34,11 @@ export const ERRORS = {
       error_description: 'Malformed body passed',
     },
   },
+  USER_NOT_FOUND: {
+    code: 404,
+    message: {
+      error: 'not found',
+      error_description: 'User Does Not Exsist',
+    },
+  },
 };

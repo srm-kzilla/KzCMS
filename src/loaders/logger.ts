@@ -1,5 +1,5 @@
 import winston from 'winston';
-import config from '../config';
+import config from '@/config';
 import { ConsoleTransportInstance } from 'winston/lib/winston/transports';
 
 const transports: ConsoleTransportInstance[] = [];
