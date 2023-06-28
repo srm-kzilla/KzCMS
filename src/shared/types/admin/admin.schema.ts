@@ -17,7 +17,6 @@ export const AuthGetSchema = z.object({
 export const DeleteUserSchema = z.object({
   email: z.string().email(),
 });
-
 export const userDetailsSchema = z.object({
   userid: z.string(),
 });
