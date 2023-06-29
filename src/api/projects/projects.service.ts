@@ -2,8 +2,6 @@ import db from '@/loaders/database';
 import { ProjectDataType, CreateProjectType, UpdateProjectType } from '@/shared/types/project/project.schema';
 import { ObjectId } from 'mongodb';
 import slugify from 'slugify';
-import { uploadImage } from '@/utility/s3';
-import LoggerInstance from '@/loaders/logger';
 
 export const handleCreateProject = async ({ projectName, typeName }: CreateProjectType): Promise<string> => {
   if (!projectName || !typeName)
@@ -78,12 +76,11 @@ export const handleDeleteProject = async (slug: string) => {
   }
 };
 
-export const handleCreateProjectData = async (slug: string, body: any, image: Express.Multer.File) => {
+export const handleCreateProjectData = async (slug: string, body: any, image?: Express.Multer.File) => {
   // TODO: Add proper types later
   // mongo
 
   // s3
-  const url = uploadImage(slug, body.title, image);
 
-  return url;
+  return 'Invoked handleCreateProjectData';
 };

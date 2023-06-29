@@ -10,8 +10,7 @@ import {
 import authenticateToken from '@/shared/middlewares/authentication';
 import { validateRequest } from '@/shared/middlewares/validator';
 import { DeleteProjectSchema } from '@/shared/types/project/project.schema';
-import multer from 'multer';
-const upload = multer({ dest: 'uploads/' });
+import { upload } from '@/shared/middlewares/s3';
 
 export default (): Router => {
   const app = Router();

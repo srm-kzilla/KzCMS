@@ -110,16 +110,18 @@ export const createProjectData = async (
         author?: string;
       };
     };
-    file: Express.Multer.File;
+    file: Express.MulterS3.File;
   },
   res: Response,
   next: NextFunction,
 ): Promise<void> => {
   try {
-    const url = await handleCreateProjectData(req.params.slug, req.body, req.file);
+    if (!req.file) {
+      throw { statusCode: ERRORS.MALFORMED_BODY.code, message: 'No Image provided' };
+    }
+    await handleCreateProjectData(req.params.slug, req.body);
     res.status(STATUS.OK).json({
-      success: true,
-      message: `image \`${url}\` created`,
+      message: `image \`${req.file.location}\` created`,
     });
   } catch (error) {
     next(error);
