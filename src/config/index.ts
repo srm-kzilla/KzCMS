@@ -8,8 +8,12 @@ const envSchema = z.object({
   PORT: z.string().regex(/^\d+$/).optional().default('5050'),
   MONGODB_URI: z.string().startsWith('mongodb+srv://').includes('mongodb.net'),
   JWT_SECRET: z.string(),
-  level: z.enum(['error', 'warn', 'info', 'http', 'verbose', 'debug', 'silly']).optional().default('silly'),
-  prefix: z.string().optional().default('/api'),
+  LEVEL: z.enum(['error', 'warn', 'info', 'http', 'verbose', 'debug', 'silly']).optional().default('silly'),
+  PREFIX: z.string().optional().default('/api'),
+  AWS_REGION: z.string().optional(),
+  AWS_CLIENT_KEY: z.string().optional().default('ap-south-1'),
+  AWS_CLIENT_SECRET: z.string(),
+  AWS_BUCKET_NAME: z.string(),
 });
 
 const parsedSchema = envSchema.parse(process.env);
@@ -23,11 +27,18 @@ export default {
 
   JWT_SECRET: parsedSchema.JWT_SECRET,
 
-  logs: {
-    level: parsedSchema.level,
+  LOGS: {
+    LEVEL: parsedSchema.LEVEL,
   },
 
-  api: {
-    prefix: parsedSchema.prefix,
+  API: {
+    PREFIX: parsedSchema.PREFIX,
+  },
+
+  AWS: {
+    region: parsedSchema.AWS_REGION,
+    clientKey: parsedSchema.AWS_CLIENT_KEY,
+    clientSecret: parsedSchema.AWS_CLIENT_SECRET,
+    bucketName: parsedSchema.AWS_BUCKET_NAME,
   },
 };

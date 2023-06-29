@@ -48,7 +48,7 @@ export default ({ app }: { app: express.Application }): void => {
 
   app.use(limiter);
 
-  app.use(config.api.prefix, routes());
+  app.use(config.API.PREFIX, routes());
 
   app.use(errorHandler);
 };
