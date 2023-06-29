@@ -18,10 +18,58 @@
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  background: linear-gradient(to bottom, transparent, rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
+}
+
+.object-down {
+  width: 400px;
+}
+
+.object-top {
+  width: 200px;
+  overflow: hidden;
+  position: relative;
+}
+
+.object-top img {
+  width: 200px;
+
+  position: absolute;
+  left: 15%;
+  top: 15%;
+  animation: fadeInFromTop 0.5s linear forwards, floating ease 4s;
+}
+
+@keyframes fadeInFromTop {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes floating {
+  0% {
+    transform: translate(0%, 0%) rotate(360deg);
+  }
+
+  25% {
+    transform: translate(5%, 15%) rotate(360deg);
+  }
+
+  50% {
+    transform: translate(10%, 5%) rotate(360deg);
+  }
+
+  75% {
+    transform: translate(0%, 15%) rotate(360deg);
+  }
+
+  100% {
+    transform: translate(0%, 0%) rotate(360deg);
+  }
 }
