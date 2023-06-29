@@ -14,7 +14,7 @@ const login = () => {
          
                
             </div>
-            <img src='http://mpr.swalekha.in/assets/images/login.png' className='w-full h-full sm:w-full lg:w-full  flex flex-col p-20 bg-cover object-cover
+            <img src='http://mpr.swalekha.in/assets/images/login.png' className='w-full mx-auto h-full md:w-38 lg:w-full  bg-cover object-cover
             '/>
         </div>
      
