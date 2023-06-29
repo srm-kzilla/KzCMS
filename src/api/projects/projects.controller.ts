@@ -1,13 +1,14 @@
 import { Request, Response, NextFunction } from 'express';
 import LoggerInstance from '@/loaders/logger';
 import { ERRORS } from '@/shared/errors';
-import { CreateProjectType, DeleteProjectType } from '@/shared/types/project/project.schema';
+import { CreateProjectType, DeleteProjectType, ImageType } from '@/shared/types/project/project.schema';
 import {
+  handleCreateProjectData,
   handleCreateProject,
   handleDeleteProject,
   handleGetAllProjects,
   handleGetProject,
-  handleUpdateProject,
+  handleUpdateProjectData,
 } from './projects.service';
 import { STATUS } from '@/shared/constants';
 
@@ -61,7 +62,7 @@ export const createProject = async (
   }
 };
 
-export const updateProject = async (
+export const updateProjectData = async (
   req: Request & {
     body: {
       title: string;
@@ -73,7 +74,7 @@ export const updateProject = async (
   res: Response,
 ): Promise<void> => {
   try {
-    const data = await handleUpdateProject({ slug: req.params.slug, data: req.body });
+    const data = await handleUpdateProjectData({ slug: req.params.slug, data: req.body });
     res.status(200).json(data);
   } catch (error) {
     LoggerInstance.error(`Error while updating Project: ${error}`);
@@ -93,6 +94,32 @@ export const deleteProject = async (
     res.status(STATUS.OK).json({
       success: true,
       message: `project \`${req.params.slug}\` deleted`,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const createProjectData = async (
+  req: Request & {
+    body: {
+      data: {
+        title: string;
+        description?: string;
+        link?: string;
+        author?: string;
+      };
+    };
+    file: Express.Multer.File;
+  },
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    const url = await handleCreateProjectData(req.params.slug, req.body, req.file);
+    res.status(STATUS.OK).json({
+      success: true,
+      message: `image \`${url}\` created`,
     });
   } catch (error) {
     next(error);
