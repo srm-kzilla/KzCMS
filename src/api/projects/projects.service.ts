@@ -23,10 +23,7 @@ export const handleCreateProject = async ({ projectName, typeName }: CreateProje
   return slug;
 };
 
-export const handleUpdateProjectData = async (
-  slug: string,
-  { data }: ProjectDataType,
-): Promise<ProjectDataType & any> => {
+export const handleUpdateProjectData = async (slug: string, data: ProjectDataType) => {
   const projectsCollection = (await db()).collection('projects');
   const project = await projectsCollection.findOne({ projectSlug: slug, 'data.title': data.title });
   if (!project) {
@@ -48,8 +45,9 @@ export const handleUpdateProjectData = async (
     projection: { _id: 0 },
   });
 
-  return { updatedProject: updatedProject.value };
+  return { updatedProject: updatedProject.value } as unknown as ProjectDataType;
 };
+
 export const handleGetAllProjects = async () => {
   const projects = await (await db()).collection('projects').find().toArray();
   return projects as unknown as ProjectDataType[];
@@ -79,32 +77,28 @@ export const handleDeleteProject = async (slug: string) => {
   }
 };
 
-export const handleCreateProjectData = async (slug: string, body: any, imageUrl: string) => {
-  // TODO: Add proper types later
-  try {
-    const project = await (await db()).collection('projects').findOne({ projectSlug: slug });
+export const handleCreateProjectData = async (slug: string, data: ProjectDataType, imageUrl: string) => {
+  const projectsCollection = (await db()).collection('projects');
+  const project = await projectsCollection.findOne({ projectSlug: slug });
 
-    if (!project) {
-      throw { message: 'Project not found' };
-    }
+  if (!project) {
+    throw { errorCode: 404, message: 'Project not found' };
+  }
 
-    await (await db()).collection('projects').updateOne(
-      {
-        slug,
-      },
-      {
-        $push: {
-          data: {
-            title: body.title,
-            description: body.description,
-            link: body.link,
-            imageUrl,
-            author: body.author,
-          },
+  await projectsCollection.updateOne(
+    {
+      projectSlug: slug,
+    },
+    {
+      $push: {
+        data: {
+          title: data.title,
+          description: data.description,
+          link: data.link,
+          imageUrl,
+          author: data.author,
         },
       },
-    );
-  } catch (error) {
-    throw { success: error.statusCode ?? 500, message: 'Project data creation failed', error };
-  }
+    },
+  );
 };

@@ -10,8 +10,8 @@ const envSchema = z.object({
   JWT_SECRET: z.string(),
   LEVEL: z.enum(['error', 'warn', 'info', 'http', 'verbose', 'debug', 'silly']).optional().default('silly'),
   PREFIX: z.string().optional().default('/api'),
-  AWS_REGION: z.string().optional(),
-  AWS_CLIENT_KEY: z.string().optional().default('ap-south-1'),
+  AWS_REGION: z.string().optional().default('ap-south-1'),
+  AWS_CLIENT_KEY: z.string(),
   AWS_CLIENT_SECRET: z.string(),
   AWS_BUCKET_NAME: z.string(),
 });

@@ -4,8 +4,6 @@ import multerS3 from 'multer-s3';
 import multer, { FileFilterCallback } from 'multer';
 import path from 'path';
 
-require('dotenv').config();
-
 export const s3Client = new S3Client({
   region: config.AWS.region,
   credentials: {
