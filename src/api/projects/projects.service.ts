@@ -1,5 +1,5 @@
 import db from '@/loaders/database';
-import { ProjectDataType, CreateProjectType, UpdateProjectType } from '@/shared/types/project/project.schema';
+import { ProjectDataType, CreateProjectType } from '@/shared/types/project/project.schema';
 import { ObjectId } from 'mongodb';
 import slugify from 'slugify';
 
@@ -23,7 +23,10 @@ export const handleCreateProject = async ({ projectName, typeName }: CreateProje
   return slug;
 };
 
-export const handleUpdateProjectData = async ({ slug, data }: UpdateProjectType): Promise<ProjectDataType & any> => {
+export const handleUpdateProjectData = async (
+  slug: string,
+  { data }: ProjectDataType,
+): Promise<ProjectDataType & any> => {
   const projectsCollection = (await db()).collection('projects');
   const project = await projectsCollection.findOne({ projectSlug: slug, 'data.title': data.title });
   if (!project) {
@@ -76,11 +79,32 @@ export const handleDeleteProject = async (slug: string) => {
   }
 };
 
-export const handleCreateProjectData = async (slug: string, body: any, image?: Express.Multer.File) => {
+export const handleCreateProjectData = async (slug: string, body: any, imageUrl: string) => {
   // TODO: Add proper types later
-  // mongo
+  try {
+    const project = await (await db()).collection('projects').findOne({ projectSlug: slug });
 
-  // s3
+    if (!project) {
+      throw { message: 'Project not found' };
+    }
 
-  return 'Invoked handleCreateProjectData';
+    await (await db()).collection('projects').updateOne(
+      {
+        slug,
+      },
+      {
+        $push: {
+          data: {
+            title: body.title,
+            description: body.description,
+            link: body.link,
+            imageUrl,
+            author: body.author,
+          },
+        },
+      },
+    );
+  } catch (error) {
+    throw { success: error.statusCode ?? 500, message: 'Project data creation failed', error };
+  }
 };

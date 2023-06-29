@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import LoggerInstance from '@/loaders/logger';
 import { ERRORS } from '@/shared/errors';
-import { CreateProjectType, DeleteProjectType, ImageType } from '@/shared/types/project/project.schema';
+import { CreateProjectType, DeleteProjectType, ProjectDataType } from '@/shared/types/project/project.schema';
 import {
   handleCreateProjectData,
   handleCreateProject,
@@ -64,17 +64,12 @@ export const createProject = async (
 
 export const updateProjectData = async (
   req: Request & {
-    body: {
-      title: string;
-      description?: string;
-      link?: string;
-      author?: string;
-    };
+    body: ProjectDataType;
   },
   res: Response,
 ): Promise<void> => {
   try {
-    const data = await handleUpdateProjectData({ slug: req.params.slug, data: req.body });
+    const data = await handleUpdateProjectData(req.params.slug, req.body);
     res.status(200).json(data);
   } catch (error) {
     LoggerInstance.error(`Error while updating Project: ${error}`);
@@ -102,14 +97,7 @@ export const deleteProject = async (
 
 export const createProjectData = async (
   req: Request & {
-    body: {
-      data: {
-        title: string;
-        description?: string;
-        link?: string;
-        author?: string;
-      };
-    };
+    body: ProjectDataType;
     file: Express.MulterS3.File;
   },
   res: Response,
@@ -119,7 +107,7 @@ export const createProjectData = async (
     if (!req.file) {
       throw { statusCode: ERRORS.MALFORMED_BODY.code, message: 'No Image provided' };
     }
-    await handleCreateProjectData(req.params.slug, req.body);
+    await handleCreateProjectData(req.params.slug, req.body, req.file.location);
     res.status(STATUS.OK).json({
       message: `image \`${req.file.location}\` created`,
     });
