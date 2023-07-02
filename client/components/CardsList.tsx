@@ -4,7 +4,7 @@ import CardsListPropsType from '@/types/CardsListProps';
 
 const CardList = ({ cardListProps }: { cardListProps: CardsListPropsType }) => {
   return (
-    <div className="pt-10 flex flex-wrap justify-around w-auto min-h-full">
+    <div className="pt-10 flex flex-wrap justify-evenly w-auto min-h-full">
       {cardListProps.cards.map((card, index) => {
         if (card.type == cardListProps.type || cardListProps.type == 'all') {
           return (
