@@ -41,4 +41,11 @@ export const ERRORS = {
       error_description: 'User Does Not Exsist',
     },
   },
+  RESOURCE_CONFLICT: {
+    code: 409,
+    message: {
+      error: 'Resource Conflict',
+      error_description: 'Resource already exsists',
+    },
+  },
 };

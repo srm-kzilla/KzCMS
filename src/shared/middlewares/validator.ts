@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { Request, Response, NextFunction } from 'express';
+import { ERRORS } from '../errors';
 
 type RequestLocation = 'query' | 'body' | 'params';
 
@@ -11,7 +12,7 @@ export function validateRequest(location: RequestLocation, schema: z.AnyZodObjec
       next();
     } catch (error) {
       const message = error;
-      return res.status(421).json({ error: message });
+      return res.status(ERRORS.MALFORMED_BODY.code).json({ error: ERRORS.MALFORMED_BODY, message });
     }
   };
 }

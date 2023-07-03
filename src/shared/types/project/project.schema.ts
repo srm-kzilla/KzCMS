@@ -25,22 +25,21 @@ export const ProjectSchema = z.object({
 });
 
 export const ProjectDataSchema = z.object({
-  data: z.object({
-    title: z.string(),
-    description: z.string().optional(),
-    link: z.string().url().optional(),
-    author: z.string().optional(),
-  }),
+  title: z.string(),
+  description: z.string().optional(),
+  image: z.any().optional(),
+  link: z.string().url().optional(),
+  author: z.string().optional(),
 });
 
-export const DeleteProjectSchema = z.object({
+export const ProjectSlugSchmea = z.object({
   slug: z.string(),
 });
 
 export type CreateProjectType = z.infer<typeof CreateProjectSchema>;
 export type BaseProjectType = z.infer<typeof BaseProjectSchema>;
 export type ProjectType = z.infer<typeof ProjectSchema>;
-export type ProjectDataType = z.infer<typeof ProjectDataSchema>['data'];
-export type DeleteProjectType = {
-  params: z.infer<typeof DeleteProjectSchema>;
+export type ProjectDataType = z.infer<typeof ProjectDataSchema>;
+export type ProjectSlugType = {
+  params: z.infer<typeof ProjectSlugSchmea>;
 };

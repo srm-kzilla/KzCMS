@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import LoggerInstance from '@/loaders/logger';
 import { ERRORS } from '@/shared/errors';
-import { CreateProjectType, DeleteProjectType, ProjectDataType } from '@/shared/types/project/project.schema';
+import { CreateProjectType, ProjectSlugType, ProjectDataType } from '@/shared/types/project/project.schema';
 import {
   handleCreateProjectData,
   handleCreateProject,
@@ -80,7 +80,7 @@ export const updateProjectData = async (
 };
 
 export const deleteProject = async (
-  req: Request & DeleteProjectType,
+  req: Request & ProjectSlugType,
   res: Response,
   next: NextFunction,
 ): Promise<void> => {
