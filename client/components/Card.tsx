@@ -1,10 +1,16 @@
 import React from 'react';
 import Link from 'next/link';
-import CardPropsType from '@/types/CardProps';
 import ExternalLinkFillIcon from 'remixicon-react/ExternalLinkFillIcon';
 import { useRouter } from 'next/router';
 
-const Card = ({ cardProps }: { cardProps: CardPropsType }) => {
+export interface CardPropsType {
+  title: string;
+  websiteUrl: string;
+  manageUrl: string;
+  type: string;
+}
+
+export const Card = ({ cardProps }: { cardProps: CardPropsType }) => {
   const router = useRouter();
 
   return (
