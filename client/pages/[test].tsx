@@ -4,10 +4,9 @@ import React from 'react';
 import ArrowLeftLineIcon from 'remixicon-react/ArrowLeftLineIcon';
 
 const NavbarOptions: NavbarPropsType = {
-  title: 'Test',
   options: [
     {
-      title: 'Go Back',
+      toolTip: 'Go Back',
       icon: ArrowLeftLineIcon,
       url: '/',
     },

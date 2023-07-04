@@ -1,10 +1,9 @@
 interface NavbarPropsType {
-    title: string;
     options: NavbarPropsOptionsType[];
 }
 
 interface NavbarPropsOptionsType {
-    title: string;
+    toolTip: string;
     icon: any;
     url: string;
 }

@@ -37,7 +37,7 @@ const Navbar = ({ navBarProps }: { navBarProps: NavbarPropsType }) => {
           setMobileNav(!mobileNav);
         }}
       >
-        <MenuUnfoldLineIcon size={30} />
+        <MenuUnfoldLineIcon size={35} />
       </div>
       <div
         className={
@@ -58,7 +58,7 @@ const Navbar = ({ navBarProps }: { navBarProps: NavbarPropsType }) => {
                   setMobileNav(!mobileNav);
                 }}
               >
-                <MenuFoldLineIcon size={30} />
+                <MenuFoldLineIcon size={35} />
               </div>
             </div>
             <div className="flex flex-col gap-5 p-4">
@@ -77,7 +77,18 @@ const Navbar = ({ navBarProps }: { navBarProps: NavbarPropsType }) => {
                           router.push(item.url);
                         }}
                       >
-                        <Icon size={35} />
+                        {isDesktop ? (
+                          <div className="tooltip">
+                            <div>
+                              <Icon size={35} />
+                            </div>
+                            <span className="tooltiptext font-bold">{item.toolTip}</span>
+                          </div>
+                        ) : (
+                          <div>
+                            <Icon size={35} />
+                          </div>
+                        )}
                       </div>
                     </div>
                   );

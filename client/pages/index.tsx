@@ -6,20 +6,19 @@ import CalendarEventLineIcon from 'remixicon-react/CalendarEventLineIcon';
 
 // Mock data
 const NavbarOptions: NavbarPropsType = {
-  title: 'Categories',
   options: [
     {
-      title: 'Home',
+      toolTip: 'Home',
       icon: Home4LineIcon,
       url: '/',
     },
     {
-      title: 'Events',
+      toolTip: 'Events',
       icon: CalendarEventLineIcon,
       url: '/events',
     },
     {
-      title: 'Products',
+      toolTip: 'Products',
       icon: ShoppingBag3LineIcon,
       url: '/products',
     },
