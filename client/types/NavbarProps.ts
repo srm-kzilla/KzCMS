@@ -5,6 +5,7 @@ interface NavbarPropsType {
 
 interface NavbarPropsOptionsType {
     title: string;
+    icon: any;
     url: string;
 }
 

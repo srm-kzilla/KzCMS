@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import LogoutCircleRLineIcon from 'remixicon-react/LogoutCircleRLineIcon';
 import MenuFoldLineIcon from 'remixicon-react/MenuFoldLineIcon';
 import MenuUnfoldLineIcon from 'remixicon-react/MenuUnfoldLineIcon';
-import UserFillIcon from 'remixicon-react/UserFillIcon';
+import kzillaIcon from '../public/srmkzilla-gradient-logo.svg';
 
 const Navbar = ({ navBarProps }: { navBarProps: NavbarPropsType }) => {
   const router = useRouter();
@@ -42,16 +42,16 @@ const Navbar = ({ navBarProps }: { navBarProps: NavbarPropsType }) => {
       <div
         className={
           isDesktop
-            ? 'w-72 h-screen flex flex-col justify-between bg-[#1f1f1f] font-raleway'
+            ? 'w-fit h-screen flex flex-col justify-between bg-cms-dark font-raleway shadow-xl shadow-black'
             : mobileNav
-            ? 'w-72 h-screen flex flex-col justify-between bg-[#1f1f1f] font-raleway'
+            ? 'w-fit h-screen flex flex-col justify-between bg-cms-dark font-raleway shadow-xl shadow-black'
             : 'hidden'
         }
       >
         <div>
           <div className="flex flex-col gap-2">
-            <div className="p-4 pt-6 border-gray-600 border-b-2 flex items-center justify-between gap-4">
-              <h1 className="font-extrabold tracking-wide text-4xl">KzCMS</h1>
+            <div className="p-4 pt-6 w-full h-full border-gray-600 border-b-2 flex flex-col items-center justify-between lg:justify-center gap-4">
+              <Image className="w-10" src={kzillaIcon} alt="SRMKZILLA" />
               <div
                 className="lg:hidden"
                 onClick={() => {
@@ -62,24 +62,22 @@ const Navbar = ({ navBarProps }: { navBarProps: NavbarPropsType }) => {
               </div>
             </div>
             <div className="flex flex-col gap-5 p-4">
-              <div>
-                <h1 className="text-3xl font-medium">{navBarProps.title}</h1>
-              </div>
               <div className="flex flex-col gap-2">
                 {navBarProps.options.map((item, key) => {
+                  const Icon = item.icon;
                   return (
                     <div key={key}>
                       <div
                         className={
                           router.pathname === item.url
-                            ? 'px-4 py-2 rounded-lg bg-white text-black cursor-pointer'
-                            : 'px-4 py-2 rounded-lg hover:bg-white hover:text-black duration-300 cursor-pointer'
+                            ? 'p-2 rounded-lg bg-white text-black cursor-pointer'
+                            : 'p-2 rounded-lg hover:bg-white hover:text-black duration-300 cursor-pointer'
                         }
                         onClick={() => {
                           router.push(item.url);
                         }}
                       >
-                        <h1 className="text-xl font-medium">{item.title}</h1>
+                        <Icon size={35} />
                       </div>
                     </div>
                   );
@@ -88,17 +86,9 @@ const Navbar = ({ navBarProps }: { navBarProps: NavbarPropsType }) => {
             </div>
           </div>
         </div>
-        <div className="w-full h-14 bg-[#2d2d2d] flex items-center justify-between gap-2 p-2">
-          <div className="flex items-center gap-2">
-            <div>
-              <UserFillIcon />
-            </div>
-            <div>
-              <h1>CoolDude123</h1>
-            </div>
-          </div>
+        <div className="w-full h-fit flex items-center justify-center gap-2 p-2 mb-4">
           <div className="cursor-pointer hover:text-red-500 duration-300">
-            <LogoutCircleRLineIcon />
+            <LogoutCircleRLineIcon size={35} />
           </div>
         </div>
       </div>
