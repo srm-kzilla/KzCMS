@@ -8,7 +8,7 @@ export default function Home() {
   const { category } = router.query;
 
   return (
-    <div className="w-full min-h-screen h-fit">
+    <div className="w-full min-h-screen h-fit bg-[#0D1117]">
       <CardList type={category as string} cardList={cardListMock} />
     </div>
   );
