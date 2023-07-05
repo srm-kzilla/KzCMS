@@ -7,7 +7,7 @@ import { ObjectId } from 'mongodb';
 import slugify from 'slugify';
 import fs from 'fs';
 
-export const s3Client = new S3Client({
+const s3Client = new S3Client({
   region: config.AWS.region,
   credentials: {
     accessKeyId: config.AWS.clientKey,
@@ -20,7 +20,6 @@ const s3BaseUrl = `https://${config.AWS.bucketName}.s3.${config.AWS.region}.amaz
 const removeFileAfterUse = (path: fs.PathLike) => {
   fs.unlink(path, err => {
     if (err) {
-      console.error('Failed to remove file:', err);
       throw { errorCode: ERRORS.RESOURCE_NOT_FOUND.code, message: ERRORS.RESOURCE_NOT_FOUND.message };
     }
   });
