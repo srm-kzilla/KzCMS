@@ -1,7 +1,21 @@
+import config from '@/config';
 import db from '@/loaders/database';
-import { ProjectDataType, CreateProjectType } from '@/shared/types/project/project.schema';
+import { ERRORS } from '@/shared/errors';
+import { CreateProjectType, ProjectDataType } from '@/shared/types/project/project.schema';
+import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { ObjectId } from 'mongodb';
 import slugify from 'slugify';
+import fs from 'fs';
+
+export const s3Client = new S3Client({
+  region: config.AWS.region,
+  credentials: {
+    accessKeyId: config.AWS.clientKey,
+    secretAccessKey: config.AWS.clientSecret,
+  },
+});
+
+const s3BaseUrl = `https://${config.AWS.bucketName}.s3.${config.AWS.region}.amazonaws.com`;
 
 export const handleCreateProject = async ({ projectName, typeName }: CreateProjectType): Promise<string> => {
   if (!projectName || !typeName)
@@ -77,13 +91,51 @@ export const handleDeleteProject = async (slug: string) => {
   }
 };
 
-export const handleCreateProjectData = async (slug: string, data: ProjectDataType, imageUrl: string) => {
+export const handleCreateProjectData = async (slug: string, data: ProjectDataType, file: Express.Multer.File) => {
   const projectsCollection = (await db()).collection('projects');
   const project = await projectsCollection.findOne({ projectSlug: slug });
 
   if (!project) {
-    throw { errorCode: 404, message: 'Project not found' };
+    throw { errorCode: ERRORS.RESOURCE_NOT_FOUND.code, message: ERRORS.RESOURCE_NOT_FOUND.message };
   }
+
+  const projects = await (await db()).collection('projects').findOne({
+    projectSlug: slug,
+    'data.title': data.title,
+  });
+
+  if (projects) {
+    throw {
+      errorCode: ERRORS.RESOURCE_CONFLICT.code,
+      message: ERRORS.RESOURCE_CONFLICT.message.error_description,
+    };
+  }
+
+  console.log(file.buffer, file.stream);
+  // ? Upload to S3
+  console.log(file);
+  const uploadResult = await s3Client.send(
+    new PutObjectCommand({
+      Bucket: config.AWS.bucketName,
+      Key: file.filename,
+      Body: fs.createReadStream(file.path),
+      ContentType: file.mimetype,
+      ACL: 'public-read',
+    }),
+  );
+
+  console.log('uploadResult', uploadResult);
+
+  if (!uploadResult) {
+    throw { errorCode: 500, message: 'Upload to S3 failed' };
+  }
+
+  fs.unlink(file.path, err => {
+    if (err) {
+      console.error('Failed to remove file:', err);
+      throw { errorCode: ERRORS.RESOURCE_NOT_FOUND.code, message: ERRORS.RESOURCE_NOT_FOUND.message };
+    }
+  });
 
   await projectsCollection.updateOne(
     {
@@ -95,7 +147,7 @@ export const handleCreateProjectData = async (slug: string, data: ProjectDataTyp
           title: data.title,
           description: data.description,
           link: data.link,
-          imageUrl,
+          imageUrl: `${s3BaseUrl}/${file.filename}`,
           author: data.author,
         },
       },

@@ -1,8 +1,7 @@
 import authenticateToken from '@/shared/middlewares/authentication';
-import checkDataConflicts from '@/shared/middlewares/mongo';
-import { upload } from '@/shared/middlewares/s3';
+import { upload } from '@/shared/middlewares/multer';
 import { validateRequest } from '@/shared/middlewares/validator';
-import { ProjectDataSchema, ProjectSlugSchmea } from '@/shared/types/project/project.schema';
+import { ProjectSlugSchmea } from '@/shared/types/project/project.schema';
 import { Router } from 'express';
 import {
   createProject,
@@ -26,9 +25,7 @@ export default (): Router => {
     '/:slug',
     authenticateToken(),
     validateRequest('params', ProjectSlugSchmea),
-    // TODO: Need to validate the body as well
     upload.single('image'),
-    checkDataConflicts(),
     createProjectData,
   );
 

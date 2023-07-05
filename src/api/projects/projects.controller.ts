@@ -98,7 +98,7 @@ export const deleteProject = async (
 export const createProjectData = async (
   req: Request & {
     body: ProjectDataType;
-    file: Express.MulterS3.File;
+    file: Express.Multer.File;
   },
   res: Response,
   next: NextFunction,
@@ -107,9 +107,10 @@ export const createProjectData = async (
     if (!req.file) {
       throw { statusCode: ERRORS.MALFORMED_BODY.code, message: 'No Image provided' };
     }
-    await handleCreateProjectData(req.params.slug, req.body, req.file.location);
+
+    await handleCreateProjectData(req.params.slug, req.body, req.file);
     res.status(STATUS.OK).json({
-      message: `image \`${req.file.location}\` created`,
+      message: `Data Created`,
     });
   } catch (error) {
     next(error);
