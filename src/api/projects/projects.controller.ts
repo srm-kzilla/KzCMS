@@ -110,6 +110,7 @@ export const createProjectData = async (
 
     await handleCreateProjectData(req.params.slug, req.body, req.file);
     res.status(STATUS.OK).json({
+      success: true,
       message: `Data Created`,
     });
   } catch (error) {

@@ -17,6 +17,15 @@ export const s3Client = new S3Client({
 
 const s3BaseUrl = `https://${config.AWS.bucketName}.s3.${config.AWS.region}.amazonaws.com`;
 
+const removeFileAfterUse = (path: fs.PathLike) => {
+  fs.unlink(path, err => {
+    if (err) {
+      console.error('Failed to remove file:', err);
+      throw { errorCode: ERRORS.RESOURCE_NOT_FOUND.code, message: ERRORS.RESOURCE_NOT_FOUND.message };
+    }
+  });
+};
+
 export const handleCreateProject = async ({ projectName, typeName }: CreateProjectType): Promise<string> => {
   if (!projectName || !typeName)
     throw { statusCode: 400, success: false, message: 'Project name and type name both must be provided' };
@@ -96,24 +105,18 @@ export const handleCreateProjectData = async (slug: string, data: ProjectDataTyp
   const project = await projectsCollection.findOne({ projectSlug: slug });
 
   if (!project) {
+    removeFileAfterUse(file.path);
     throw { errorCode: ERRORS.RESOURCE_NOT_FOUND.code, message: ERRORS.RESOURCE_NOT_FOUND.message };
   }
 
-  const projects = await (await db()).collection('projects').findOne({
-    projectSlug: slug,
-    'data.title': data.title,
-  });
-
-  if (projects) {
+  if (project.data.find((d: { title: string }) => d.title === data.title)) {
+    removeFileAfterUse(file.path);
     throw {
       errorCode: ERRORS.RESOURCE_CONFLICT.code,
       message: ERRORS.RESOURCE_CONFLICT.message.error_description,
     };
   }
 
-  console.log(file.buffer, file.stream);
-  // ? Upload to S3
-  console.log(file);
   const uploadResult = await s3Client.send(
     new PutObjectCommand({
       Bucket: config.AWS.bucketName,
@@ -123,19 +126,11 @@ export const handleCreateProjectData = async (slug: string, data: ProjectDataTyp
       ACL: 'public-read',
     }),
   );
-
-  console.log('uploadResult', uploadResult);
+  removeFileAfterUse(file.path);
 
   if (!uploadResult) {
     throw { errorCode: 500, message: 'Upload to S3 failed' };
   }
-
-  fs.unlink(file.path, err => {
-    if (err) {
-      console.error('Failed to remove file:', err);
-      throw { errorCode: ERRORS.RESOURCE_NOT_FOUND.code, message: ERRORS.RESOURCE_NOT_FOUND.message };
-    }
-  });
 
   await projectsCollection.updateOne(
     {
