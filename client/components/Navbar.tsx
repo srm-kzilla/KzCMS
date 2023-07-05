@@ -1,34 +1,17 @@
 import NavbarPropsType from '@/types/NavbarProps';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import LogoutCircleRLineIcon from 'remixicon-react/LogoutCircleRLineIcon';
 import MenuFoldLineIcon from 'remixicon-react/MenuFoldLineIcon';
 import MenuUnfoldLineIcon from 'remixicon-react/MenuUnfoldLineIcon';
 import kzillaIcon from '../public/srmkzilla-gradient-logo.svg';
+import useIsDesktop from '@/hooks/useIsDesktop';
 
 const Navbar = ({ navBarProps }: { navBarProps: NavbarPropsType }) => {
   const router = useRouter();
   const [mobileNav, setMobileNav] = useState<boolean>(false);
-  const [isDesktop, setDesktop] = useState(false);
-
-  useEffect(() => {
-    if (window.innerWidth > 1450) {
-      setDesktop(true);
-    } else {
-      setDesktop(false);
-    }
-
-    const updateMedia = () => {
-      if (window.innerWidth > 1450) {
-        setDesktop(true);
-      } else {
-        setDesktop(false);
-      }
-    };
-    window.addEventListener('resize', updateMedia);
-    return () => window.removeEventListener('resize', updateMedia);
-  }, []);
+  const [isDesktop] = useIsDesktop();
   return (
     <div>
       <div
@@ -44,16 +27,17 @@ const Navbar = ({ navBarProps }: { navBarProps: NavbarPropsType }) => {
           isDesktop
             ? 'w-fit h-screen flex flex-col justify-between bg-cms-dark font-raleway shadow-xl shadow-black'
             : mobileNav
-            ? 'w-fit h-screen flex flex-col justify-between bg-cms-dark font-raleway shadow-xl shadow-black'
-            : 'hidden'
+              ? 'w-fit h-screen flex flex-col justify-between bg-cms-dark font-raleway shadow-xl shadow-black'
+              : 'hidden'
         }
       >
         <div>
-          <div className="flex flex-col gap-2">
-            <div className="p-4 pt-6 w-full h-full border-gray-600 border-b-2 flex flex-col items-center justify-between lg:justify-center gap-4">
-              <Image className="w-10" src={kzillaIcon} alt="SRMKZILLA" />
+          <div className='flex flex-col gap-2'>
+            <div
+              className='p-4 pt-6 w-full h-full border-gray-600 border-b-2 flex flex-col items-center justify-between lg:justify-center gap-4'>
+              <Image className='w-10' src={kzillaIcon} alt='SRMKZILLA' />
               <div
-                className="lg:hidden"
+                className={isDesktop ? 'hidden' : mobileNav ? 'block' : 'hidden'}
                 onClick={() => {
                   setMobileNav(!mobileNav);
                 }}
@@ -61,8 +45,8 @@ const Navbar = ({ navBarProps }: { navBarProps: NavbarPropsType }) => {
                 <MenuFoldLineIcon size={35} />
               </div>
             </div>
-            <div className="flex flex-col gap-5 p-4">
-              <div className="flex flex-col gap-2">
+            <div className='flex flex-col gap-5 p-4'>
+              <div className='flex flex-col gap-2'>
                 {navBarProps.options.map((item, key) => {
                   const Icon = item.icon;
                   return (
@@ -78,11 +62,11 @@ const Navbar = ({ navBarProps }: { navBarProps: NavbarPropsType }) => {
                         }}
                       >
                         {isDesktop ? (
-                          <div className="tooltip">
+                          <div className='tooltip'>
                             <div>
                               <Icon size={35} />
                             </div>
-                            <span className="tooltiptext font-bold">{item.toolTip}</span>
+                            <span className='tooltiptext font-bold'>{item.toolTip}</span>
                           </div>
                         ) : (
                           <div>
@@ -97,8 +81,8 @@ const Navbar = ({ navBarProps }: { navBarProps: NavbarPropsType }) => {
             </div>
           </div>
         </div>
-        <div className="w-full h-fit flex items-center justify-center gap-2 p-2 mb-4">
-          <div className="cursor-pointer hover:text-red-500 duration-300">
+        <div className='w-full h-fit flex items-center justify-center gap-2 p-2 mb-4'>
+          <div className='cursor-pointer hover:text-red-500 duration-300'>
             <LogoutCircleRLineIcon size={35} />
           </div>
         </div>

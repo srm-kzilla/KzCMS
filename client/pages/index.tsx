@@ -27,7 +27,7 @@ const NavbarOptions: NavbarPropsType = {
 
 export default function Home() {
   return (
-    <div className="w-full min-h-screen h-fit">
+    <div className='w-full min-h-screen h-fit'>
       <Navbar navBarProps={NavbarOptions} />
     </div>
   );
