@@ -7,7 +7,7 @@ export interface CardPropsType {
   title: string;
   websiteUrl: string;
   manageUrl: string;
-  cardType: string;
+  cardType: "main" | "product" | "event" | "other";
 }
 
 export const Card = ({ title, websiteUrl, manageUrl, cardType }: CardPropsType) => {
@@ -22,11 +22,11 @@ export const Card = ({ title, websiteUrl, manageUrl, cardType }: CardPropsType) 
 
   return (
     <div
-      className="m-3 group/card flex flex-col w-auto h-60 p-12 rounded-xl bg-[#161B22] border-2 border-[#2C3239] relative overflow-hidden"
+      className="m-3 group/card flex flex-col w-auto md:w-96 h-60 p-12 rounded-xl bg-[#161B22] border-2 border-[#2C3239] relative overflow-hidden"
       onMouseMove={handleMouseMove}
     >
       <div className="top-0 left-0 w-full h-60 bg-[#161B22] group-hover/card:bg-opacity-25 rounded-xl backdrop-filter backdrop-blur-3xl overflow-hidden z-10 absolute"></div>
-      <Link href={websiteUrl} className="text-3xl font-bold flex gap-20 z-10">
+      <Link href={websiteUrl} className="text-3xl font-bold flex gap-28 z-10">
         {title}
         <ExternalLinkFillIcon />
       </Link>

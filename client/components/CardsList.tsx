@@ -7,7 +7,7 @@ export interface CardsListPropsType {
 }
 
 interface CardsListProps {
-  type: string;
+  type: "main" | "product" | "event" | "other" | "all";
   cardList: CardsListPropsType;
 }
 

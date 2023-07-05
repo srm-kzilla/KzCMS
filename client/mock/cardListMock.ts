@@ -12,7 +12,7 @@ export const cardListMock: CardsListPropsType = {
       title: 'Mozofest',
       websiteUrl: 'https://mozofest.srmkzilla.net/',
       manageUrl: '/mozofest',
-      cardType: 'project',
+      cardType: 'product',
     },
     {
       title: 'Mozofest',
