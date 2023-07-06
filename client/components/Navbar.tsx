@@ -1,4 +1,3 @@
-import NavbarPropsOptionsType from '@/types/types';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
@@ -6,6 +5,16 @@ import LogoutCircleRLineIcon from 'remixicon-react/LogoutCircleRLineIcon';
 import MenuFoldLineIcon from 'remixicon-react/MenuFoldLineIcon';
 import MenuUnfoldLineIcon from 'remixicon-react/MenuUnfoldLineIcon';
 import useIsDesktop from '@/hooks/useIsDesktop';
+
+interface NavbarPropsOptionsType {
+  options: NavbarOptionsType[];
+}
+
+interface NavbarOptionsType {
+  toolTip: string;
+  icon: any;
+  url: string;
+}
 
 const Navbar = ({ navBarProps }: { navBarProps: NavbarPropsOptionsType }) => {
   const router = useRouter();

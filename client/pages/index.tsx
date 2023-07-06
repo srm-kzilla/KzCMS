@@ -1,11 +1,10 @@
 import Navbar from '@/components/Navbar';
-import NavbarPropsOptionsType from '@/types/types';
 import ShoppingBag3LineIcon from 'remixicon-react/ShoppingBag3LineIcon';
 import Home4LineIcon from 'remixicon-react/Home4LineIcon';
 import CalendarEventLineIcon from 'remixicon-react/CalendarEventLineIcon';
 
-// Mock data
-const NavbarOptions: NavbarPropsOptionsType = {
+// Mock data for Navbar
+const NavbarOptions = {
   options: [
     {
       toolTip: 'Home',
