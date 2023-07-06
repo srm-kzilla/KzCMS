@@ -4,7 +4,7 @@ import { cardListMock } from '@/mock/cardListMock';
 
 export default function Home() {
   return (
-    <div className="w-full min-h-screen h-fit bg-[#0D1117]">
+    <div className="w-full min-h-screen h-fit bg-kzBlack">
       <CardList type="all" cardList={cardListMock} />
     </div>
   );
