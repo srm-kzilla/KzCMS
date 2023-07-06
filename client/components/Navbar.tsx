@@ -1,14 +1,13 @@
-import NavbarPropsType from '@/types/NavbarProps';
+import NavbarPropsOptionsType from '@/types/types';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import LogoutCircleRLineIcon from 'remixicon-react/LogoutCircleRLineIcon';
 import MenuFoldLineIcon from 'remixicon-react/MenuFoldLineIcon';
 import MenuUnfoldLineIcon from 'remixicon-react/MenuUnfoldLineIcon';
-import kzillaIcon from '../public/srmkzilla-gradient-logo.svg';
 import useIsDesktop from '@/hooks/useIsDesktop';
 
-const Navbar = ({ navBarProps }: { navBarProps: NavbarPropsType }) => {
+const Navbar = ({ navBarProps }: { navBarProps: NavbarPropsOptionsType }) => {
   const router = useRouter();
   const [mobileNav, setMobileNav] = useState<boolean>(false);
   const [isDesktop] = useIsDesktop();
@@ -35,7 +34,7 @@ const Navbar = ({ navBarProps }: { navBarProps: NavbarPropsType }) => {
           <div className='flex flex-col gap-2'>
             <div
               className='p-4 pt-6 w-full h-full border-gray-600 border-b-2 flex flex-col items-center justify-between lg:justify-center gap-4'>
-              <Image className='w-10' width={10} height={10} src={kzillaIcon}
+              <Image className='w-10' width={10} height={10} src='/srmkzilla-gradient-logo.svg'
                      alt='SRMKZILLA' />
               <div
                 className={isDesktop ? 'hidden' : mobileNav ? 'block' : 'hidden'}
@@ -83,7 +82,11 @@ const Navbar = ({ navBarProps }: { navBarProps: NavbarPropsType }) => {
           </div>
         </div>
         <div className='w-full h-fit flex items-center justify-center gap-2 p-2 mb-4'>
-          <div className='cursor-pointer hover:text-red-500 duration-300'>
+          <div className='cursor-pointer hover:text-red-500 duration-300' onClick={
+            () => {
+              //   TODO: Add logout functionality
+            }
+          }>
             <LogoutCircleRLineIcon size={35} />
           </div>
         </div>
