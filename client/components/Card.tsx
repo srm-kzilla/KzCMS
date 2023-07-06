@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import ExternalLinkFillIcon from 'remixicon-react/ExternalLinkFillIcon';
 import { useRouter } from 'next/router';
+import Button from './Button';
 
 export interface CardPropsType {
   title: string;
   websiteUrl: string;
   manageUrl: string;
-  cardType: "main" | "product" | "event" | "other";
+  cardType: 'main' | 'product' | 'event' | 'other';
 }
 
 export const Card = ({ title, websiteUrl, manageUrl, cardType }: CardPropsType) => {
@@ -20,6 +21,10 @@ export const Card = ({ title, websiteUrl, manageUrl, cardType }: CardPropsType) 
     setPosition({ x: e.clientX - cardRect.left, y: e.clientY - cardRect.top });
   };
 
+  const gotoRoute = () => {
+    router.push(manageUrl);
+  };
+
   return (
     <div
       className="m-3 group/card flex flex-col w-auto md:w-96 h-60 p-12 rounded-xl bg-[#161B22] border-2 border-[#2C3239] relative overflow-hidden"
@@ -30,19 +35,13 @@ export const Card = ({ title, websiteUrl, manageUrl, cardType }: CardPropsType) 
         {title}
         <ExternalLinkFillIcon />
       </Link>
-      <button
-        type="button"
-        className="text-[#C4D3E0] bg-gradient-to-tr from-[#5653FF] to-[#B10DFF] hover:bg-gradient-to-br font-medium p-5 mt-10 rounded-lg text-sm w-32 text-center z-10"
-        onClick={() => {
-          router.push(manageUrl);
-        }}
-      >
-        Manage
-      </button>
+      <Button buttonTitle="Manage" buttonAction={gotoRoute} />
       <div
         className="absolute opacity-40 bg-gradient-radial from-[#31b5d3] to-[#050709] rounded-full transform -translate-x-1/2 -translate-y-1/2 transition duration-300 ease-in-out"
         style={{ top: position.y, left: position.x, width: '30rem', height: '30rem' }}
-      ></div>
+      >
+        bB
+      </div>
     </div>
   );
 };
