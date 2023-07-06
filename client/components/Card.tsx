@@ -35,7 +35,7 @@ export const Card = ({ title, websiteUrl, manageUrl, cardType }: CardPropsType) 
         {title}
         <ExternalLinkFillIcon />
       </Link>
-      <Button buttonTitle="Manage" buttonAction={gotoRoute} />
+      <Button buttonTitle="Manage" onClick={gotoRoute} />
       <div
         className="absolute opacity-40 bg-gradient-radial from-[#31b5d3] to-[#050709] rounded-full transform -translate-x-1/2 -translate-y-1/2 transition duration-300 ease-in-out"
         style={{ top: position.y, left: position.x, width: '30rem', height: '30rem' }}
