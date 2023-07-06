@@ -3,30 +3,19 @@
 @tailwind utilities;
 
 body {
-  @apply bg-cms-dark;
-  color: white;
-  overflow: hidden;
+    @apply bg-cms-dark text-white truncate;
 }
 
-.tooltip {
-  position: relative;
-}
+@layer components {
+    .tooltip {
+        @apply relative;
+    }
 
-.tooltip .tooltiptext {
-  visibility: hidden;
-  width: 120px;
-  background-color: #fff;
-  color: #000;
-  text-align: center;
-  border-radius: 6px;
-  padding: 12px;
-  padding-top: 13px;
-  position: absolute;
-  z-index: 1;
-  top: -7px;
-  left: 50px;
-}
+    .tooltip .tooltiptext {
+        @apply absolute z-10 -top-[7px] left-[50px] bg-white text-black text-center rounded-md p-3 pt-4 invisible font-bold;
+    }
 
-.tooltip:hover .tooltiptext {
-  visibility: visible;
+    .tooltip:hover .tooltiptext {
+        @apply visible;
+    }
 }

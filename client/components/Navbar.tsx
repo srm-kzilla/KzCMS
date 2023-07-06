@@ -35,7 +35,8 @@ const Navbar = ({ navBarProps }: { navBarProps: NavbarPropsType }) => {
           <div className='flex flex-col gap-2'>
             <div
               className='p-4 pt-6 w-full h-full border-gray-600 border-b-2 flex flex-col items-center justify-between lg:justify-center gap-4'>
-              <Image className='w-10' src={kzillaIcon} alt='SRMKZILLA' />
+              <Image className='w-10' width={10} height={10} src={kzillaIcon}
+                     alt='SRMKZILLA' />
               <div
                 className={isDesktop ? 'hidden' : mobileNav ? 'block' : 'hidden'}
                 onClick={() => {
@@ -66,7 +67,7 @@ const Navbar = ({ navBarProps }: { navBarProps: NavbarPropsType }) => {
                             <div>
                               <Icon size={35} />
                             </div>
-                            <span className='tooltiptext font-bold'>{item.toolTip}</span>
+                            <span className='tooltiptext'>{item.toolTip}</span>
                           </div>
                         ) : (
                           <div>
