@@ -21,5 +21,13 @@ export const userDetailsSchema = z.object({
   userid: z.string(),
 });
 
+export const UpdateProjectSchema = z.object({
+  adminEmail: z.string().email(),
+  projectSlug: z.string(),
+  new_user_access: z.array(z.string()),
+  deleted_user_access: z.array(z.string()),
+});
+
 export type AuthParamType = z.infer<typeof AuthSchema>;
 export type AuthGetUserType = z.infer<typeof AuthGetSchema>;
+export type UpdateProjectSchemaType = z.infer<typeof UpdateProjectSchema>;

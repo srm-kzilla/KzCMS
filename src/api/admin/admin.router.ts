@@ -9,13 +9,13 @@ import {
   verifyUser,
 } from './admin.controller';
 import { validateRequest } from '@/shared/middlewares/validator';
-import { VerifyUserSchema, DeleteUserSchema, userDetailsSchema, AuthSchema } from '@/shared/types/admin/admin.schema';
+import { VerifyUserSchema, DeleteUserSchema, userDetailsSchema, AuthSchema, UpdateProjectSchema } from '@/shared/types/admin/admin.schema';
 
 export default (): Router => {
   const app = Router();
 
   app.patch('/verify', validateRequest('body', VerifyUserSchema), verifyUser);
-  app.patch('/:user', updateUserProjects);
+  app.patch('/update/user-projects', validateRequest('body', UpdateProjectSchema), updateUserProjects);
   app.get('/', getUsers);
   app.patch('/user/update', validateRequest('body', AuthSchema), updateUser);
   app.delete('/user', validateRequest('body', DeleteUserSchema), deleteUser);
