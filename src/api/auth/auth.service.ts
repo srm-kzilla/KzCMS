@@ -17,6 +17,7 @@ export async function handleAddNewUser(signup: UserScemaType) {
   await collection.insertOne({
     ...signup,
     password: hash,
+    projects: []
   });
 }
 
