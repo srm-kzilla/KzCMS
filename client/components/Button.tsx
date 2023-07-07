@@ -1,6 +1,6 @@
 import React from 'react';
 
-export interface ButtonPropsType extends React.BlockquoteHTMLAttributes<HTMLButtonElement> {
+export interface ButtonPropsType extends React.HTMLAttributes<HTMLButtonElement> {
   buttonTitle: string;
 }
 
