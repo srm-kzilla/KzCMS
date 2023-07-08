@@ -1,30 +1,55 @@
 import React from 'react';
-import Card from './Card';
-import { CardPropsType } from './Card';
+import { Card, CardPropsType } from './Card';
 
 export interface CardsListPropsType {
   cards: CardPropsType[];
 }
 
 interface CardsListProps {
-  type: "main" | "product" | "event" | "other" | "all";
+  type: 'main' | 'product' | 'event' | 'other' | null;
   cardList: CardsListPropsType;
 }
 
 const CardList = ({ type, cardList }: CardsListProps) => {
+  // console.log(cardList);
   return (
-    <div className="pt-10 flex flex-wrap justify-evenly w-auto min-h-full">
-      {cardList.cards.map((card, index) => {
-        if (card.cardType == type || type == 'all') {
-          return (
-            <div key={index}>
-              <Card title={card.title} websiteUrl={card.websiteUrl} manageUrl={card.manageUrl} cardType={card.cardType} />
+    <div className='pt-10 flex flex-wrap justify-evenly w-full min-h-full'>
+      {
+        type !== null ? (
+            <div>
+              {/*{cardList.cards.map((card, index) => {*/}
+              {/*  if (card.cardType === type) {*/}
+              {/*    return (*/}
+              {/*      <div key={index}>*/}
+
+              {/*      </div>*/}
+              {/*    );*/}
+              {/*  }*/}
+              {/*})}*/}
+              {/*<Card title={card.title} websiteUrl={card.websiteUrl} manageUrl={card.manageUrl}*/}
+              {/*      cardType={card.cardType} />*/}
+              {cardList.cards.filter((card) => card.cardType === type).map((card, index) => {
+                  console.log('Card:', card);
+                  return (
+                    <div key={index}>
+                      <Card title={card.title} websiteUrl={card.websiteUrl} manageUrl={card.manageUrl}
+                            cardType={card.cardType} />
+                    </div>
+                  );
+                },
+              )}
             </div>
-          );
-        }
-      })}
+          )
+          :
+          (
+            <div>
+              <h1>Loading...</h1>
+            </div>
+          )
+      }
     </div>
-  );
+  )
+    ;
 };
 
 export default CardList;

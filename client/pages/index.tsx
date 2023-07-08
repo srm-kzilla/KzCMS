@@ -14,12 +14,12 @@ const NavbarOptions = {
     {
       toolTip: 'Events',
       icon: CalendarEventLineIcon,
-      url: '/events',
+      url: '/event',
     },
     {
       toolTip: 'Products',
       icon: ShoppingBag3LineIcon,
-      url: '/products',
+      url: '/product',
     },
   ],
 };
