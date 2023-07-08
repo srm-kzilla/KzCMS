@@ -37,7 +37,7 @@ export default function Home() {
   };
 
   return (
-    <div className='w-full min-h-screen h-fit bg-cms-dark'>
+    <div className='w-full flex min-h-screen h-fit bg-cms-dark'>
       <Navbar navBarProps={NavbarOptions} />
       <CardList type={category ? category as 'main' | 'product' | 'event' | 'other' : null} cardList={cardListMock} />
     </div>

@@ -13,7 +13,7 @@ interface CardsListProps {
 const CardList = ({ type, cardList }: CardsListProps) => {
   // console.log(cardList);
   return (
-    <div className='pt-10 flex flex-wrap justify-evenly w-full min-h-full'>
+    <div className='pt-10 flex flex-wrap justify-evenly w-full h-fit'>
       {
         type !== null ? (
             <div>
