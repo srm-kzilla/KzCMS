@@ -6,47 +6,38 @@ export interface CardsListPropsType {
 }
 
 interface CardsListProps {
-  type: 'main' | 'product' | 'event' | 'other' | null;
+  type: 'all' | 'product' | 'event' | 'other';
   cardList: CardsListPropsType;
 }
 
 const CardList = ({ type, cardList }: CardsListProps) => {
-  // console.log(cardList);
+  console.log('Type', type);
   return (
     <div className='pt-10 flex flex-wrap justify-evenly w-full h-fit'>
-      {
-        type !== null ? (
-            <div>
-              {/*{cardList.cards.map((card, index) => {*/}
-              {/*  if (card.cardType === type) {*/}
-              {/*    return (*/}
-              {/*      <div key={index}>*/}
-
-              {/*      </div>*/}
-              {/*    );*/}
-              {/*  }*/}
-              {/*})}*/}
-              {/*<Card title={card.title} websiteUrl={card.websiteUrl} manageUrl={card.manageUrl}*/}
-              {/*      cardType={card.cardType} />*/}
-              {cardList.cards.filter((card) => card.cardType === type).map((card, index) => {
-                  console.log('Card:', card);
-                  return (
-                    <div key={index}>
-                      <Card title={card.title} websiteUrl={card.websiteUrl} manageUrl={card.manageUrl}
-                            cardType={card.cardType} />
-                    </div>
-                  );
-                },
-              )}
-            </div>
-          )
-          :
-          (
-            <div>
-              <h1>Loading...</h1>
-            </div>
-          )
-      }
+      <div>
+        {
+          type === 'all' ? (
+              cardList.cards.map((card, index) => {
+                console.log('Card:', card);
+                return (
+                  <div key={index}>
+                    <Card title={card.title} websiteUrl={card.websiteUrl} manageUrl={card.manageUrl}
+                          cardType={card.cardType} />
+                  </div>
+                );
+              })
+            ) :
+            cardList.cards.filter((card) => card.cardType === type).map((card, index) => {
+                console.log('Card:', card);
+                return (
+                  <div key={index}>
+                    <Card title={card.title} websiteUrl={card.websiteUrl} manageUrl={card.manageUrl}
+                          cardType={card.cardType} />
+                  </div>
+                );
+              },
+            )}
+      </div>
     </div>
   )
     ;

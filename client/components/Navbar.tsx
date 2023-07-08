@@ -21,7 +21,7 @@ const Navbar = ({ navBarProps }: { navBarProps: NavbarPropsOptionsType }) => {
   const [mobileNav, setMobileNav] = useState<boolean>(false);
   const [isDesktop] = useIsDesktop();
   return (
-    <div>
+    <div className="z-30">
       <div
         className={isDesktop ? 'hidden' : mobileNav ? 'hidden' : 'block absolute top-6 left-4'}
         onClick={() => {
@@ -33,9 +33,9 @@ const Navbar = ({ navBarProps }: { navBarProps: NavbarPropsOptionsType }) => {
       <div
         className={
           isDesktop
-            ? 'w-fit h-screen flex flex-col justify-between bg-cms-dark font-raleway shadow-xl shadow-black'
+            ? 'w-fit h-screen fixed top-0 left-0 flex flex-col justify-between bg-cms-dark font-raleway shadow-xl shadow-black'
             : mobileNav
-              ? 'w-fit h-screen flex flex-col justify-between bg-cms-dark font-raleway shadow-xl shadow-black'
+              ? 'w-fit h-screen fixed top-0 left-0 flex flex-col justify-between bg-cms-dark font-raleway shadow-xl shadow-black'
               : 'hidden'
         }
       >

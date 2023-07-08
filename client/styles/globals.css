@@ -3,7 +3,16 @@
 @tailwind utilities;
 
 body {
-    @apply bg-cms-dark text-white truncate;
+    @apply bg-cms-dark text-white overflow-x-hidden;
+}
+
+::-webkit-scrollbar {
+    @apply w-1.5 rounded-b-full;
+}
+
+::-webkit-scrollbar-thumb {
+    @apply bg-cms-grey m-0 rounded-full p-0;
+    box-sizing: border-box;
 }
 
 @layer components {

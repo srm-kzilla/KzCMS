@@ -8,7 +8,7 @@ export interface CardPropsType {
   title: string;
   websiteUrl: string;
   manageUrl: string;
-  cardType: 'main' | 'product' | 'event' | 'other';
+  cardType: 'all' | 'product' | 'event' | 'other';
 }
 
 export const Card = ({ title, websiteUrl, manageUrl, cardType }: CardPropsType) => {
