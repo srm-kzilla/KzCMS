@@ -1,29 +1,25 @@
 import { Router } from 'express';
-import {
-  getProjects,
-  getProject,
-  createProject,
-  createProjects,
-  updateProject,
-  deleteProject,
-  postImage,
-  deleteImage,
-} from './projects.controller';
+import { getProjects, getProject, createProject, updateProject, deleteProject } from './projects.controller';
+import authenticateToken from '@/shared/middlewares/authentication';
+import { validateRequest } from '@/shared/middlewares/validator';
+import { DeleteProjectSchema } from '@/shared/types/project/project.schema';
 
 export default (): Router => {
   const app = Router();
 
-  app.get('/', getProjects);
-  app.get('/:slug', getProject);
+  app.get('/', authenticateToken(), getProjects);
+  app.get('/:slug', authenticateToken(), getProject);
 
-  app.post('/', createProject);
-  app.post('/:slug', createProjects);
+  // TODO: NEED TO DO THIS IMAGES AFTER THE NEXT MEET
 
-  app.patch('/:slug', updateProject);
-  app.delete('/:slug', deleteProject);
-
-  app.post('/image', postImage);
-  app.delete('/image', deleteImage);
+  app.post('/', authenticateToken({ verifyAdmin: true }), createProject);
+  app.patch('/:slug', authenticateToken({ verifyAdmin: true }), updateProject);
+  app.delete(
+    '/:slug',
+    authenticateToken({ verifyAdmin: true }),
+    validateRequest('params', DeleteProjectSchema),
+    deleteProject,
+  );
 
   return app;
 };

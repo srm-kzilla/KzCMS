@@ -1,16 +1,27 @@
 import { Router } from 'express';
-import { deleteUser, getUsers, updateUser, updateUserProjects, verifyUser } from './admin.controller';
+import {
+  deleteUser,
+  getUserDetails,
+  getUserProjects,
+  getUsers,
+  updateUser,
+  updateUserProjects,
+  verifyUser,
+} from './admin.controller';
 import { validateRequest } from '@/shared/middlewares/validator';
-import { verifyUserSchema, deleteUserSchema } from '@/shared/types/admin/admin.schema';
+import { VerifyUserSchema, DeleteUserSchema, userDetailsSchema, AuthSchema, UpdateProjectSchema } from '@/shared/types/admin/admin.schema';
 
 export default (): Router => {
   const app = Router();
 
-  app.patch('/verify', validateRequest('body', verifyUserSchema), verifyUser);
-  app.patch('/:user', updateUserProjects);
+  app.patch('/verify', validateRequest('body', VerifyUserSchema), verifyUser);
+  app.patch('/update/user-projects', validateRequest('body', UpdateProjectSchema), updateUserProjects);
   app.get('/', getUsers);
-  app.patch('/:user', updateUser);
-  app.delete('/user', validateRequest('body', deleteUserSchema), deleteUser);
+  app.patch('/user/update', validateRequest('body', AuthSchema), updateUser);
+  app.delete('/user', validateRequest('body', DeleteUserSchema), deleteUser);
+
+  app.get('/user/:userid', validateRequest('params', userDetailsSchema), getUserDetails);
+  app.get('/user/:userid/projects', validateRequest('params', userDetailsSchema), getUserProjects);
 
   return app;
 };
