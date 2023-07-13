@@ -6,6 +6,7 @@ import Home4LineIcon from 'remixicon-react/Home4LineIcon';
 import CalendarEventLineIcon from 'remixicon-react/CalendarEventLineIcon';
 import ShoppingBag3LineIcon from 'remixicon-react/ShoppingBag3LineIcon';
 import { useEffect, useState } from 'react';
+import TitleBar from '@/components/TitleBar';
 
 export default function Home() {
   const router = useRouter();
@@ -26,20 +27,31 @@ export default function Home() {
       {
         toolTip: 'Events',
         icon: CalendarEventLineIcon,
-        url: '/event',
+        url: '/events',
       },
       {
         toolTip: 'Products',
         icon: ShoppingBag3LineIcon,
-        url: '/product',
+        url: '/products',
       },
     ],
   };
 
+  const capitalize = (text: string) => {
+    if (text) {
+      return text.charAt(0).toUpperCase() + text.slice(1);
+    }
+    return '';
+  };
+  console.log(category);
+
   return (
-    <div className='w-full flex min-h-screen h-fit bg-cms-dark'>
+    <div className="w-full flex min-h-screen h-fit bg-cms-dark">
       <Navbar navBarProps={NavbarOptions} />
-      <CardList type={category as 'all' | 'product' | 'event' | 'other'} cardList={cardListMock} />
+      <div className="md:pl-4">
+        <TitleBar title={capitalize(category as 'all' | 'products' | 'events' | 'others')} />
+        <CardList type={category as 'all' | 'products' | 'events' | 'others'} cardList={cardListMock} />
+      </div>
     </div>
   );
 }

@@ -8,7 +8,7 @@ export interface CardPropsType {
   title: string;
   websiteUrl: string;
   manageUrl: string;
-  cardType: 'all' | 'product' | 'event' | 'other';
+  cardType: 'all' | 'products' | 'events' | 'others';
 }
 
 export const Card = ({ title, websiteUrl, manageUrl, cardType }: CardPropsType) => {
@@ -27,7 +27,7 @@ export const Card = ({ title, websiteUrl, manageUrl, cardType }: CardPropsType) 
 
   return (
     <div
-      className="mt-7 md:m-7 group/card flex flex-col h-60 p-12 rounded-xl bg-[#161B22] border-2 border-[#2C3239] relative overflow-hidden"
+      className="mt-7 md:m-8 group/card flex flex-col h-60 p-12 rounded-xl bg-[#161B22] border-2 border-[#2C3239] relative overflow-hidden"
       onMouseMove={handleMouseMove}
     >
       <div className="top-0 left-0 w-full h-60 bg-[#161B22] group-hover/card:bg-opacity-25 rounded-xl backdrop-filter backdrop-blur-3xl overflow-hidden z-10 absolute"></div>

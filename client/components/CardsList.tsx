@@ -6,15 +6,15 @@ export interface CardsListPropsType {
 }
 
 interface CardsListProps {
-  type: 'all' | 'product' | 'event' | 'other';
+  type: 'all' | 'products' | 'events' | 'others';
   cardList: CardsListPropsType;
 }
 
 const CardList = ({ type, cardList }: CardsListProps) => {
   console.log('Type', type);
   return (
-    <div className="mt-20 md:m-20 flex">
-      <div className="pt-10 flex flex-wrap justify-around w-full h-fit">
+    <div className="mt-20 flex w-screen">
+      <div className="pt-10 md:pl-20 flex flex-wrap justify-around md:justify-start w-full h-fit">
         {type === 'all'
           ? cardList.cards.map((card, index) => {
               console.log('Card:', card);

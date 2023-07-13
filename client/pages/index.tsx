@@ -4,6 +4,7 @@ import Home4LineIcon from 'remixicon-react/Home4LineIcon';
 import CalendarEventLineIcon from 'remixicon-react/CalendarEventLineIcon';
 import CardList from '@/components/CardsList';
 import { cardListMock } from '@/mock/cardListMock';
+import TitleBar from '@/components/TitleBar';
 
 // Mock data for Navbar
 const NavbarOptions = {
@@ -16,21 +17,24 @@ const NavbarOptions = {
     {
       toolTip: 'Events',
       icon: CalendarEventLineIcon,
-      url: '/event',
+      url: '/events',
     },
     {
       toolTip: 'Products',
       icon: ShoppingBag3LineIcon,
-      url: '/product',
+      url: '/products',
     },
   ],
 };
 
 export default function Home() {
   return (
-    <div className='w-full flex min-h-screen h-fit'>
+    <div className="w-full flex min-h-screen h-fit">
       <Navbar navBarProps={NavbarOptions} />
-      <CardList type={'all'} cardList={cardListMock} />
+      <div className="md:pl-4">
+        <TitleBar title="Srmkzilla Cockpit" />
+        <CardList type={'all'} cardList={cardListMock} />
+      </div>
     </div>
   );
 }

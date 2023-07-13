@@ -23,7 +23,7 @@ const Navbar = ({ navBarProps }: { navBarProps: NavbarPropsOptionsType }) => {
   return (
     <div className="z-30">
       <div
-        className={isDesktop ? 'hidden' : mobileNav ? 'hidden' : 'block absolute top-6 left-4'}
+        className={isDesktop ? 'hidden' : mobileNav ? 'hidden' : 'absolute h-24 w-20 flex justify-center items-center'}
         onClick={() => {
           setMobileNav(!mobileNav);
         }}
@@ -35,16 +35,14 @@ const Navbar = ({ navBarProps }: { navBarProps: NavbarPropsOptionsType }) => {
           isDesktop
             ? 'w-fit h-screen fixed top-0 left-0 flex flex-col justify-between bg-cms-dark font-raleway shadow-xl shadow-black'
             : mobileNav
-              ? 'w-fit h-screen fixed top-0 left-0 flex flex-col justify-between bg-cms-dark font-raleway shadow-xl shadow-black'
-              : 'hidden'
+            ? 'w-fit h-screen fixed top-0 left-0 flex flex-col justify-between bg-cms-dark font-raleway shadow-xl shadow-black'
+            : 'hidden'
         }
       >
         <div>
-          <div className='flex flex-col gap-2'>
-            <div
-              className='p-4 pt-6 w-full h-full border-gray-600 border-b-2 flex flex-col items-center justify-between lg:justify-center gap-4'>
-              <Image className='w-10' width={10} height={10} src='/srmkzilla-gradient-logo.svg'
-                     alt='SRMKZILLA' />
+          <div className="flex flex-col gap-2">
+            <div className="p-4 pt-6 w-full h-full border-gray-600 border-b-2 flex flex-col items-center justify-between lg:justify-center gap-4">
+              <Image className="w-10" width={10} height={10} src="/srmkzilla-gradient-logo.svg" alt="SRMKZILLA" />
               <div
                 className={isDesktop ? 'hidden' : mobileNav ? 'block' : 'hidden'}
                 onClick={() => {
@@ -54,8 +52,8 @@ const Navbar = ({ navBarProps }: { navBarProps: NavbarPropsOptionsType }) => {
                 <MenuFoldLineIcon size={35} />
               </div>
             </div>
-            <div className='flex flex-col gap-5 p-4'>
-              <div className='flex flex-col gap-2'>
+            <div className="flex flex-col gap-5 p-4">
+              <div className="flex flex-col gap-2">
                 {navBarProps.options.map((item, key) => {
                   const Icon = item.icon;
                   return (
@@ -71,11 +69,11 @@ const Navbar = ({ navBarProps }: { navBarProps: NavbarPropsOptionsType }) => {
                         }}
                       >
                         {isDesktop ? (
-                          <div className='tooltip'>
+                          <div className="tooltip">
                             <div>
                               <Icon size={35} />
                             </div>
-                            <span className='tooltiptext'>{item.toolTip}</span>
+                            <span className="tooltiptext">{item.toolTip}</span>
                           </div>
                         ) : (
                           <div>
@@ -90,12 +88,13 @@ const Navbar = ({ navBarProps }: { navBarProps: NavbarPropsOptionsType }) => {
             </div>
           </div>
         </div>
-        <div className='w-full h-fit flex items-center justify-center gap-2 p-2 mb-4'>
-          <div className='cursor-pointer hover:text-red-500 duration-300' onClick={
-            () => {
+        <div className="w-full h-fit flex items-center justify-center gap-2 p-2 mb-4">
+          <div
+            className="cursor-pointer hover:text-red-500 duration-300"
+            onClick={() => {
               //   TODO: Add logout functionality
-            }
-          }>
+            }}
+          >
             <LogoutCircleRLineIcon size={35} />
           </div>
         </div>
