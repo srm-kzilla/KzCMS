@@ -106,7 +106,7 @@ export const deleteProjectData = async (req: Request, res: Response, next: NextF
 
     res.status(STATUS.OK).json({
       success: true,
-      message: `project \`${req.params.slug}\` deleted`,
+      message: `project \`${req.params.slug}\` - \`${req.body.title}\` Data deleted`,
     });
   } catch (error) {
     next(error);

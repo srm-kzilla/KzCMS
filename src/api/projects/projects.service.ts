@@ -1,6 +1,8 @@
+import config from '@/config';
 import db from '@/loaders/database';
 import { ProjectDataType, CreateProjectType, UpdateProjectType } from '@/shared/types/project/project.schema';
 import { ObjectId } from 'mongodb';
+import { S3Client, DeleteObjectCommand } from '@aws-sdk/client-s3';
 import slugify from 'slugify';
 
 export const handleCreateProject = async ({ projectName, typeName }: CreateProjectType): Promise<string> => {
@@ -78,11 +80,23 @@ export const handleDeleteProject = async (slug: string) => {
 
 export const handleDeleteProjectData = async (slug: string, title: string) => {
   try {
-    const result = await (await db())
+    const result = await (
+      await db()
+    )
       .collection('projects')
-      .findOneAndUpdate({ projectSlug: slug }, { $unset: { data: { title: title } } });
+      // @ts-ignore
+      .findOneAndUpdate({ projectSlug: slug }, { $pull: { data: { title: title } } }, { returnOriginal: false });
 
-    console.log(result.value?.data[title]);
+    const link = result.value?.data.find((item: any) => item.title === title)?.link;
+    const regex = /https:\/\/kzilla-fun-bucket\.s3\.ap-south-1\.amazonaws\.com\/(.*)/;
+
+    const res = await s3Client.send(
+      new DeleteObjectCommand({
+        Bucket: config.AWS.AWS_BUCKET_NAME,
+        Key: link.match(regex)[1],
+      }),
+    );
+    console.log(res);
   } catch (error) {
     throw {
       statusCode: 400,
