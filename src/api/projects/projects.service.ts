@@ -75,3 +75,18 @@ export const handleDeleteProject = async (slug: string) => {
     };
   }
 };
+
+export const handleDeleteProjectData = async (slug: string, title: string) => {
+  try {
+    const result = await (await db())
+      .collection('projects')
+      .findOneAndUpdate({ projectSlug: slug }, { $unset: { data: { title: title } } });
+
+    console.log(result.value?.data[title]);
+  } catch (error) {
+    throw {
+      statusCode: 400,
+      message: 'Project data deletion failed',
+    };
+  }
+};
