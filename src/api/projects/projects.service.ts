@@ -40,6 +40,7 @@ export const handleCreateProject = async ({ projectName, typeName }: CreateProje
     projectSlug: slug,
     projectName: `${projectName} | ${typeName}`,
     data: [],
+    userAccess: [],
   });
 
   return slug;
