@@ -18,9 +18,8 @@ export default (): Router => {
   app.get('/', authenticateToken(), getProjects);
   app.get('/:slug', authenticateToken(), getProject);
 
+  app.patch('/:slug', authenticateToken(), updateProjectData);
   app.post('/', authenticateToken({ verifyAdmin: true }), createProject);
-  app.patch('/:slug', authenticateToken({ verifyAdmin: true }), updateProjectData);
-
   app.post(
     '/:slug',
     authenticateToken(),
