@@ -4,6 +4,8 @@ import { ProjectDataType, CreateProjectType, UpdateProjectType } from '@/shared/
 import { ObjectId } from 'mongodb';
 import { S3Client, DeleteObjectCommand } from '@aws-sdk/client-s3';
 import slugify from 'slugify';
+import { ERRORS } from '@/shared/errors';
+import { LINK_REGEX_PATTERN } from '@/shared/constants';
 
 export const handleCreateProject = async ({ projectName, typeName }: CreateProjectType): Promise<string> => {
   if (!projectName || !typeName)
@@ -87,20 +89,41 @@ export const handleDeleteProjectData = async (slug: string, title: string) => {
       // @ts-ignore
       .findOneAndUpdate({ projectSlug: slug }, { $pull: { data: { title: title } } }, { returnOriginal: false });
 
-    const link = result.value?.data.find((item: any) => item.title === title)?.link;
-    const regex = /https:\/\/kzilla-fun-bucket\.s3\.ap-south-1\.amazonaws\.com\/(.*)/;
+    if (!result.value) {
+      throw {
+        statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
+        message: ERRORS.RESOURCE_NOT_FOUND.message,
+      };
+    }
 
-    const res = await s3Client.send(
+    const link = result.value.data.find((item: any) => item.title === title);
+
+    if (!link.imageUrl) {
+      throw {
+        statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
+        message: ERRORS.RESOURCE_NOT_FOUND.message,
+      };
+    }
+
+    const KEY = link.imageUrl.match(LINK_REGEX_PATTERN);
+
+    if (!KEY) {
+      throw {
+        statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
+        message: ERRORS.RESOURCE_NOT_FOUND.message,
+      };
+    }
+
+    await s3Client.send(
       new DeleteObjectCommand({
-        Bucket: config.AWS.AWS_BUCKET_NAME,
-        Key: link.match(regex)[1],
+        Bucket: config.AWS.bucketName,
+        Key: KEY[0],
       }),
     );
-    console.log(res);
   } catch (error) {
     throw {
-      statusCode: 400,
-      message: 'Project data deletion failed',
+      statusCode: ERRORS.SERVER_ERROR.code,
+      message: error,
     };
   }
 };
