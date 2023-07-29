@@ -106,7 +106,6 @@ export const handleDeleteProjectData = async (slug: string, title: string) => {
     }
 
     const KEY = link.imageUrl.match(LINK_REGEX_PATTERN);
-
     if (!KEY) {
       throw {
         statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
@@ -117,13 +116,13 @@ export const handleDeleteProjectData = async (slug: string, title: string) => {
     await s3Client.send(
       new DeleteObjectCommand({
         Bucket: config.AWS.bucketName,
-        Key: KEY[0],
+        Key: KEY[1],
       }),
     );
   } catch (error) {
     throw {
       statusCode: ERRORS.SERVER_ERROR.code,
-      message: error,
+      message: ERRORS.SERVER_ERROR.message,
     };
   }
 };
