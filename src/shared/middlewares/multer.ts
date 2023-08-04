@@ -1,5 +1,6 @@
 import multer, { FileFilterCallback } from 'multer';
 import path from 'path';
+import { ERRORS } from '../errors';
 
 export const upload = multer({
   limits: { fileSize: 10000000 },
@@ -10,9 +11,13 @@ export const upload = multer({
     destination: function (_, __, cb) {
       cb(null, './tmp/uploads');
     },
-    filename: function (req, file, cb) {
+    filename: function (req, _file, cb) {
       const uniqueSuffix = Date.now() + '-' + Math.round(Math.random());
-      cb(null, `${req.params.slug}-${uniqueSuffix}${path.extname(file.originalname).toLowerCase()}`);
+      if (!req.params.slug) {
+        cb(new Error('No Slug found'), `NoSlugFound-${uniqueSuffix}`);
+      }
+      const fileName = `${req.params.slug.toLowerCase()}-${uniqueSuffix.toLowerCase()}`;
+      cb(null, fileName);
     },
   }),
 });
