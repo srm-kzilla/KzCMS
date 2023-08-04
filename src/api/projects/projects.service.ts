@@ -6,6 +6,7 @@ import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { ObjectId } from 'mongodb';
 import slugify from 'slugify';
 import fs from 'fs';
+import { promisify } from 'util';
 
 const s3Client = new S3Client({
   region: config.AWS.region,
@@ -15,14 +16,18 @@ const s3Client = new S3Client({
   },
 });
 
-const s3BaseUrl = `https://${config.AWS.bucketName}.s3.${config.AWS.region}.amazonaws.com`;
+const S3_BASE_URL = `https://${config.AWS.bucketName}.s3.${config.AWS.region}.amazonaws.com`;
 
-const removeFileAfterUse = (path: fs.PathLike) => {
-  fs.unlink(path, err => {
-    if (err) {
-      throw { errorCode: ERRORS.RESOURCE_NOT_FOUND.code, message: ERRORS.RESOURCE_NOT_FOUND.message };
-    }
-  });
+const removeFileAfterUse = async (path: fs.PathLike) => {
+  try {
+    const unlinkFile = promisify(fs.unlink);
+    await unlinkFile(path);
+  } catch {
+    throw {
+      statusCode: ERRORS.SERVER_ERROR.code,
+      message: `${ERRORS.SERVER_ERROR.message} | File Unlink Error`,
+    };
+  }
 };
 
 export const handleCreateProject = async ({ projectName, typeName }: CreateProjectType): Promise<string> => {
@@ -142,7 +147,7 @@ export const handleCreateProjectData = async (slug: string, data: ProjectDataTyp
           title: data.title,
           description: data.description,
           link: data.link,
-          imageUrl: `${s3BaseUrl}/${file.filename}`,
+          imageUrl: `${S3_BASE_URL}/${file.filename}`,
           author: data.author,
         },
       },
