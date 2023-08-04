@@ -2,7 +2,7 @@ import config from '@/config';
 import db from '@/loaders/database';
 import { LINK_REGEX_PATTERN } from '@/shared/constants';
 import { ERRORS } from '@/shared/errors';
-import { CreateProjectType, ProjectDataType } from '@/shared/types/project/project.schema';
+import { CreateProjectType, ProjectDataType, BaseProjectType } from '@/shared/types/project/project.schema';
 import { DeleteObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import fs from 'fs';
 import { ObjectId } from 'mongodb';
@@ -75,6 +75,23 @@ export const handleUpdateProjectData = async (slug: string, data: ProjectDataTyp
   });
 
   return { updatedProject: updatedProject.value } as unknown as ProjectDataType;
+};
+
+export const handleUpdateProjectSlug = async ({ name, slug }: BaseProjectType): Promise<ProjectDataType & any> => {
+  const projectsCollection = (await db()).collection('projects');
+  const project = await projectsCollection.findOne({ projectName: name });
+  if (!project) {
+    throw { success: false, message: `Project with name '${name}' not found` };
+  }
+  const filter = { _id: new ObjectId(project._id), projectName: name };
+  const update = {
+    $set: {
+      projectSlug: slug,
+    },
+  };
+
+  const updatedProjectSlug = await projectsCollection.findOneAndUpdate(filter, update);
+  return { updatedProjectSlug: updatedProjectSlug.value };
 };
 
 export const handleGetAllProjects = async () => {
