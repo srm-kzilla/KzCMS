@@ -1,5 +1,12 @@
 import { Router } from 'express';
-import { getProjects, getProject, createProject, updateProject, deleteProject } from './projects.controller';
+import {
+  getProjects,
+  getProject,
+  createProject,
+  updateProject,
+  deleteProject,
+  deleteProjectData,
+} from './projects.controller';
 import authenticateToken from '@/shared/middlewares/authentication';
 import { validateRequest } from '@/shared/middlewares/validator';
 import { DeleteProjectSchema } from '@/shared/types/project/project.schema';
@@ -20,6 +27,6 @@ export default (): Router => {
     validateRequest('params', DeleteProjectSchema),
     deleteProject,
   );
-
+  app.delete('/image/:slug', authenticateToken(), validateRequest('params', DeleteProjectSchema), deleteProjectData);
   return app;
 };

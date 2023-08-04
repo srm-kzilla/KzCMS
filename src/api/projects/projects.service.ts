@@ -1,7 +1,11 @@
+import config from '@/config';
 import db from '@/loaders/database';
 import { ProjectDataType, CreateProjectType, UpdateProjectType } from '@/shared/types/project/project.schema';
 import { ObjectId } from 'mongodb';
+import { S3Client, DeleteObjectCommand } from '@aws-sdk/client-s3';
 import slugify from 'slugify';
+import { ERRORS } from '@/shared/errors';
+import { LINK_REGEX_PATTERN } from '@/shared/constants';
 
 export const handleCreateProject = async ({ projectName, typeName }: CreateProjectType): Promise<string> => {
   if (!projectName || !typeName)
@@ -74,4 +78,45 @@ export const handleDeleteProject = async (slug: string) => {
       message: 'Project deletion failed',
     };
   }
+};
+
+export const handleDeleteProjectData = async (slug: string, title: string) => {
+  const result = await (
+    await db()
+  )
+    .collection('projects')
+    // @ts-ignore
+    .findOneAndUpdate({ projectSlug: slug }, { $pull: { data: { title: title } } }, { returnOriginal: false });
+
+  if (!result.value || !result.value.data) {
+    throw {
+      statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
+      message: ERRORS.RESOURCE_NOT_FOUND.message,
+    };
+  }
+
+  const data = result.value.data.find((item: any) => item.title === title);
+
+  if (!data || !data.imageUrl) {
+    throw {
+      statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
+      message: ERRORS.RESOURCE_NOT_FOUND.message,
+    };
+  }
+
+  const KEY = data.imageUrl.match(LINK_REGEX_PATTERN);
+
+  if (!KEY) {
+    throw {
+      statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
+      message: ERRORS.RESOURCE_NOT_FOUND.message,
+    };
+  }
+
+  await s3Client.send(
+    new DeleteObjectCommand({
+      Bucket: config.AWS.bucketName,
+      Key: KEY[1],
+    }),
+  );
 };

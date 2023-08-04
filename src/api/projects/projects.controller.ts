@@ -8,6 +8,7 @@ import {
   handleGetAllProjects,
   handleGetProject,
   handleUpdateProject,
+  handleDeleteProjectData,
 } from './projects.service';
 import { STATUS } from '@/shared/constants';
 
@@ -93,6 +94,19 @@ export const deleteProject = async (
     res.status(STATUS.OK).json({
       success: true,
       message: `project \`${req.params.slug}\` deleted`,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const deleteProjectData = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    await handleDeleteProjectData(req.params.slug, req.body.title);
+
+    res.status(STATUS.OK).json({
+      success: true,
+      message: `project \`${req.params.slug}\` - \`${req.body.title}\` Data deleted`,
     });
   } catch (error) {
     next(error);
