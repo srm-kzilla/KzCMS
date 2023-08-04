@@ -1,11 +1,35 @@
 import config from '@/config';
 import db from '@/loaders/database';
-import { ProjectDataType, CreateProjectType, UpdateProjectType } from '@/shared/types/project/project.schema';
-import { ObjectId } from 'mongodb';
-// import { S3Client, DeleteObjectCommand } from '@aws-sdk/client-s3';
-import slugify from 'slugify';
-import { ERRORS } from '@/shared/errors';
 import { LINK_REGEX_PATTERN } from '@/shared/constants';
+import { ERRORS } from '@/shared/errors';
+import { CreateProjectType, ProjectDataType } from '@/shared/types/project/project.schema';
+import { DeleteObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import fs from 'fs';
+import { ObjectId } from 'mongodb';
+import slugify from 'slugify';
+import { promisify } from 'util';
+
+const s3Client = new S3Client({
+  region: config.AWS.region,
+  credentials: {
+    accessKeyId: config.AWS.clientKey,
+    secretAccessKey: config.AWS.clientSecret,
+  },
+});
+
+const S3_BASE_URL = `https://${config.AWS.bucketName}.s3.${config.AWS.region}.amazonaws.com`;
+
+const removeFileAfterUse = async (path: fs.PathLike) => {
+  try {
+    const unlinkFile = promisify(fs.unlink);
+    await unlinkFile(path);
+  } catch {
+    throw {
+      statusCode: ERRORS.SERVER_ERROR.code,
+      message: `${ERRORS.SERVER_ERROR.message} | File Unlink Error`,
+    };
+  }
+};
 
 export const handleCreateProject = async ({ projectName, typeName }: CreateProjectType): Promise<string> => {
   if (!projectName || !typeName)
@@ -22,12 +46,13 @@ export const handleCreateProject = async ({ projectName, typeName }: CreateProje
     projectSlug: slug,
     projectName: `${projectName} | ${typeName}`,
     data: [],
+    userAccess: [],
   });
 
   return slug;
 };
 
-export const handleUpdateProject = async ({ slug, data }: UpdateProjectType): Promise<ProjectDataType & any> => {
+export const handleUpdateProjectData = async (slug: string, data: ProjectDataType) => {
   const projectsCollection = (await db()).collection('projects');
   const project = await projectsCollection.findOne({ projectSlug: slug, 'data.title': data.title });
   if (!project) {
@@ -49,8 +74,9 @@ export const handleUpdateProject = async ({ slug, data }: UpdateProjectType): Pr
     projection: { _id: 0 },
   });
 
-  return { updatedProject: updatedProject.value };
+  return { updatedProject: updatedProject.value } as unknown as ProjectDataType;
 };
+
 export const handleGetAllProjects = async () => {
   const projects = await (await db()).collection('projects').find().toArray();
   return projects as unknown as ProjectDataType[];
@@ -61,10 +87,6 @@ export const handleGetProject = async (projectSlug: string) => {
     projectSlug,
   });
   return projects as unknown as ProjectDataType;
-};
-
-export const handleCreateProjects = async () => {
-  return undefined;
 };
 
 export const handleDeleteProject = async (slug: string) => {
@@ -78,6 +100,56 @@ export const handleDeleteProject = async (slug: string) => {
       message: 'Project deletion failed',
     };
   }
+};
+
+export const handleCreateProjectData = async (slug: string, data: ProjectDataType, file: Express.Multer.File) => {
+  const projectsCollection = (await db()).collection('projects');
+  const project = await projectsCollection.findOne({ projectSlug: slug });
+
+  if (!project) {
+    removeFileAfterUse(file.path);
+    throw { errorCode: ERRORS.RESOURCE_NOT_FOUND.code, message: ERRORS.RESOURCE_NOT_FOUND.message };
+  }
+
+  if (project.data.find((d: { title: string }) => d.title === data.title)) {
+    removeFileAfterUse(file.path);
+    throw {
+      errorCode: ERRORS.RESOURCE_CONFLICT.code,
+      message: ERRORS.RESOURCE_CONFLICT.message.error_description,
+    };
+  }
+
+  const uploadResult = await s3Client.send(
+    new PutObjectCommand({
+      Bucket: config.AWS.bucketName,
+      Key: file.filename,
+      Body: fs.createReadStream(file.path),
+      ContentType: file.mimetype,
+      ACL: 'public-read',
+    }),
+  );
+  removeFileAfterUse(file.path);
+
+  if (!uploadResult) {
+    throw { errorCode: 500, message: 'Upload to S3 failed' };
+  }
+
+  await projectsCollection.updateOne(
+    {
+      projectSlug: slug,
+    },
+    {
+      $push: {
+        data: {
+          title: data.title,
+          description: data.description,
+          link: data.link,
+          imageUrl: `${S3_BASE_URL}/${file.filename}`,
+          author: data.author,
+        },
+      },
+    },
+  );
 };
 
 export const handleDeleteProjectData = async (slug: string, title: string) => {

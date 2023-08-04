@@ -1,13 +1,14 @@
 import { Request, Response, NextFunction } from 'express';
 import LoggerInstance from '@/loaders/logger';
 import { ERRORS } from '@/shared/errors';
-import { CreateProjectType, DeleteProjectType } from '@/shared/types/project/project.schema';
+import { CreateProjectType, ProjectSlugType, ProjectDataType } from '@/shared/types/project/project.schema';
 import {
+  handleCreateProjectData,
   handleCreateProject,
   handleDeleteProject,
   handleGetAllProjects,
   handleGetProject,
-  handleUpdateProject,
+  handleUpdateProjectData,
   handleDeleteProjectData,
 } from './projects.service';
 import { STATUS } from '@/shared/constants';
@@ -62,19 +63,14 @@ export const createProject = async (
   }
 };
 
-export const updateProject = async (
+export const updateProjectData = async (
   req: Request & {
-    body: {
-      title: string;
-      description?: string;
-      link?: string;
-      author?: string;
-    };
+    body: ProjectDataType;
   },
   res: Response,
 ): Promise<void> => {
   try {
-    const data = await handleUpdateProject({ slug: req.params.slug, data: req.body });
+    const data = await handleUpdateProjectData(req.params.slug, req.body);
     res.status(200).json(data);
   } catch (error) {
     LoggerInstance.error(`Error while updating Project: ${error}`);
@@ -85,7 +81,7 @@ export const updateProject = async (
 };
 
 export const deleteProject = async (
-  req: Request & DeleteProjectType,
+  req: Request & ProjectSlugType,
   res: Response,
   next: NextFunction,
 ): Promise<void> => {
@@ -94,6 +90,29 @@ export const deleteProject = async (
     res.status(STATUS.OK).json({
       success: true,
       message: `project \`${req.params.slug}\` deleted`,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const createProjectData = async (
+  req: Request & {
+    body: ProjectDataType;
+    file: Express.Multer.File;
+  },
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    if (!req.file) {
+      throw { statusCode: ERRORS.MALFORMED_BODY.code, message: 'No Image provided' };
+    }
+
+    await handleCreateProjectData(req.params.slug, req.body, req.file);
+    res.status(STATUS.OK).json({
+      success: true,
+      message: `Data Created`,
     });
   } catch (error) {
     next(error);

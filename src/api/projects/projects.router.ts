@@ -1,15 +1,17 @@
 import { Router } from 'express';
 import {
-  getProjects,
-  getProject,
   createProject,
-  updateProject,
+  createProjectData,
   deleteProject,
   deleteProjectData,
+  getProject,
+  getProjects,
+  updateProjectData,
 } from './projects.controller';
 import authenticateToken from '@/shared/middlewares/authentication';
+import { upload } from '@/shared/middlewares/multer';
 import { validateRequest } from '@/shared/middlewares/validator';
-import { DeleteProjectSchema } from '@/shared/types/project/project.schema';
+import { ProjectSlugSchmea } from '@/shared/types/project/project.schema';
 
 export default (): Router => {
   const app = Router();
@@ -17,16 +19,24 @@ export default (): Router => {
   app.get('/', authenticateToken(), getProjects);
   app.get('/:slug', authenticateToken(), getProject);
 
-  // TODO: NEED TO DO THIS IMAGES AFTER THE NEXT MEET
-
+  app.patch('/:slug', authenticateToken(), updateProjectData);
   app.post('/', authenticateToken({ verifyAdmin: true }), createProject);
-  app.patch('/:slug', authenticateToken({ verifyAdmin: true }), updateProject);
+  app.post(
+    '/:slug',
+    authenticateToken(),
+    validateRequest('params', ProjectSlugSchmea),
+    upload.single('image'),
+    createProjectData,
+  );
+
   app.delete(
     '/:slug',
     authenticateToken({ verifyAdmin: true }),
-    validateRequest('params', DeleteProjectSchema),
+    validateRequest('params', ProjectSlugSchmea),
     deleteProject,
   );
-  app.delete('/image/:slug', authenticateToken(), validateRequest('params', DeleteProjectSchema), deleteProjectData);
+
+  app.delete('/image/:slug', authenticateToken(), validateRequest('params', ProjectSlugSchmea), deleteProjectData);
+
   return app;
 };

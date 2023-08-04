@@ -10,45 +10,36 @@ export const BaseProjectSchema = z.object({
   name: z.string(),
 });
 
-export const ImageSchema = z.object({
-  slug: z.string(),
-  title: z.string(),
-  image: z.string(),
-});
-
-export const ProjectDataSchema = z.object({
+export const ProjectSchema = z.object({
   slug: z.string(),
   userAccess: z.array(z.string()),
   data: z.array(
     z.object({
       title: z.string(),
-      description: z.string(),
+      description: z.string().optional(),
       imageURL: z.string().url(),
-      link: z.string().url(),
-      author: z.string(),
+      link: z.string().url().optional(),
+      author: z.string().optional(),
     }),
   ),
 });
 
-export const UpdateProjectDataSchema = z.object({
-  slug: z.string(),
-  data: z.object({
-    title: z.string(),
-    description: z.string(),
-    link: z.string().url(),
-    author: z.string(),
-  }),
+export const ProjectDataSchema = z.object({
+  title: z.string(),
+  description: z.string().optional(),
+  image: z.any().optional(),
+  link: z.string().url().optional(),
+  author: z.string().optional(),
 });
 
-export const DeleteProjectSchema = z.object({
+export const ProjectSlugSchmea = z.object({
   slug: z.string(),
 });
 
 export type CreateProjectType = z.infer<typeof CreateProjectSchema>;
 export type BaseProjectType = z.infer<typeof BaseProjectSchema>;
-export type ImageType = z.infer<typeof ImageSchema>;
-export type UpdateProjectType = z.infer<typeof UpdateProjectDataSchema>;
+export type ProjectType = z.infer<typeof ProjectSchema>;
 export type ProjectDataType = z.infer<typeof ProjectDataSchema>;
-export type DeleteProjectType = {
-  params: z.infer<typeof DeleteProjectSchema>;
+export type ProjectSlugType = {
+  params: z.infer<typeof ProjectSlugSchmea>;
 };
