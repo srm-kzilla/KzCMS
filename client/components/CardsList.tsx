@@ -17,7 +17,6 @@ const CardList = ({ type, cardList }: CardsListProps) => {
       <div className="pt-10 md:pl-20 flex flex-wrap justify-around md:justify-start w-full h-fit">
         {type === 'all'
           ? cardList.cards.map((card, index) => {
-              console.log('Card:', card);
               return (
                 <div key={index}>
                   <Card
