@@ -81,48 +81,42 @@ export const handleDeleteProject = async (slug: string) => {
 };
 
 export const handleDeleteProjectData = async (slug: string, title: string) => {
-  try {
-    const result = await (
-      await db()
-    )
-      .collection('projects')
-      // @ts-ignore
-      .findOneAndUpdate({ projectSlug: slug }, { $pull: { data: { title: title } } }, { returnOriginal: false });
+  const result = await (
+    await db()
+  )
+    .collection('projects')
+    // @ts-ignore
+    .findOneAndUpdate({ projectSlug: slug }, { $pull: { data: { title: title } } }, { returnOriginal: false });
 
-    if (!result.value) {
-      throw {
-        statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
-        message: ERRORS.RESOURCE_NOT_FOUND.message,
-      };
-    }
-
-    const link = result.value.data.find((item: any) => item.title === title);
-
-    if (!link.imageUrl) {
-      throw {
-        statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
-        message: ERRORS.RESOURCE_NOT_FOUND.message,
-      };
-    }
-
-    const KEY = link.imageUrl.match(LINK_REGEX_PATTERN);
-    if (!KEY) {
-      throw {
-        statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
-        message: ERRORS.RESOURCE_NOT_FOUND.message,
-      };
-    }
-
-    await s3Client.send(
-      new DeleteObjectCommand({
-        Bucket: config.AWS.bucketName,
-        Key: KEY[1],
-      }),
-    );
-  } catch (error) {
+  if (!result.value || !result.value.data) {
     throw {
-      statusCode: ERRORS.SERVER_ERROR.code,
-      message: ERRORS.SERVER_ERROR.message,
+      statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
+      message: ERRORS.RESOURCE_NOT_FOUND.message,
     };
   }
+
+  const data = result.value.data.find((item: any) => item.title === title);
+
+  if (!data || !data.imageUrl) {
+    throw {
+      statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
+      message: ERRORS.RESOURCE_NOT_FOUND.message,
+    };
+  }
+
+  const KEY = data.imageUrl.match(LINK_REGEX_PATTERN);
+
+  if (!KEY) {
+    throw {
+      statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
+      message: ERRORS.RESOURCE_NOT_FOUND.message,
+    };
+  }
+
+  await s3Client.send(
+    new DeleteObjectCommand({
+      Bucket: config.AWS.bucketName,
+      Key: KEY[1],
+    }),
+  );
 };
