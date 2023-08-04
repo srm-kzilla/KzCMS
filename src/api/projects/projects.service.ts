@@ -2,7 +2,7 @@ import config from '@/config';
 import db from '@/loaders/database';
 import { ProjectDataType, CreateProjectType, UpdateProjectType } from '@/shared/types/project/project.schema';
 import { ObjectId } from 'mongodb';
-import { S3Client, DeleteObjectCommand } from '@aws-sdk/client-s3';
+// import { S3Client, DeleteObjectCommand } from '@aws-sdk/client-s3';
 import slugify from 'slugify';
 import { ERRORS } from '@/shared/errors';
 import { LINK_REGEX_PATTERN } from '@/shared/constants';
@@ -113,10 +113,10 @@ export const handleDeleteProjectData = async (slug: string, title: string) => {
     };
   }
 
-  await s3Client.send(
-    new DeleteObjectCommand({
-      Bucket: config.AWS.bucketName,
-      Key: KEY[1],
-    }),
-  );
+  // await s3Client.send(
+  //   new DeleteObjectCommand({
+  //     Bucket: config.AWS.bucketName,
+  //     Key: KEY[1],
+  //   }),
+  // );
 };
