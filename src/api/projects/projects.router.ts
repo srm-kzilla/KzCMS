@@ -1,9 +1,9 @@
-
 import { Router } from 'express';
 import {
   createProject,
   createProjectData,
   deleteProject,
+  deleteProjectData,
   getProject,
   getProjects,
   updateProjectData,
@@ -12,15 +12,6 @@ import authenticateToken from '@/shared/middlewares/authentication';
 import { upload } from '@/shared/middlewares/multer';
 import { validateRequest } from '@/shared/middlewares/validator';
 import { ProjectSlugSchmea } from '@/shared/types/project/project.schema';
-import { Router } from 'express';
-import {
-  createProject,
-  createProjectData,
-  deleteProject,
-  getProject,
-  getProjects,
-  updateProjectData,
-} from './projects.controller';
 
 export default (): Router => {
   const app = Router();
@@ -44,8 +35,8 @@ export default (): Router => {
     validateRequest('params', ProjectSlugSchmea),
     deleteProject,
   );
-  
-  app.delete('/image/:slug', authenticateToken(), validateRequest('params', DeleteProjectSchema), deleteProjectData);
-  
+
+  app.delete('/image/:slug', authenticateToken(), validateRequest('params', ProjectSlugSchmea), deleteProjectData);
+
   return app;
 };

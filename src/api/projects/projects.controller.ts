@@ -8,10 +8,8 @@ import {
   handleDeleteProject,
   handleGetAllProjects,
   handleGetProject,
-
   handleUpdateProjectData,
   handleDeleteProjectData,
-
 } from './projects.service';
 import { STATUS } from '@/shared/constants';
 
