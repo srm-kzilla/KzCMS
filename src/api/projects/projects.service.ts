@@ -81,7 +81,7 @@ export const handleUpdateProjectSlug = async ({ name, slug }: BaseProjectType): 
   const projectsCollection = (await db()).collection('projects');
   const project = await projectsCollection.findOne({ projectName: name });
   if (!project) {
-    throw { success: false, message: `Project with name '${name}' not found` };
+    throw { errorCode: ERRORS.RESOURCE_NOT_FOUND.code, message: ERRORS.RESOURCE_NOT_FOUND.message };
   }
   const filter = {projectName: name };
   const update = {
