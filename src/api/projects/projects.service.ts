@@ -77,13 +77,13 @@ export const handleUpdateProjectData = async (slug: string, data: ProjectDataTyp
   return { updatedProject: updatedProject.value } as unknown as ProjectDataType;
 };
 
-export const handleUpdateProjectSlug = async ({ name, slug }: BaseProjectType): Promise<ProjectDataType & any> => {
+export const handleUpdateProjectSlug = async ({ name, slug }: BaseProjectType): Promise<BaseProjectType> => {
   const projectsCollection = (await db()).collection('projects');
   const project = await projectsCollection.findOne({ projectName: name });
   if (!project) {
     throw { success: false, message: `Project with name '${name}' not found` };
   }
-  const filter = { _id: new ObjectId(project._id), projectName: name };
+  const filter = {projectName: name };
   const update = {
     $set: {
       projectSlug: slug,
@@ -91,7 +91,7 @@ export const handleUpdateProjectSlug = async ({ name, slug }: BaseProjectType): 
   };
 
   const updatedProjectSlug = await projectsCollection.findOneAndUpdate(filter, update);
-  return { updatedProjectSlug: updatedProjectSlug.value };
+  return { updatedProjectSlug: updatedProjectSlug.value } as unknown as BaseProjectType;
 };
 
 export const handleGetAllProjects = async () => {
