@@ -83,14 +83,11 @@ export const handleUpdateProjectSlug = async ({ name, slug }: BaseProjectType): 
   if (!project) {
     throw { errorCode: ERRORS.RESOURCE_NOT_FOUND.code, message: ERRORS.RESOURCE_NOT_FOUND.message };
   }
-  const filter = {projectName: name };
-  const update = {
-    $set: {
-      projectSlug: slug,
-    },
-  };
 
-  const updatedProjectSlug = await projectsCollection.findOneAndUpdate(filter, update);
+  const updatedProjectSlug = await projectsCollection.findOneAndUpdate(
+    { projectName: name },
+    { $set: { projectSlug: slug } },
+  );
   return { updatedProjectSlug: updatedProjectSlug.value } as unknown as BaseProjectType;
 };
 
@@ -203,9 +200,9 @@ export const handleDeleteProjectData = async (slug: string, title: string) => {
   }
 
   await s3Client.send(
-     new DeleteObjectCommand({
-       Bucket: config.AWS.bucketName,
-       Key: KEY[1],
-     }),
-   );
+    new DeleteObjectCommand({
+      Bucket: config.AWS.bucketName,
+      Key: KEY[1],
+    }),
+  );
 };
