@@ -202,10 +202,10 @@ export const handleDeleteProjectData = async (slug: string, title: string) => {
     };
   }
 
-  // await s3Client.send(
-  //   new DeleteObjectCommand({
-  //     Bucket: config.AWS.bucketName,
-  //     Key: KEY[1],
-  //   }),
-  // );
+  await s3Client.send(
+     new DeleteObjectCommand({
+       Bucket: config.AWS.bucketName,
+       Key: KEY[1],
+     }),
+   );
 };
