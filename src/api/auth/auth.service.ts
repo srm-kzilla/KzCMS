@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt';
 import { UserScemaType } from '@/shared/types/auth/auth.schema';
 import { AuthParamType } from '@/shared/types/admin/admin.schema';
 import generateToken from '@/shared/middlewares/jwt';
+import { SALT_ROUNDS } from '@/shared/constants';
 
 export async function handleAddNewUser(signup: UserScemaType) {
   const data = await (await db()).collection('users').findOne({ email: signup.email });
@@ -11,13 +12,12 @@ export async function handleAddNewUser(signup: UserScemaType) {
   }
   const collection = (await db()).collection('users');
 
-  const saltRounds = 10;
-  const hash = await bcrypt.hash(signup.password, saltRounds);
+  const hash = await bcrypt.hash(signup.password, SALT_ROUNDS);
 
   await collection.insertOne({
     ...signup,
     password: hash,
-    projects: []
+    projects: [],
   });
 }
 
