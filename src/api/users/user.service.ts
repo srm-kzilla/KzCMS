@@ -26,10 +26,9 @@ export async function handleGetUserProjects(id: string) {
   return user.projects;
 }
 
-export async function handleGetUserDetails(id: string) {
-  const oid = new ObjectId(id);
+export async function handleGetUserDetails(email: string) {
   const user = await (await db()).collection('users').findOne(
-    { _id: oid },
+    { email },
     {
       projection: {
         password: 0,
@@ -39,7 +38,7 @@ export async function handleGetUserDetails(id: string) {
   if (!user) {
     throw {
       status: ERRORS.RESOURCE_NOT_FOUND.code,
-      message: `User with id ${id} not found`,
+      message: `User with id ${email} not found`,
     };
   }
   return user;

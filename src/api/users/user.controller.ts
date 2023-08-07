@@ -19,18 +19,18 @@ export const getUsers = async (req: Request, res: Response, next: NextFunction) 
 export async function getUserDetails(
   req: Request & {
     params: {
-      userid: string;
+      email: string;
     };
   },
   res: Response,
   next: NextFunction,
 ) {
   try {
-    const id = req.params.userid;
-    const data = await handleGetUserDetails(id);
+    const email = req.params.email;
+    const data = await handleGetUserDetails(email);
     return res.status(STATUS.OK).json({
       success: true,
-      message: `user found with id ${id}`,
+      message: `user found with email ${email}`,
       data,
     });
   } catch (error) {
