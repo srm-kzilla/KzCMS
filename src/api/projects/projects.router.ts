@@ -19,7 +19,7 @@ export default (): Router => {
   app.get('/', authenticateToken(), getProjects);
   app.get('/:slug', authenticateToken(), getProject);
 
-  app.patch('/:slug', authenticateToken(), updateProjectData);
+  app.patch('/:slug/data', authenticateToken(), updateProjectData);
   app.post('/', authenticateToken({ verifyAdmin: true }), createProject);
   app.post(
     '/:slug',
@@ -36,7 +36,7 @@ export default (): Router => {
     deleteProject,
   );
 
-  app.delete('/image/:slug', authenticateToken(), validateRequest('params', ProjectSlugSchmea), deleteProjectData);
+  app.delete('/:slug/data', authenticateToken(), validateRequest('params', ProjectSlugSchmea), deleteProjectData);
 
   return app;
 };
