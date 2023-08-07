@@ -16,8 +16,8 @@ export const DeleteUserSchema = z.object({
 export const UpdateProjectSchema = z.object({
   adminEmail: z.string().email(),
   projectSlug: z.string(),
-  new_user_access: z.array(z.string().email()),
-  deleted_user_access: z.array(z.string().email()),
+  newUserAccess: z.array(z.string().email()),
+  deletedUserAccess: z.array(z.string().email()),
 });
 
 export type AuthGetUserType = z.infer<typeof AuthGetSchema>;
