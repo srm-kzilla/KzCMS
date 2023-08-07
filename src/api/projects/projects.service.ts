@@ -32,8 +32,9 @@ const removeFileAfterUse = async (path: fs.PathLike) => {
 };
 
 export const handleCreateProject = async ({ projectName, typeName }: CreateProjectType): Promise<string> => {
-  if (!projectName || !typeName)
-    throw { statusCode: 400, success: false, message: 'Project name and type name both must be provided' };
+  if (!projectName || !typeName){
+    throw {success: false, statusCode: ERRORS.MALFORMED_BODY.code, message: ERRORS.MALFORMED_BODY.message };
+  }
   const projectsCollection = (await db()).collection('projects');
   const slug = slugify(`${projectName} ${typeName}`, { lower: true, replacement: '-', trim: true });
   const project = await projectsCollection.findOne({ projectSlug: slug });
@@ -108,13 +109,13 @@ export const handleCreateProjectData = async (slug: string, data: ProjectDataTyp
 
   if (!project) {
     removeFileAfterUse(file.path);
-    throw { errorCode: ERRORS.RESOURCE_NOT_FOUND.code, message: ERRORS.RESOURCE_NOT_FOUND.message };
+    throw { statusCode: ERRORS.RESOURCE_NOT_FOUND.code, message: ERRORS.RESOURCE_NOT_FOUND.message };
   }
 
   if (project.data.find((d: { title: string }) => d.title === data.title)) {
     removeFileAfterUse(file.path);
     throw {
-      errorCode: ERRORS.RESOURCE_CONFLICT.code,
+      statusCode: ERRORS.RESOURCE_CONFLICT.code,
       message: ERRORS.RESOURCE_CONFLICT.message.error_description,
     };
   }
@@ -131,7 +132,7 @@ export const handleCreateProjectData = async (slug: string, data: ProjectDataTyp
   removeFileAfterUse(file.path);
 
   if (!uploadResult) {
-    throw { errorCode: 500, message: 'Upload to S3 failed' };
+    throw { statusCode: ERRORS.MALFORMED_BODY.code, message: ERRORS.MALFORMED_BODY.message };
   }
 
   await projectsCollection.updateOne(
