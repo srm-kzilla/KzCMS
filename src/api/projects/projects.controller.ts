@@ -83,15 +83,18 @@ export const updateProjectData = async (
 
 export const updateProjectSlug = async (
   req: Request & {
-    body: {
-      name: string;
+    params: {
       slug: string;
+    }, 
+    body: {
+      projectName?:  string,
+      projectSlug: string
     };
   },
   res: Response,
 ): Promise<void> => {
   try {
-    const data = await handleUpdateProjectSlug({ name: req.body.name, slug: req.body.slug });
+    const data = await handleUpdateProjectSlug({ slug: req.params.slug, projectName: req.body.projectName, projectSlug: req.body.projectSlug });
     res.status(200).json(data);
   } catch (error) {
     LoggerInstance.error(`Error while updating Project Tag: ${error}`);

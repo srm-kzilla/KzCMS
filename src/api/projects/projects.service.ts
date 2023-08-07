@@ -2,7 +2,7 @@ import config from '@/config';
 import db from '@/loaders/database';
 import { LINK_REGEX_PATTERN } from '@/shared/constants';
 import { ERRORS } from '@/shared/errors';
-import { CreateProjectType, ProjectDataType, BaseProjectType } from '@/shared/types/project/project.schema';
+import { CreateProjectType, ProjectDataType, ProjectMetadataType } from '@/shared/types/project/project.schema';
 import { DeleteObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import fs from 'fs';
 import { ObjectId } from 'mongodb';
@@ -77,18 +77,24 @@ export const handleUpdateProjectData = async (slug: string, data: ProjectDataTyp
   return { updatedProject: updatedProject.value } as unknown as ProjectDataType;
 };
 
-export const handleUpdateProjectSlug = async ({ name, slug }: BaseProjectType): Promise<BaseProjectType> => {
+export const handleUpdateProjectSlug = async ({ slug, projectName, projectSlug }: ProjectMetadataType): Promise<ProjectMetadataType> => {
   const projectsCollection = (await db()).collection('projects');
-  const project = await projectsCollection.findOne({ projectName: name });
+  const project = await projectsCollection.findOne({ projectSlug: slug });
   if (!project) {
     throw { errorCode: ERRORS.RESOURCE_NOT_FOUND.code, message: ERRORS.RESOURCE_NOT_FOUND.message };
   }
-
+  const filter = { projectSlug: slug };
+  const update = { $set: { projectSlug: slug } };
+  if (projectName!=null){
+    const update = { $set: { projectSlug: projectSlug , projectName: projectName} };
+  }
   const updatedProjectSlug = await projectsCollection.findOneAndUpdate(
-    { projectName: name },
-    { $set: { projectSlug: slug } },
+    filter,update,
   );
-  return { updatedProjectSlug: updatedProjectSlug.value } as unknown as BaseProjectType;
+
+  const check = await projectsCollection.findOne({ projectSlug: projectSlug });
+  console.log(check);
+  return { updatedProjectSlug: updatedProjectSlug.value } as unknown as ProjectMetadataType;
 };
 
 export const handleGetAllProjects = async () => {

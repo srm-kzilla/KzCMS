@@ -18,7 +18,7 @@ export default (): Router => {
   const app = Router();
 
   app.get('/', authenticateToken(), getProjects);
-  app.patch('/', authenticateToken({ verifyAdmin: true }), updateProjectSlug);
+  app.patch('/:slug', authenticateToken({ verifyAdmin: true }), updateProjectSlug);
   app.get('/:slug', authenticateToken(), getProject);
 
   app.patch('/:slug', authenticateToken(), updateProjectData);
