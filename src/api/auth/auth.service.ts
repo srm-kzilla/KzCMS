@@ -1,7 +1,6 @@
 import db from '@/loaders/database';
 import bcrypt from 'bcrypt';
-import { UserScemaType } from '@/shared/types/auth/auth.schema';
-import { AuthParamType } from '@/shared/types/admin/admin.schema';
+import { UserScemaType, AuthParamType } from '@/shared/types';
 import generateToken from '@/shared/middlewares/jwt';
 import { SALT_ROUNDS } from '@/shared/constants';
 

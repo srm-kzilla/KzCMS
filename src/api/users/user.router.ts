@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { getUserDetails, getUserProjects, getUsers } from './user.controller';
 import { validateRequest } from '@/shared/middlewares/validator';
-import { userDetailsSchema } from '@/shared/types/user/user.schema';
+import { userDetailsSchema } from '@/shared/types';
 
 export default (): Router => {
   const app = Router();

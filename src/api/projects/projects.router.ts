@@ -11,7 +11,7 @@ import {
 import authenticateToken from '@/shared/middlewares/authentication';
 import { upload } from '@/shared/middlewares/multer';
 import { validateRequest } from '@/shared/middlewares/validator';
-import { ProjectSlugSchmea } from '@/shared/types/project/project.schema';
+import { ProjectSlugSchmea } from '@/shared/types';
 
 export default (): Router => {
   const app = Router();

@@ -2,7 +2,7 @@ import db from '@/loaders/database';
 import bcrypt from 'bcrypt';
 import { ERRORS } from '@/shared/errors';
 import { Collection, WithId, ObjectId, AnyBulkWriteOperation } from 'mongodb';
-import { UpdateProjectSchemaType } from '@/shared/types/admin/admin.schema';
+import { UpdateProjectSchemaType } from '@/shared/types';
 import { SALT_ROUNDS } from '@/shared/constants';
 
 export const handleUpdateUser = async (email: string, password: string): Promise<void> => {
