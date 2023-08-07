@@ -1,10 +1,11 @@
 import db from '@/loaders/database';
 import bcrypt from 'bcrypt';
-import { UserScemaType } from '@/shared/types/auth/auth.schema';
+import { UserSchemaType } from '@/shared/types/auth/auth.schema';
 import { AuthParamType } from '@/shared/types/admin/admin.schema';
 import generateToken from '@/shared/middlewares/jwt';
+import { date } from 'zod';
 
-export async function handleAddNewUser(signup: UserScemaType) {
+export async function handleAddNewUser(signup: UserSchemaType) {
   const data = await (await db()).collection('users').findOne({ email: signup.email });
   if (data) {
     throw { statusCode: 409, message: 'This email already exists', success: false };
@@ -14,10 +15,16 @@ export async function handleAddNewUser(signup: UserScemaType) {
   const saltRounds = 10;
   const hash = await bcrypt.hash(signup.password, saltRounds);
 
+  const currentDate = new Date();
+
   await collection.insertOne({
     ...signup,
     password: hash,
-    projects: []
+    projects: [],
+    isAdmin: false,
+    isVerified: false,
+    isDeleted: false,
+    createdAt: currentDate
   });
 }
 
