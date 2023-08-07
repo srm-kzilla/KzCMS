@@ -1,6 +1,8 @@
 {
   "name": "kzillacms",
   "main": "build/index.js",
+  "author": "kzilla",
+  "license": "SEE LICENSE IN 'LICENSE'",
   "scripts": {
     "start": "node build/index.js",
     "build": "tsc && tscpaths --project=tsconfig.json -s ./src -o ./build",
@@ -37,7 +39,5 @@
     "slugify": "^1.6.6",
     "winston": "^3.9.0",
     "zod": "^3.21.4"
-  },
-  "author": "kzilla",
-  "license": ""
+  }
 }
