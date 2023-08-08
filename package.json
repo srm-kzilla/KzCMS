@@ -2,7 +2,7 @@
   "name": "kzillacms",
   "main": "build/index.js",
   "author": "kzilla",
-  "license": "SEE LICENSE IN 'LICENSE'",
+  "license": "MIT",
   "scripts": {
     "start": "node build/index.js",
     "build": "tsc && tscpaths --project=tsconfig.json -s ./src -o ./build",
