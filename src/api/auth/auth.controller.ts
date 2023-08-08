@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { handleAddNewUser, handleExistingUser } from './auth.service';
-import { AuthParamType } from '@/shared/types/admin/admin.schema';
+import { AuthParamType } from '@/shared/types';
 
 export const addNewUser = async (req: Request, res: Response, next: NextFunction) => {
   const user = req.body;

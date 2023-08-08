@@ -5,7 +5,7 @@ import {
   deleteProject,
   deleteProjectData,
   getProject,
-  getProjects,
+  getAllProjects,
   updateProjectData,
   updateProjectMetadata
 } from './projects.controller';
@@ -19,6 +19,7 @@ export default (): Router => {
 
   app.get('/', authenticateToken(), getProjects);
   app.patch('/:slug', authenticateToken({ verifyAdmin: true }), validateRequest('body',ProjectMetadataSchema), updateProjectMetadata);
+
   app.get('/:slug', authenticateToken(), getProject);
 
   app.patch('/:slug', authenticateToken(), updateProjectData);
