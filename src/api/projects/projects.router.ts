@@ -5,7 +5,7 @@ import {
   deleteProject,
   deleteProjectData,
   getProject,
-  getProjects,
+  getAllProjects,
   updateProjectData,
 } from './projects.controller';
 import authenticateToken from '@/shared/middlewares/authentication';
@@ -16,7 +16,7 @@ import { ProjectSlugSchmea } from '@/shared/types';
 export default (): Router => {
   const app = Router();
 
-  app.get('/', authenticateToken(), getProjects);
+  app.get('/', authenticateToken(), getAllProjects);
   app.get('/:slug', authenticateToken(), getProject);
 
   app.patch('/:slug', authenticateToken(), updateProjectData);
