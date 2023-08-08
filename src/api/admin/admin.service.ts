@@ -2,15 +2,16 @@ import db from '@/loaders/database';
 import bcrypt from 'bcrypt';
 import { ERRORS } from '@/shared/errors';
 import { Collection, WithId, ObjectId, AnyBulkWriteOperation } from 'mongodb';
-import { UpdateProjectSchemaType } from '@/shared/types/admin/admin.schema';
+import { UpdateProjectSchemaType } from '@/shared/types';
+import { SALT_ROUNDS } from '@/shared/constants';
 
 export const handleUpdateUser = async (email: string, password: string): Promise<void> => {
   const data = await (await db()).collection('users').findOne({ email: email });
   if (!data) {
     throw { statusCode: ERRORS.USER_NOT_FOUND.code, message: ERRORS.USER_NOT_FOUND.message };
   }
-  const saltRounds = 10;
-  const hash = await bcrypt.hash(password, saltRounds);
+
+  const hash = await bcrypt.hash(password, SALT_ROUNDS);
   await (await db()).collection('users').updateOne({ email }, { $set: { password: hash } });
 };
 
