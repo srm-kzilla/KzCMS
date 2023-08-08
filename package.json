@@ -1,7 +1,7 @@
 {
   "name": "kzillacms",
   "main": "build/index.js",
-  "author": "kzilla",
+  "author": "technical@srmkzilla.net",
   "license": "MIT",
   "scripts": {
     "start": "node build/index.js",
