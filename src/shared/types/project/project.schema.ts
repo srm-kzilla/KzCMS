@@ -36,17 +36,16 @@ export const ProjectSlugSchmea = z.object({
   slug: z.string(),
 });
 
-export const ProjectMetadata = z.object({
-  slug: z.string(),
-  projectName: z.string().optional(),
-  projectSlug: z.string(),
+export const ProjectMetadataSchema = z.object({
+  newName: z.string(),
+  newSlug: z.string().optional(),
 });
 
 export type CreateProjectType = z.infer<typeof CreateProjectSchema>;
 export type BaseProjectType = z.infer<typeof BaseProjectSchema>;
 export type ProjectType = z.infer<typeof ProjectSchema>;
 export type ProjectDataType = z.infer<typeof ProjectDataSchema>;
-export type ProjectMetadataType = z.infer<typeof ProjectMetadata>;
+export type ProjectMetadataType = z.infer<typeof ProjectMetadataSchema>;
 export type ProjectSlugType = {
   params: z.infer<typeof ProjectSlugSchmea>;
 };
