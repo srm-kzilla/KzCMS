@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from 'express';
-
 import { handleGetUserDetails, handleGetUserProjects, handleGetUsers } from './user.service';
 import { MESSAGES_TEXT, STATUS } from '@/shared/constants';
 

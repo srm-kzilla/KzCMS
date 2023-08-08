@@ -12,3 +12,5 @@ export const MESSAGES_TEXT = {
 };
 
 export const LINK_REGEX_PATTERN = /https:\/\/(?:[\w.-]+)\.s3\.ap-south-1\.amazonaws\.com\/(.+)/;
+
+export const SALT_ROUNDS = 10;

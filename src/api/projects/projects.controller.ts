@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import LoggerInstance from '@/loaders/logger';
 import { ERRORS } from '@/shared/errors';
-import { CreateProjectType, ProjectSlugType, ProjectDataType } from '@/shared/types/project/project.schema';
+import { CreateProjectType, ProjectSlugType, ProjectDataType } from '@/shared/types';
 import {
   handleCreateProjectData,
   handleCreateProject,
