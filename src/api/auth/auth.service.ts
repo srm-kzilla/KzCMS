@@ -1,7 +1,6 @@
 import db from '@/loaders/database';
 import bcrypt from 'bcrypt';
-import { date } from 'zod';
-import { UserSchemaType, AuthParamType } from '@/shared/types';
+import { UserSchemaType, AuthType } from '@/shared/types';
 import generateToken from '@/shared/middlewares/jwt';
 import { SALT_ROUNDS } from '@/shared/constants';
 
@@ -24,7 +23,7 @@ export async function handleAddNewUser(signup: UserSchemaType) {
   });
 }
 
-export async function handleExistingUser({ email, password }: AuthParamType): Promise<string> {
+export async function handleExistingUser({ email, password }: AuthType): Promise<string> {
   const data = await (await db()).collection('users').findOne({ email: email });
 
   if (!data) {

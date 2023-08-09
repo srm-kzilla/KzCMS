@@ -5,11 +5,6 @@ export const VerifyUserSchema = z.object({
   verify: z.boolean(),
 });
 
-export const AuthSchema = z.object({
-  email: z.string().email(),
-  password: z.string(),
-});
-
 export const AuthGetSchema = z.object({
   email: z.string().email(),
 });
@@ -25,6 +20,5 @@ export const UpdateProjectSchema = z.object({
   deleted_user_access: z.array(z.string().email()),
 });
 
-export type AuthParamType = z.infer<typeof AuthSchema>;
 export type AuthGetUserType = z.infer<typeof AuthGetSchema>;
 export type UpdateProjectSchemaType = z.infer<typeof UpdateProjectSchema>;

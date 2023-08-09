@@ -6,4 +6,4 @@ export const AuthSchema = z.object({
 });
 
 export type UserSchemaType = z.infer<typeof AuthSchema>;
-export type LoginType = z.infer<typeof AuthSchema>;
+export type AuthType = z.infer<typeof AuthSchema>;
