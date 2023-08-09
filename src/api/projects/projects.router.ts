@@ -12,12 +12,12 @@ import {
 import authenticateToken from '@/shared/middlewares/authentication';
 import { upload } from '@/shared/middlewares/multer';
 import { validateRequest } from '@/shared/middlewares/validator';
-import { ProjectMetadataSchema, ProjectSlugSchmea } from '@/shared/types/project/project.schema';
+import { ProjectMetadataSchema, ProjectSlugSchmea } from '@/shared/types';
 
 export default (): Router => {
   const app = Router();
 
-  app.get('/', authenticateToken(), getProjects);
+  app.get('/', authenticateToken(), getAllProjects);
   app.patch('/:slug', authenticateToken({ verifyAdmin: true }), validateRequest('body',ProjectMetadataSchema), updateProjectMetadata);
 
   app.get('/:slug', authenticateToken(), getProject);
