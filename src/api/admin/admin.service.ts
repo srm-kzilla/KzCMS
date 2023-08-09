@@ -1,7 +1,7 @@
 import db from '@/loaders/database';
 import bcrypt from 'bcrypt';
 import { ERRORS } from '@/shared/errors';
-import { Collection, WithId, ObjectId, AnyBulkWriteOperation } from 'mongodb';
+import { AnyBulkWriteOperation } from 'mongodb';
 import { UpdateProjectSchemaType } from '@/shared/types';
 import { SALT_ROUNDS } from '@/shared/constants';
 
@@ -33,13 +33,13 @@ export const handleVerifyUser = async (email: string, verify: boolean): Promise<
 export async function handleUpdateUserProjects(data: UpdateProjectSchemaType) {
   const updated_project = await (await db())
     .collection('projects')
-    .updateOne({ projectSlug: data.projectSlug }, { $set: { userAccess: data.new_user_access } });
+    .updateOne({ projectSlug: data.projectSlug }, { $set: { userAccess: data.newUserAccess } });
   if (!updated_project) {
     throw { statusCode: ERRORS.SERVER_ERROR.code, message: ERRORS.SERVER_ERROR.message };
   }
 
-  const new_users = data.new_user_access;
-  const deleted_users = data.deleted_user_access;
+  const new_users = data.newUserAccess;
+  const deleted_users = data.deletedUserAccess;
 
   const collection = await (await db()).collection('users');
   const bulkOperations: AnyBulkWriteOperation<{}>[] = [];
