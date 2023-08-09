@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { handleGetUserDetails, handleGetUserProjects, handleGetUsers } from './user.service';
 import { MESSAGES_TEXT, STATUS } from '@/shared/constants';
-import { userDetailsType } from '@/shared/types/user/user.schema';
+import { userDetailsType } from '@/shared/types';
 
 export const getUsers = async (req: Request, res: Response, next: NextFunction) => {
   try {
