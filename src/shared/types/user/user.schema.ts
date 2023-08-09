@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const userDetailsSchema = z.object({
-  userid: z.string(),
+  email: z.string(),
 });
 
 export const userSchema = z.object({
@@ -14,3 +14,4 @@ export const userSchema = z.object({
 });
 
 export type userType = z.infer<typeof userSchema>;
+export type userDetailsType = z.infer<typeof userDetailsSchema>;
