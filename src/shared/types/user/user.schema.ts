@@ -1,9 +1,5 @@
 import { z } from 'zod';
 
-export const userDetailsSchema = z.object({
-  email: z.string(),
-});
-
 export const userSchema = z.object({
   email: z.string().email(),
   password: z.string().min(5, { message: 'Must be 5 characters long or more' }),
@@ -14,4 +10,3 @@ export const userSchema = z.object({
 });
 
 export type userType = z.infer<typeof userSchema>;
-export type userDetailsType = z.infer<typeof userDetailsSchema>;

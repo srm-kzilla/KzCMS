@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { handleGetUserDetails, handleGetUserProjects, handleGetUsers } from './user.service';
 import { MESSAGES_TEXT, STATUS } from '@/shared/constants';
-import { userDetailsType } from '@/shared/types';
+import { AuthGetUserType } from '@/shared/types';
 
 export const getUsers = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -17,7 +17,7 @@ export const getUsers = async (req: Request, res: Response, next: NextFunction) 
 };
 
 export async function getUserDetails(
-  req: Request<unknown, unknown, userDetailsType>,
+  req: Request<unknown, unknown, AuthGetUserType>,
   res: Response,
   next: NextFunction,
 ) {
@@ -35,16 +35,12 @@ export async function getUserDetails(
 }
 
 export async function getUserProjects(
-  req: Request & {
-    params: {
-      userid: string;
-    };
-  },
+  req: Request<unknown, unknown, AuthGetUserType>,
   res: Response,
   next: NextFunction,
 ) {
   try {
-    const projects = await handleGetUserProjects(req.params.userid);
+    const projects = await handleGetUserProjects(req.body.email);
     return res.status(STATUS.OK).json({
       success: true,
       projects,
