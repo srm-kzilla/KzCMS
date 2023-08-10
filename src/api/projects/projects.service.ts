@@ -32,8 +32,8 @@ const removeFileAfterUse = async (path: fs.PathLike) => {
 };
 
 export const handleCreateProject = async ({ projectName, typeName }: CreateProjectType): Promise<string> => {
-  if (!projectName || !typeName){
-    throw {success: false, statusCode: ERRORS.MALFORMED_BODY.code, message: ERRORS.MALFORMED_BODY.message };
+  if (!projectName || !typeName) {
+    throw { success: false, statusCode: ERRORS.MALFORMED_BODY.code, message: ERRORS.MALFORMED_BODY.message };
   }
   const projectsCollection = (await db()).collection('projects');
   const slug = slugify(`${projectName} ${typeName}`, { lower: true, replacement: '-', trim: true });
@@ -81,16 +81,15 @@ export const handleUpdateProjectData = async (slug: string, data: ProjectDataTyp
 export const handleUpdateProjectMetadata = async (slug: string, newName: string, newSlug: string) => {
   const projectsCollection = (await db()).collection('projects');
   const project = await projectsCollection.findOne({ projectSlug: slug });
-  console.log(project);
   if (!project) {
     throw { errorCode: ERRORS.RESOURCE_NOT_FOUND.code, message: ERRORS.RESOURCE_NOT_FOUND.message };
   }
-  if (!newSlug){
-    newSlug = project.projectSlug; 
+  if (!newSlug) {
+    newSlug = project.projectSlug;
   }
 
   const SLUG = slugify(`${newSlug}`, { lower: true, replacement: '-', trim: true });
-  
+
   projectsCollection.updateOne({ projectSlug: slug }, { $set: { projectName: newName, projectSlug: SLUG } });
 };
 

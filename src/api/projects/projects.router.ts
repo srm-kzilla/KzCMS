@@ -7,7 +7,7 @@ import {
   getProject,
   getAllProjects,
   updateProjectData,
-  updateProjectMetadata
+  updateProjectMetadata,
 } from './projects.controller';
 import authenticateToken from '@/shared/middlewares/authentication';
 import { upload } from '@/shared/middlewares/multer';
@@ -18,7 +18,12 @@ export default (): Router => {
   const app = Router();
 
   app.get('/', authenticateToken(), getAllProjects);
-  app.patch('/:slug', authenticateToken({ verifyAdmin: true }), validateRequest('body',ProjectMetadataSchema), updateProjectMetadata);
+  app.patch(
+    '/:slug',
+    authenticateToken({ verifyAdmin: true }),
+    validateRequest('body', ProjectMetadataSchema),
+    updateProjectMetadata,
+  );
 
   app.get('/:slug', authenticateToken(), getProject);
 
