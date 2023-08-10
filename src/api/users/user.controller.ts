@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { handleGetUserDetails, handleGetUserProjects, handleGetUsers } from './user.service';
 import { MESSAGES_TEXT, STATUS } from '@/shared/constants';
+import { AuthGetUserType } from '@/shared/types';
 
 export const getUsers = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -16,20 +17,16 @@ export const getUsers = async (req: Request, res: Response, next: NextFunction) 
 };
 
 export async function getUserDetails(
-  req: Request & {
-    params: {
-      userid: string;
-    };
-  },
+  req: Request<unknown, unknown, AuthGetUserType>,
   res: Response,
   next: NextFunction,
 ) {
   try {
-    const id = req.params.userid;
-    const data = await handleGetUserDetails(id);
+    const email = req.body.email;
+    const data = await handleGetUserDetails(email);
     return res.status(STATUS.OK).json({
       success: true,
-      message: `user found with id ${id}`,
+      message: `user found with id ${email}`,
       data,
     });
   } catch (error) {
@@ -38,16 +35,12 @@ export async function getUserDetails(
 }
 
 export async function getUserProjects(
-  req: Request & {
-    params: {
-      userid: string;
-    };
-  },
+  req: Request<unknown, unknown, AuthGetUserType>,
   res: Response,
   next: NextFunction,
 ) {
   try {
-    const projects = await handleGetUserProjects(req.params.userid);
+    const projects = await handleGetUserProjects(req.body.email);
     return res.status(STATUS.OK).json({
       success: true,
       projects,

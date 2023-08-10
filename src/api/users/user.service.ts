@@ -7,10 +7,9 @@ export const handleGetUsers = async (): Promise<WithId<Document>[]> => {
   return await collection.find({}, { projection: { password: 0 } }).toArray();
 };
 
-export async function handleGetUserProjects(id: string) {
-  const oid = new ObjectId(id);
+export async function handleGetUserProjects(email: string) {
   const user = await (await db()).collection('users').findOne(
-    { _id: oid },
+    { email },
     {
       projection: {
         projects: 1,
@@ -20,7 +19,7 @@ export async function handleGetUserProjects(id: string) {
   if (!user) {
     throw {
       statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
-      message: `User not found with id ${id}`,
+      message: `User not found with id ${email}`,
     };
   }
   return user.projects;
