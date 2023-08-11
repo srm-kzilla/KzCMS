@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import LoggerInstance from '@/loaders/logger';
 import { ERRORS } from '@/shared/errors';
-import { CreateProjectType, ProjectSlugType, ProjectDataType, ProjectMetadataType } from '@/shared/types/project/project.schema';
+import { CreateProjectType, ProjectSlugType, ProjectDataType, ProjectMetadataType } from '@/shared/types';
 import {
   handleCreateProjectData,
   handleCreateProject,
@@ -84,6 +84,7 @@ export const updateProjectData = async (
 export const updateProjectMetadata = async (
   req: Request,
   res: Response,
+  next: NextFunction
 ): Promise<void> => {
   try {
     const data = await handleUpdateProjectMetadata(req.params.slug, req.body.newName, req.body.newSlug);
@@ -92,10 +93,7 @@ export const updateProjectMetadata = async (
       message: `project \`${req.params.slug}\` updated`,
     });
   } catch (error) {
-    LoggerInstance.error(`Error while updating Project Tag: ${error}`);
-    res
-      .status(error.statusCode ?? ERRORS.SERVER_ERROR.code)
-      .json({ success: false, message: error.message ?? ERRORS.SERVER_ERROR.message });
+    next(error);
   }
 };
 
