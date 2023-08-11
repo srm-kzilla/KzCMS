@@ -14,6 +14,7 @@ export async function handleAddNewUser(signup: UserSchemaType) {
   const hash = await bcrypt.hash(signup.password, SALT_ROUNDS);
 
   await collection.insertOne({
+    email: signup.email,
     password: hash,
     isAdmin: false,
     isVerified: false,
