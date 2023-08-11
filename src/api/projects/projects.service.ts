@@ -2,7 +2,7 @@ import config from '@/config';
 import db from '@/loaders/database';
 import { LINK_REGEX_PATTERN } from '@/shared/constants';
 import { ERRORS } from '@/shared/errors';
-import { CreateProjectType, ProjectDataType } from '@/shared/types';
+import { CreateProjectType, ProjectDataType, ProjectMetadataType } from '@/shared/types';
 import { DeleteObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import fs from 'fs';
 import { ObjectId } from 'mongodb';
@@ -32,8 +32,8 @@ const removeFileAfterUse = async (path: fs.PathLike) => {
 };
 
 export const handleCreateProject = async ({ projectName, typeName }: CreateProjectType): Promise<string> => {
-  if (!projectName || !typeName){
-    throw {success: false, statusCode: ERRORS.MALFORMED_BODY.code, message: ERRORS.MALFORMED_BODY.message };
+  if (!projectName || !typeName) {
+    throw { success: false, statusCode: ERRORS.MALFORMED_BODY.code, message: ERRORS.MALFORMED_BODY.message };
   }
   const projectsCollection = (await db()).collection('projects');
   const slug = slugify(`${projectName} ${typeName}`, { lower: true, replacement: '-', trim: true });
@@ -76,6 +76,21 @@ export const handleUpdateProjectData = async (slug: string, data: ProjectDataTyp
   });
 
   return { updatedProject: updatedProject.value } as unknown as ProjectDataType;
+};
+
+export const handleUpdateProjectMetadata = async (slug: string, newName: string, newSlug: string) => {
+  const projectsCollection = (await db()).collection('projects');
+  const project = await projectsCollection.findOne({ projectSlug: slug });
+  if (!project) {
+    throw { errorCode: ERRORS.RESOURCE_NOT_FOUND.code, message: ERRORS.RESOURCE_NOT_FOUND.message };
+  }
+  if (!newSlug) {
+    newSlug = project.projectSlug;
+  }
+
+  const SLUG = slugify(`${newSlug}`, { lower: true, replacement: '-', trim: true });
+
+  projectsCollection.updateOne({ projectSlug: slug }, { $set: { projectName: newName, projectSlug: SLUG } });
 };
 
 export const handleGetAllProjects = async () => {
@@ -186,10 +201,10 @@ export const handleDeleteProjectData = async (slug: string, title: string) => {
     };
   }
 
-  // await s3Client.send(
-  //   new DeleteObjectCommand({
-  //     Bucket: config.AWS.bucketName,
-  //     Key: KEY[1],
-  //   }),
-  // );
+  await s3Client.send(
+    new DeleteObjectCommand({
+      Bucket: config.AWS.bucketName,
+      Key: KEY[1],
+    }),
+  );
 };

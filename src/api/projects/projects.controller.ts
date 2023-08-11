@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import LoggerInstance from '@/loaders/logger';
 import { ERRORS } from '@/shared/errors';
-import { CreateProjectType, ProjectSlugType, ProjectDataType } from '@/shared/types';
+import { CreateProjectType, ProjectSlugType, ProjectDataType, ProjectMetadataType } from '@/shared/types';
 import {
   handleCreateProjectData,
   handleCreateProject,
@@ -10,6 +10,7 @@ import {
   handleGetProject,
   handleUpdateProjectData,
   handleDeleteProjectData,
+  handleUpdateProjectMetadata
 } from './projects.service';
 import { STATUS } from '@/shared/constants';
 
@@ -79,6 +80,23 @@ export const updateProjectData = async (
       .json({ success: false, message: error.message ?? ERRORS.SERVER_ERROR.message });
   }
 };
+
+export const updateProjectMetadata = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const data = await handleUpdateProjectMetadata(req.params.slug, req.body.newName, req.body.newSlug);
+    res.status(STATUS.OK).json({
+      success: true,
+      message: `project \`${req.params.slug}\` updated`,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 
 export const deleteProject = async (
   req: Request & ProjectSlugType,
