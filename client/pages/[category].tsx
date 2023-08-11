@@ -1,6 +1,6 @@
 import CardList from '@/components/CardsList';
 import { useRouter } from 'next/router';
-import { cardListMock } from '@/mock/cardListMock';
+import { cardListMock } from '@/mock/Data';
 import Navbar from '@/components/Navbar';
 import Home4LineIcon from 'remixicon-react/Home4LineIcon';
 import CalendarEventLineIcon from 'remixicon-react/CalendarEventLineIcon';

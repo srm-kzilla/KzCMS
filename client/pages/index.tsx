@@ -3,7 +3,7 @@ import ShoppingBag3LineIcon from 'remixicon-react/ShoppingBag3LineIcon';
 import Home4LineIcon from 'remixicon-react/Home4LineIcon';
 import CalendarEventLineIcon from 'remixicon-react/CalendarEventLineIcon';
 import CardList from '@/components/CardsList';
-import { cardListMock } from '@/mock/cardListMock';
+import { cardListMock } from '@/mock/Data';
 import TitleBar from '@/components/TitleBar';
 
 // Mock data for Navbar

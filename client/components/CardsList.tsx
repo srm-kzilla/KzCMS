@@ -11,7 +11,6 @@ interface CardsListProps {
 }
 
 const CardList = ({ type, cardList }: CardsListProps) => {
-  console.log('Type', type);
   return (
     <div className="mt-20 flex w-screen">
       <div className="pt-10 md:pl-20 flex flex-wrap justify-around md:justify-start w-full h-fit">
@@ -31,7 +30,6 @@ const CardList = ({ type, cardList }: CardsListProps) => {
           : cardList.cards
               .filter(card => card.cardType === type)
               .map((card, index) => {
-                console.log('Card:', card);
                 return (
                   <div key={index}>
                     <Card

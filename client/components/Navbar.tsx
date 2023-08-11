@@ -5,6 +5,7 @@ import LogoutCircleRLineIcon from 'remixicon-react/LogoutCircleRLineIcon';
 import MenuFoldLineIcon from 'remixicon-react/MenuFoldLineIcon';
 import MenuUnfoldLineIcon from 'remixicon-react/MenuUnfoldLineIcon';
 import useIsDesktop from '@/hooks/useIsDesktop';
+import { kZgradientLogoAlt, kZgradientLogoURL } from '@/constants/constants';
 
 interface NavbarPropsOptionsType {
   options: NavbarOptionsType[];
@@ -42,7 +43,7 @@ const Navbar = ({ navBarProps }: { navBarProps: NavbarPropsOptionsType }) => {
         <div>
           <div className="flex flex-col gap-2">
             <div className="p-4 pt-6 w-full h-full border-gray-600 border-b-2 flex flex-col items-center justify-between lg:justify-center gap-4">
-              <Image className="w-10" width={10} height={10} src="/srmkzilla-gradient-logo.svg" alt="SRMKZILLA" />
+              <Image className="w-10" width={10} height={10} src={kZgradientLogoURL} alt={kZgradientLogoAlt} />
               <div
                 className={isDesktop ? 'hidden' : mobileNav ? 'block' : 'hidden'}
                 onClick={() => {
