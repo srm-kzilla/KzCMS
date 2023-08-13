@@ -3,7 +3,6 @@ import Button from './button';
 
 interface CardProps {
   title: string;
-
   backgroundColor?: string;
   textColor?: string;
   shadow?: boolean;
@@ -11,7 +10,6 @@ interface CardProps {
 
 const Card: React.FC<CardProps> = ({
   title,
-
   backgroundColor = 'bg-gray-400',
   textColor = 'text-gray-700',
   shadow = true,
