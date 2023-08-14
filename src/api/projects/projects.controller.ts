@@ -10,7 +10,7 @@ import {
   handleGetProject,
   handleUpdateProjectData,
   handleDeleteProjectData,
-  handleUpdateProjectMetadata
+  handleUpdateProjectMetadata,
 } from './projects.service';
 import { STATUS } from '@/shared/constants';
 
@@ -69,23 +69,17 @@ export const updateProjectData = async (
     body: ProjectDataType;
   },
   res: Response,
+  next: NextFunction,
 ): Promise<void> => {
   try {
     const data = await handleUpdateProjectData(req.params.slug, req.body);
     res.status(200).json(data);
   } catch (error) {
-    LoggerInstance.error(`Error while updating Project: ${error}`);
-    res
-      .status(error.statusCode ?? ERRORS.SERVER_ERROR.code)
-      .json({ success: false, message: error.message ?? ERRORS.SERVER_ERROR.message });
+    next(error);
   }
 };
 
-export const updateProjectMetadata = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): Promise<void> => {
+export const updateProjectMetadata = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const data = await handleUpdateProjectMetadata(req.params.slug, req.body.newName, req.body.newSlug);
     res.status(STATUS.OK).json({
@@ -96,7 +90,6 @@ export const updateProjectMetadata = async (
     next(error);
   }
 };
-
 
 export const deleteProject = async (
   req: Request & ProjectSlugType,

@@ -41,7 +41,7 @@ export default function authenticateToken({ verifyAdmin } = { verifyAdmin: false
       LoggerInstance.error(error);
       res
         .status(error.statusCode ?? ERRORS.SERVER_ERROR.code)
-        .json({ success: false, message: error.message ?? ERRORS.SERVER_ERROR.message });
+        .json({ success: false, message: error.message ?? ERRORS.SERVER_ERROR.message.error });
     }
   };
 }
