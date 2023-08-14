@@ -35,7 +35,7 @@ export async function handleUpdateUserProjects(data: UpdateProjectSchemaType) {
     .collection('projects')
     .updateOne({ projectSlug: data.projectSlug }, { $set: { userAccess: data.newUserAccess } });
   if (!updated_project) {
-    throw { statusCode: ERRORS.SERVER_ERROR.code, message: ERRORS.SERVER_ERROR.message };
+    throw { statusCode: ERRORS.SERVER_ERROR.code, message: ERRORS.SERVER_ERROR.message.error };
   }
 
   const new_users = data.newUserAccess;
@@ -64,7 +64,7 @@ export async function handleUpdateUserProjects(data: UpdateProjectSchemaType) {
   if (bulkOperations.length > 0) {
     const success = collection.bulkWrite(bulkOperations);
     if (!success) {
-      throw { statusCode: ERRORS.SERVER_ERROR.code, message: ERRORS.SERVER_ERROR.message };
+      throw { statusCode: ERRORS.SERVER_ERROR.code, message: ERRORS.SERVER_ERROR.message.error };
     }
   }
   return new_users;

@@ -26,7 +26,7 @@ const removeFileAfterUse = async (path: fs.PathLike) => {
   } catch {
     throw {
       statusCode: ERRORS.SERVER_ERROR.code,
-      message: `${ERRORS.SERVER_ERROR.message} | File Unlink Error`,
+      message: `${ERRORS.SERVER_ERROR.message.error} | File Unlink Error`,
     };
   }
 };
