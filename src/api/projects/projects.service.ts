@@ -2,10 +2,10 @@ import config from '@/config';
 import db from '@/loaders/database';
 import { LINK_REGEX_PATTERN } from '@/shared/constants';
 import { ERRORS } from '@/shared/errors';
-import { CreateProjectType, ProjectDataType, ProjectMetadataType } from '@/shared/types';
+import { CreateProjectType, ProjectDataType, ProjectType } from '@/shared/types';
 import { DeleteObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import fs from 'fs';
-import { ObjectId } from 'mongodb';
+import { ObjectId, UpdateFilter } from 'mongodb';
 import slugify from 'slugify';
 import { promisify } from 'util';
 
@@ -160,7 +160,7 @@ export const handleCreateProjectData = async (slug: string, data: ProjectDataTyp
           title: data.title,
           description: data.description,
           link: data.link,
-          imageUrl: `${S3_BASE_URL}/${file.filename}`,
+          imageURL: `${S3_BASE_URL}/${file.filename}`,
           author: data.author,
         },
       },
@@ -169,30 +169,26 @@ export const handleCreateProjectData = async (slug: string, data: ProjectDataTyp
 };
 
 export const handleDeleteProjectData = async (slug: string, title: string) => {
-  const result = await (
-    await db()
-  )
-    .collection('projects')
-    // @ts-ignore
-    .findOneAndUpdate({ projectSlug: slug }, { $pull: { data: { title: title } } }, { returnOriginal: false });
+  const projectsCollection = (await db()).collection('projects');
+  const project = (await projectsCollection.findOne({ projectSlug: slug })) as unknown as ProjectType;
 
-  if (!result.value || !result.value.data) {
+  if (!project) {
     throw {
       statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
       message: ERRORS.RESOURCE_NOT_FOUND.message,
     };
   }
 
-  const data = result.value.data.find((item: any) => item.title === title);
+  const data = project.data.find(item => item.title === title);
 
-  if (!data || !data.imageUrl) {
+  if (!data || !data.imageURL) {
     throw {
       statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
       message: ERRORS.RESOURCE_NOT_FOUND.message,
     };
   }
 
-  const KEY = data.imageUrl.match(LINK_REGEX_PATTERN);
+  const KEY = data.imageURL.match(LINK_REGEX_PATTERN);
 
   if (!KEY) {
     throw {
@@ -201,10 +197,37 @@ export const handleDeleteProjectData = async (slug: string, title: string) => {
     };
   }
 
-  await s3Client.send(
-    new DeleteObjectCommand({
-      Bucket: config.AWS.bucketName,
-      Key: KEY[1],
-    }),
+  try {
+    await s3Client.send(
+      new DeleteObjectCommand({
+        Bucket: config.AWS.bucketName,
+        Key: KEY[1],
+      }),
+    );
+  } catch (e) {
+    // do nothing if delete fails? or cancel the opertion
+  }
+
+  const result = await projectsCollection.findOneAndUpdate(
+    {
+      projectSlug: slug,
+    },
+    {
+      $pull: {
+        data: {
+          title,
+        },
+      } as UpdateFilter<ProjectDataType>,
+    },
+    {
+      returnDocument: 'after',
+    },
   );
+
+  if (!result.value) {
+    throw {
+      statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
+      message: ERRORS.RESOURCE_NOT_FOUND.message,
+    };
+  }
 };
