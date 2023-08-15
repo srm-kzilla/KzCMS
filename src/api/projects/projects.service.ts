@@ -5,7 +5,7 @@ import { ERRORS } from '@/shared/errors';
 import { CreateProjectType, ProjectDataType } from '@/shared/types';
 import { DeleteObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import fs from 'fs';
-import { ObjectId } from 'mongodb';
+import { ObjectId, UpdateFilter } from 'mongodb';
 import slugify from 'slugify';
 import { promisify } from 'util';
 
@@ -169,12 +169,13 @@ export const handleCreateProjectData = async (slug: string, data: ProjectDataTyp
 };
 
 export const handleDeleteProjectData = async (slug: string, title: string) => {
-  const result = await (
-    await db()
-  )
+  const result = await (await db())
     .collection('projects')
-    // @ts-ignore
-    .findOneAndUpdate({ projectSlug: slug }, { $pull: { data: { title: title } } }, { returnOriginal: false });
+    .findOneAndUpdate(
+      { projectSlug: slug },
+      { $pull: { data: { title: title } } as UpdateFilter<ProjectDataType> },
+      { returnDocument: 'after' },
+    );
 
   if (!result.value || !result.value.data) {
     throw {

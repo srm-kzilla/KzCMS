@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
 
-import { handleDeleteUser, handleUpdateUser, handleUpdateUserProjects, handleVerifyUser } from './admin.service';
 import { MESSAGES_TEXT, STATUS } from '@/shared/constants';
+import { UpdateProjectSchemaType, VerifyUserType } from '@/shared/types/admin/admin.schema';
 import { UserSchemaType } from '@/shared/types/auth/auth.schema';
-import { VerifyUserType } from '@/shared/types/admin/admin.schema';
+import { handleDeleteUser, handleUpdateUser, handleUpdateUserProjects, handleVerifyUser } from './admin.service';
 
 export const updateUser = async (req: Request<unknown, unknown, UserSchemaType>, res: Response, next: NextFunction) => {
   try {
@@ -47,7 +47,11 @@ export const verifyUser = async (req: Request<unknown, unknown, VerifyUserType>,
   }
 };
 
-export async function updateUserProjects(req: Request, res: Response, next: NextFunction) {
+export async function updateUserProjects(
+  req: Request<unknown, unknown, UpdateProjectSchemaType>,
+  res: Response,
+  next: NextFunction,
+) {
   try {
     const data = await handleUpdateUserProjects(req.body);
     res.status(STATUS.OK).json({

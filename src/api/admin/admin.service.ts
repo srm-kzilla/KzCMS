@@ -1,9 +1,9 @@
 import db from '@/loaders/database';
-import bcrypt from 'bcrypt';
-import { ERRORS } from '@/shared/errors';
-import { AnyBulkWriteOperation } from 'mongodb';
-import { UpdateProjectSchemaType } from '@/shared/types';
 import { SALT_ROUNDS } from '@/shared/constants';
+import { ERRORS } from '@/shared/errors';
+import { UpdateProjectSchemaType } from '@/shared/types';
+import bcrypt from 'bcrypt';
+import { AnyBulkWriteOperation } from 'mongodb';
 
 export const handleUpdateUser = async (email: string, password: string): Promise<void> => {
   const data = await (await db()).collection('users').findOne({ email: email });

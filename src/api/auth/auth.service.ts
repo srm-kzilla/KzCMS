@@ -1,8 +1,8 @@
 import db from '@/loaders/database';
-import bcrypt from 'bcrypt';
-import { UserSchemaType } from '@/shared/types';
-import generateToken from '@/shared/middlewares/jwt';
 import { SALT_ROUNDS } from '@/shared/constants';
+import generateToken from '@/shared/middlewares/jwt';
+import { UserSchemaType } from '@/shared/types';
+import bcrypt from 'bcrypt';
 
 export async function handleAddNewUser(signup: UserSchemaType) {
   const data = await (await db()).collection('users').findOne({ email: signup.email });

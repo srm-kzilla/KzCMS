@@ -1,7 +1,7 @@
+import { validateRequest } from '@/shared/middlewares/validator';
+import { AuthGetSchema, AuthSchema, UpdateProjectSchema, VerifyUserSchema } from '@/shared/types';
 import { Router } from 'express';
 import { deleteUser, updateUser, updateUserProjects, verifyUser } from './admin.controller';
-import { validateRequest } from '@/shared/middlewares/validator';
-import { VerifyUserSchema, AuthGetSchema, AuthSchema, UpdateProjectSchema } from '@/shared/types';
 
 export default (): Router => {
   const app = Router();
