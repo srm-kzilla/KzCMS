@@ -1,12 +1,13 @@
 import { z } from 'zod';
+import { emailSchema } from '../user/user.schema';
 
 export const VerifyUserSchema = z.object({
-  email: z.string().email(),
+  email: emailSchema,
   verify: z.boolean(),
 });
 
 export const UpdateProjectSchema = z.object({
-  adminEmail: z.string().email(),
+  adminEmail: emailSchema,
   projectSlug: z.string(),
   newUserAccess: z.array(z.string().email()),
   deletedUserAccess: z.array(z.string().email()),
