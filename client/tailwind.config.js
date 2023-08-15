@@ -28,6 +28,11 @@ module.exports = {
           purple: '#B10DFF',
           textColor: '#C4D3E0',
         },
+        login: {
+          grey: "#27262C",
+          blue: "#7D7AFF",
+          
+        }
       },
     },
     plugins: [],
