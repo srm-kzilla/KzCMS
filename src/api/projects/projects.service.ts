@@ -2,7 +2,7 @@ import config from '@/config';
 import db from '@/loaders/database';
 import { LINK_REGEX_PATTERN } from '@/shared/constants';
 import { ERRORS } from '@/shared/errors';
-import { CreateProjectType, ProjectDataType, ProjectMetadataType } from '@/shared/types';
+import { CreateProjectType, ProjectDataType } from '@/shared/types';
 import { DeleteObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import fs from 'fs';
 import { ObjectId } from 'mongodb';

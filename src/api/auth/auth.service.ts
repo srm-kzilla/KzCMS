@@ -20,7 +20,7 @@ export async function handleAddNewUser(signup: UserSchemaType) {
     isVerified: false,
     isDeleted: false,
     projects: [],
-    createdAt: new Date()
+    createdAt: new Date(),
   });
 }
 

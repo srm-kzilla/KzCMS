@@ -13,3 +13,4 @@ export const UpdateProjectSchema = z.object({
 });
 
 export type UpdateProjectSchemaType = z.infer<typeof UpdateProjectSchema>;
+export type VerifyUserType = z.infer<typeof VerifyUserSchema>;
