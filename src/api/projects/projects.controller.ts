@@ -1,18 +1,17 @@
-import { Request, Response, NextFunction } from 'express';
-import LoggerInstance from '@/loaders/logger';
+import { STATUS } from '@/shared/constants';
 import { ERRORS } from '@/shared/errors';
-import { CreateProjectType, ProjectSlugType, ProjectDataType, ProjectMetadataType } from '@/shared/types';
+import { CreateProjectType, ProjectDataType, ProjectSlugType } from '@/shared/types';
+import { NextFunction, Request, Response } from 'express';
 import {
-  handleCreateProjectData,
   handleCreateProject,
+  handleCreateProjectData,
   handleDeleteProject,
+  handleDeleteProjectData,
   handleGetAllProjects,
   handleGetProject,
   handleUpdateProjectData,
-  handleDeleteProjectData,
   handleUpdateProjectMetadata,
 } from './projects.service';
-import { STATUS } from '@/shared/constants';
 
 export const getAllProjects = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
@@ -81,7 +80,7 @@ export const updateProjectData = async (
 
 export const updateProjectMetadata = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const data = await handleUpdateProjectMetadata(req.params.slug, req.body.newName, req.body.newSlug);
+    await handleUpdateProjectMetadata(req.params.slug, req.body.newName, req.body.newSlug);
     res.status(STATUS.OK).json({
       success: true,
       message: `project \`${req.params.slug}\` updated`,
