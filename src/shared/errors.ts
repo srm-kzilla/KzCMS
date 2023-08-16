@@ -48,4 +48,11 @@ export const ERRORS = {
       error_description: 'Resource already exsists',
     },
   },
+  USER_ALREADY_DELETED: {
+    code: 409,
+    message: {
+      error: 'User Already Deleted',
+      error_description: 'User already deleted',
+    },
+  },
 };
