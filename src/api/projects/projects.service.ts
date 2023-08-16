@@ -1,5 +1,6 @@
 import config from '@/config';
 import db from '@/loaders/database';
+import LoggerInstance from '@/loaders/logger';
 import { LINK_REGEX_PATTERN } from '@/shared/constants';
 import { ERRORS } from '@/shared/errors';
 import { CreateProjectType, ProjectDataType, ProjectType } from '@/shared/types';
@@ -170,7 +171,7 @@ export const handleCreateProjectData = async (slug: string, data: ProjectDataTyp
 
 export const handleDeleteProjectData = async (slug: string, title: string) => {
   const projectsCollection = (await db()).collection('projects');
-  const project = (await projectsCollection.findOne({ projectSlug: slug })) as unknown as ProjectType;
+  const project = await projectsCollection.findOne<ProjectType>({ projectSlug: slug });
 
   if (!project) {
     throw {
@@ -205,7 +206,10 @@ export const handleDeleteProjectData = async (slug: string, title: string) => {
       }),
     );
   } catch (e) {
-    // do nothing if delete fails? or cancel the opertion
+    LoggerInstance.log({
+      level: 'error',
+      message: `Error deleting image from S3: ${e}`,
+    });
   }
 
   const result = await projectsCollection.findOneAndUpdate(
