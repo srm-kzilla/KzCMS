@@ -16,6 +16,13 @@ export const handleUpdateUser = async (email: string, password: string): Promise
 };
 
 export async function handleDeleteUser(email: string) {
+  const user = await (await db()).collection('users').findOne({ email });
+  if (!user) {
+    throw { statusCode: ERRORS.USER_NOT_FOUND.code, message: ERRORS.USER_NOT_FOUND.message };
+  }
+  if (user.isDeleted) {
+    throw { statusCode: ERRORS.USER_ALREADY_DELETED.code, message: ERRORS.USER_ALREADY_DELETED.message };
+  }
   await (await db()).collection('users').updateOne({ email }, { $set: { isDeleted: true } });
 }
 
