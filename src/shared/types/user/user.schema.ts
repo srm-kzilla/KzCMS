@@ -1,7 +1,15 @@
 import { z } from 'zod';
+import { EMAIL_REGEX_PATTERN } from '@/shared/constants';
+
+export const emailSchema = z
+  .string()
+  .email()
+  .refine(email => {
+    return EMAIL_REGEX_PATTERN.test(email);
+  },"Invalid email format");
 
 export const userSchema = z.object({
-  email: z.string().email(),
+  email: emailSchema,
   password: z.string().min(5, { message: 'Must be 5 characters long or more' }),
   created_at: z.coerce.date().optional(),
   isAdmin: z.boolean().optional().default(false),
