@@ -1,9 +1,9 @@
 import db from '@/loaders/database';
-import bcrypt from 'bcrypt';
-import { ERRORS } from '@/shared/errors';
-import { AnyBulkWriteOperation } from 'mongodb';
-import { UpdateProjectSchemaType } from '@/shared/types';
 import { SALT_ROUNDS } from '@/shared/constants';
+import { ERRORS } from '@/shared/errors';
+import { UpdateProjectSchemaType } from '@/shared/types';
+import bcrypt from 'bcrypt';
+import { AnyBulkWriteOperation } from 'mongodb';
 
 export const handleUpdateUser = async (email: string, password: string): Promise<void> => {
   const data = await (await db()).collection('users').findOne({ email: email });
@@ -49,10 +49,10 @@ export async function handleUpdateUserProjects(data: UpdateProjectSchemaType) {
   const deleted_users = data.deletedUserAccess;
 
   const collection = await (await db()).collection('users');
-  const bulkOperations: AnyBulkWriteOperation<{}>[] = [];
+  const bulkOperations: AnyBulkWriteOperation<object>[] = [];
 
   for (let i = 0; i < new_users.length; i++) {
-    const query: AnyBulkWriteOperation<{}> = {
+    const query: AnyBulkWriteOperation<object> = {
       updateOne: {
         filter: { email: new_users[i], projects: { $nin: [data.projectSlug] } },
         update: { $push: { projects: data.projectSlug } },
@@ -62,14 +62,14 @@ export async function handleUpdateUserProjects(data: UpdateProjectSchemaType) {
   }
 
   for (let i = 0; i < deleted_users.length; i++) {
-    const query: AnyBulkWriteOperation<{}> = {
+    const query: AnyBulkWriteOperation<object> = {
       updateOne: { filter: { email: deleted_users[i] }, update: { $pull: { projects: data.projectSlug } } },
     };
     bulkOperations.push(query);
   }
 
   if (bulkOperations.length > 0) {
-    const success = collection.bulkWrite(bulkOperations);
+    const success = await collection.bulkWrite(bulkOperations);
     if (!success) {
       throw { statusCode: ERRORS.SERVER_ERROR.code, message: ERRORS.SERVER_ERROR.message.error };
     }

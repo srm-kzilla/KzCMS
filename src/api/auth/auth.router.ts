@@ -1,7 +1,7 @@
-import { Router } from 'express';
-import { addNewUser, loginExistingUser } from './auth.controller';
 import { validateRequest } from '@/shared/middlewares/validator';
 import { AuthSchema } from '@/shared/types';
+import { Router } from 'express';
+import { addNewUser, loginExistingUser } from './auth.controller';
 
 export default (): Router => {
   const app = Router();
