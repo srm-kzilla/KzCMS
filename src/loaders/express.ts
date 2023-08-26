@@ -25,9 +25,6 @@ export default ({ app }: { app: express.Application }): void => {
     }
   });
 
-  // It shows the real origin IP in the heroku or Cloudwatch logs
-  app.enable('trust proxy');
-
   // Middleware that helps secure app by setting headers
   app.use(helmet());
 
