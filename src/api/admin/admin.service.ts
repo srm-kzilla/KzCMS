@@ -62,7 +62,7 @@ export async function handleUpdateUserProjects(data: UpdateProjectSchemaType) {
   for (let i = 0; i < deleted_users.length; i++) {
     const query: AnyBulkWriteOperation<{}> = {
       updateOne: {
-        filter: { projectSlug: data.projectSlug, userAccess: { $in: [new_users[i]] } },
+        filter: { projectSlug: data.projectSlug },
         update: { $pull: { userAccess: deleted_users[i] } },
       },
     };
