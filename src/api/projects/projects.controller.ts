@@ -1,17 +1,23 @@
-import { Request, Response, NextFunction } from 'express';
-import LoggerInstance from '@/loaders/logger';
+import { STATUS } from '@/shared/constants';
 import { ERRORS } from '@/shared/errors';
-import { CreateProjectType, ProjectSlugType, ProjectDataType } from '@/shared/types';
 import {
-  handleCreateProjectData,
+  CreateProjectType,
+  ProjectDataType,
+  ProjectMetadataType,
+  ProjectSlugType,
+  ProjectTitleType,
+} from '@/shared/types';
+import { NextFunction, Request, Response } from 'express';
+import {
   handleCreateProject,
+  handleCreateProjectData,
   handleDeleteProject,
+  handleDeleteProjectData,
   handleGetAllProjects,
   handleGetProject,
   handleUpdateProjectData,
-  handleDeleteProjectData,
+  handleUpdateProjectMetadata,
 } from './projects.service';
-import { STATUS } from '@/shared/constants';
 
 export const getAllProjects = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
@@ -25,15 +31,7 @@ export const getAllProjects = async (req: Request, res: Response, next: NextFunc
   }
 };
 
-export const getProject = async (
-  req: Request & {
-    params: {
-      slug: string;
-    };
-  },
-  res: Response,
-  next: NextFunction,
-): Promise<void> => {
+export const getProject = async (req: Request<ProjectSlugType>, res: Response, next: NextFunction): Promise<void> => {
   try {
     const data = await handleGetProject(req.params.slug);
     res.status(STATUS.OK).json({
@@ -47,7 +45,7 @@ export const getProject = async (
 };
 
 export const createProject = async (
-  req: Request & CreateProjectType,
+  req: Request<unknown, unknown, CreateProjectType>,
   res: Response,
   next: NextFunction,
 ): Promise<void> => {
@@ -64,24 +62,36 @@ export const createProject = async (
 };
 
 export const updateProjectData = async (
-  req: Request & {
-    body: ProjectDataType;
-  },
+  req: Request<ProjectSlugType, unknown, ProjectDataType>,
   res: Response,
+  next: NextFunction,
 ): Promise<void> => {
   try {
     const data = await handleUpdateProjectData(req.params.slug, req.body);
     res.status(200).json(data);
   } catch (error) {
-    LoggerInstance.error(`Error while updating Project: ${error}`);
-    res
-      .status(error.statusCode ?? ERRORS.SERVER_ERROR.code)
-      .json({ success: false, message: error.message ?? ERRORS.SERVER_ERROR.message });
+    next(error);
+  }
+};
+
+export const updateProjectMetadata = async (
+  req: Request<ProjectSlugType, unknown, ProjectMetadataType>,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    await handleUpdateProjectMetadata(req.params.slug, req.body.newName, req.body.newSlug);
+    res.status(STATUS.OK).json({
+      success: true,
+      message: `project \`${req.params.slug}\` updated`,
+    });
+  } catch (error) {
+    next(error);
   }
 };
 
 export const deleteProject = async (
-  req: Request & ProjectSlugType,
+  req: Request<ProjectSlugType>,
   res: Response,
   next: NextFunction,
 ): Promise<void> => {
@@ -97,8 +107,7 @@ export const deleteProject = async (
 };
 
 export const createProjectData = async (
-  req: Request & {
-    body: ProjectDataType;
+  req: Request<ProjectSlugType, unknown, ProjectDataType> & {
     file: Express.Multer.File;
   },
   res: Response,
@@ -119,7 +128,11 @@ export const createProjectData = async (
   }
 };
 
-export const deleteProjectData = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const deleteProjectData = async (
+  req: Request<ProjectSlugType, unknown, ProjectTitleType>,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
   try {
     await handleDeleteProjectData(req.params.slug, req.body.title);
 

@@ -1,11 +1,12 @@
 import config from '@/config';
 import db from '@/loaders/database';
+import LoggerInstance from '@/loaders/logger';
 import { LINK_REGEX_PATTERN } from '@/shared/constants';
 import { ERRORS } from '@/shared/errors';
-import { CreateProjectType, ProjectDataType } from '@/shared/types';
+import { CreateProjectType, ProjectDataType, ProjectType } from '@/shared/types';
 import { DeleteObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import fs from 'fs';
-import { ObjectId } from 'mongodb';
+import { ObjectId, UpdateFilter } from 'mongodb';
 import slugify from 'slugify';
 import { promisify } from 'util';
 
@@ -26,14 +27,14 @@ const removeFileAfterUse = async (path: fs.PathLike) => {
   } catch {
     throw {
       statusCode: ERRORS.SERVER_ERROR.code,
-      message: `${ERRORS.SERVER_ERROR.message} | File Unlink Error`,
+      message: `${ERRORS.SERVER_ERROR.message.error} | File Unlink Error`,
     };
   }
 };
 
 export const handleCreateProject = async ({ projectName, typeName }: CreateProjectType): Promise<string> => {
-  if (!projectName || !typeName){
-    throw {success: false, statusCode: ERRORS.MALFORMED_BODY.code, message: ERRORS.MALFORMED_BODY.message };
+  if (!projectName || !typeName) {
+    throw { success: false, statusCode: ERRORS.MALFORMED_BODY.code, message: ERRORS.MALFORMED_BODY.message };
   }
   const projectsCollection = (await db()).collection('projects');
   const slug = slugify(`${projectName} ${typeName}`, { lower: true, replacement: '-', trim: true });
@@ -76,6 +77,21 @@ export const handleUpdateProjectData = async (slug: string, data: ProjectDataTyp
   });
 
   return { updatedProject: updatedProject.value } as unknown as ProjectDataType;
+};
+
+export const handleUpdateProjectMetadata = async (slug: string, newName: string, newSlug: string) => {
+  const projectsCollection = (await db()).collection('projects');
+  const project = await projectsCollection.findOne({ projectSlug: slug });
+  if (!project) {
+    throw { errorCode: ERRORS.RESOURCE_NOT_FOUND.code, message: ERRORS.RESOURCE_NOT_FOUND.message };
+  }
+  if (!newSlug) {
+    newSlug = project.projectSlug;
+  }
+
+  const SLUG = slugify(`${newSlug}`, { lower: true, replacement: '-', trim: true });
+
+  projectsCollection.updateOne({ projectSlug: slug }, { $set: { projectName: newName, projectSlug: SLUG } });
 };
 
 export const handleGetAllProjects = async () => {
@@ -145,7 +161,7 @@ export const handleCreateProjectData = async (slug: string, data: ProjectDataTyp
           title: data.title,
           description: data.description,
           link: data.link,
-          imageUrl: `${S3_BASE_URL}/${file.filename}`,
+          imageURL: `${S3_BASE_URL}/${file.filename}`,
           author: data.author,
         },
       },
@@ -154,30 +170,26 @@ export const handleCreateProjectData = async (slug: string, data: ProjectDataTyp
 };
 
 export const handleDeleteProjectData = async (slug: string, title: string) => {
-  const result = await (
-    await db()
-  )
-    .collection('projects')
-    // @ts-ignore
-    .findOneAndUpdate({ projectSlug: slug }, { $pull: { data: { title: title } } }, { returnOriginal: false });
+  const projectsCollection = (await db()).collection('projects');
+  const project = await projectsCollection.findOne<ProjectType>({ projectSlug: slug });
 
-  if (!result.value || !result.value.data) {
+  if (!project) {
     throw {
       statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
       message: ERRORS.RESOURCE_NOT_FOUND.message,
     };
   }
 
-  const data = result.value.data.find((item: any) => item.title === title);
+  const data = project.data.find(item => item.title === title);
 
-  if (!data || !data.imageUrl) {
+  if (!data || !data.imageURL) {
     throw {
       statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
       message: ERRORS.RESOURCE_NOT_FOUND.message,
     };
   }
 
-  const KEY = data.imageUrl.match(LINK_REGEX_PATTERN);
+  const KEY = data.imageURL.match(LINK_REGEX_PATTERN);
 
   if (!KEY) {
     throw {
@@ -186,10 +198,40 @@ export const handleDeleteProjectData = async (slug: string, title: string) => {
     };
   }
 
-  // await s3Client.send(
-  //   new DeleteObjectCommand({
-  //     Bucket: config.AWS.bucketName,
-  //     Key: KEY[1],
-  //   }),
-  // );
+  try {
+    await s3Client.send(
+      new DeleteObjectCommand({
+        Bucket: config.AWS.bucketName,
+        Key: KEY[1],
+      }),
+    );
+  } catch (e) {
+    LoggerInstance.log({
+      level: 'error',
+      message: `Error deleting image from S3: ${e}`,
+    });
+  }
+
+  const result = await projectsCollection.findOneAndUpdate(
+    {
+      projectSlug: slug,
+    },
+    {
+      $pull: {
+        data: {
+          title,
+        },
+      } as UpdateFilter<ProjectDataType>,
+    },
+    {
+      returnDocument: 'after',
+    },
+  );
+
+  if (!result.value) {
+    throw {
+      statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
+      message: ERRORS.RESOURCE_NOT_FOUND.message,
+    };
+  }
 };

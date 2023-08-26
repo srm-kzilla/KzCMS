@@ -1,8 +1,8 @@
 import db from '@/loaders/database';
-import bcrypt from 'bcrypt';
-import { UserSchemaType, AuthType } from '@/shared/types';
-import generateToken from '@/shared/middlewares/jwt';
 import { SALT_ROUNDS } from '@/shared/constants';
+import generateToken from '@/shared/middlewares/jwt';
+import { UserSchemaType } from '@/shared/types';
+import bcrypt from 'bcrypt';
 
 export async function handleAddNewUser(signup: UserSchemaType) {
   const data = await (await db()).collection('users').findOne({ email: signup.email });
@@ -14,16 +14,17 @@ export async function handleAddNewUser(signup: UserSchemaType) {
   const hash = await bcrypt.hash(signup.password, SALT_ROUNDS);
 
   await collection.insertOne({
+    email: signup.email,
     password: hash,
     isAdmin: false,
     isVerified: false,
     isDeleted: false,
     projects: [],
-    createdAt: new Date()
+    createdAt: new Date(),
   });
 }
 
-export async function handleExistingUser({ email, password }: AuthType): Promise<string> {
+export async function handleExistingUser({ email, password }: UserSchemaType): Promise<string> {
   const data = await (await db()).collection('users').findOne({ email: email });
 
   if (!data) {

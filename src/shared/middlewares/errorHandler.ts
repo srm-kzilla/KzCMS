@@ -11,6 +11,6 @@ export const errorHandler = (error: ApiError, _req: Request, res: Response, next
   LoggerInstance.error(error.message);
   res.status(error.statusCode ?? ERRORS.SERVER_ERROR.code).json({
     success: false,
-    message: error.message ?? ERRORS.SERVER_ERROR.message,
+    message: error.message ?? ERRORS.SERVER_ERROR.message.error,
   });
 };

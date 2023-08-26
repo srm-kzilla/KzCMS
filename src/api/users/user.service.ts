@@ -1,6 +1,6 @@
 import db from '@/loaders/database';
 import { ERRORS } from '@/shared/errors';
-import { Collection, WithId, ObjectId } from 'mongodb';
+import { Collection, WithId } from 'mongodb';
 
 export const handleGetUsers = async (): Promise<WithId<Document>[]> => {
   const collection: Collection<Document> = (await db()).collection('users');
@@ -25,10 +25,9 @@ export async function handleGetUserProjects(email: string) {
   return user.projects;
 }
 
-export async function handleGetUserDetails(id: string) {
-  const oid = new ObjectId(id);
+export async function handleGetUserDetails(email: string) {
   const user = await (await db()).collection('users').findOne(
-    { _id: oid },
+    { email: email },
     {
       projection: {
         password: 0,
@@ -38,7 +37,7 @@ export async function handleGetUserDetails(id: string) {
   if (!user) {
     throw {
       status: ERRORS.RESOURCE_NOT_FOUND.code,
-      message: `User with id ${id} not found`,
+      message: `User with email ${email} not found`,
     };
   }
   return user;

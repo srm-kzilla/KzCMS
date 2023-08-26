@@ -1,9 +1,11 @@
 import { NextFunction, Request, Response } from 'express';
 
-import { handleDeleteUser, handleUpdateUser, handleUpdateUserProjects, handleVerifyUser } from './admin.service';
 import { MESSAGES_TEXT, STATUS } from '@/shared/constants';
+import { UpdateProjectSchemaType, VerifyUserType } from '@/shared/types/admin/admin.schema';
+import { UserSchemaType } from '@/shared/types/auth/auth.schema';
+import { handleDeleteUser, handleUpdateUser, handleUpdateUserProjects, handleVerifyUser } from './admin.service';
 
-export const updateUser = async (req: Request, res: Response, next: NextFunction) => {
+export const updateUser = async (req: Request<unknown, unknown, UserSchemaType>, res: Response, next: NextFunction) => {
   try {
     const { email, password } = req.body;
     await handleUpdateUser(email, password);
@@ -16,7 +18,7 @@ export const updateUser = async (req: Request, res: Response, next: NextFunction
   }
 };
 
-export const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
+export const deleteUser = async (req: Request<unknown, unknown, UserSchemaType>, res: Response, next: NextFunction) => {
   const user = req.body.email;
   try {
     await handleDeleteUser(user);
@@ -29,7 +31,7 @@ export const deleteUser = async (req: Request, res: Response, next: NextFunction
   }
 };
 
-export const verifyUser = async (req: Request, res: Response, next: NextFunction) => {
+export const verifyUser = async (req: Request<unknown, unknown, VerifyUserType>, res: Response, next: NextFunction) => {
   const { email, verify } = req.body;
 
   const userStatus = verify ? 'verified' : 'unverified';
@@ -45,7 +47,11 @@ export const verifyUser = async (req: Request, res: Response, next: NextFunction
   }
 };
 
-export async function updateUserProjects(req: Request, res: Response, next: NextFunction) {
+export async function updateUserProjects(
+  req: Request<unknown, unknown, UpdateProjectSchemaType>,
+  res: Response,
+  next: NextFunction,
+) {
   try {
     const data = await handleUpdateUserProjects(req.body);
     res.status(STATUS.OK).json({

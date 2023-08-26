@@ -2,7 +2,7 @@ export const ERRORS = {
   SERVER_ERROR: {
     code: 500,
     message: {
-      error: 'Server Error',
+      error: 'Internal Server Error',
       error_description: 'Something bad happened at the server.',
     },
   },
@@ -46,6 +46,13 @@ export const ERRORS = {
     message: {
       error: 'Resource Conflict',
       error_description: 'Resource already exsists',
+    },
+  },
+  USER_ALREADY_DELETED: {
+    code: 409,
+    message: {
+      error: 'User Already Deleted',
+      error_description: 'User already deleted',
     },
   },
 };
