@@ -1,30 +1,11 @@
 import { NextFunction, Request, Response } from 'express';
 
-import {
-  handleDeleteUser,
-  handleGetUserDetails,
-  handleGetUserProjects,
-  handleGetUsers,
-  handleUpdateUser,
-  handleUpdateUserProjects,
-  handleVerifyUser,
-} from './admin.service';
 import { MESSAGES_TEXT, STATUS } from '@/shared/constants';
+import { UpdateProjectSchemaType, VerifyUserType } from '@/shared/types/admin/admin.schema';
+import { UserSchemaType } from '@/shared/types/auth/auth.schema';
+import { handleDeleteUser, handleUpdateUser, handleUpdateUserProjects, handleVerifyUser } from './admin.service';
 
-export const getUsers = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const data = await handleGetUsers();
-    res.status(STATUS.OK).json({
-      success: true,
-      message: MESSAGES_TEXT.FETCH_USERS,
-      data,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
-export const updateUser = async (req: Request, res: Response, next: NextFunction) => {
+export const updateUser = async (req: Request<unknown, unknown, UserSchemaType>, res: Response, next: NextFunction) => {
   try {
     const { email, password } = req.body;
     await handleUpdateUser(email, password);
@@ -37,7 +18,7 @@ export const updateUser = async (req: Request, res: Response, next: NextFunction
   }
 };
 
-export const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
+export const deleteUser = async (req: Request<unknown, unknown, UserSchemaType>, res: Response, next: NextFunction) => {
   const user = req.body.email;
   try {
     await handleDeleteUser(user);
@@ -50,7 +31,7 @@ export const deleteUser = async (req: Request, res: Response, next: NextFunction
   }
 };
 
-export const verifyUser = async (req: Request, res: Response, next: NextFunction) => {
+export const verifyUser = async (req: Request<unknown, unknown, VerifyUserType>, res: Response, next: NextFunction) => {
   const { email, verify } = req.body;
 
   const userStatus = verify ? 'verified' : 'unverified';
@@ -66,55 +47,17 @@ export const verifyUser = async (req: Request, res: Response, next: NextFunction
   }
 };
 
-export async function updateUserProjects(req: Request, res: Response, next: NextFunction) {
+export async function updateUserProjects(
+  req: Request<unknown, unknown, UpdateProjectSchemaType>,
+  res: Response,
+  next: NextFunction,
+) {
   try {
     const data = await handleUpdateUserProjects(req.body);
     res.status(STATUS.OK).json({
       success: true,
       message: MESSAGES_TEXT.UPDATE_USER,
       userAccess: data,
-    });
-  } catch (error) {
-    next(error);  
-  }
-}
-
-export async function getUserDetails(
-  req: Request & {
-    params: {
-      userid: string;
-    };
-  },
-  res: Response,
-  next: NextFunction,
-) {
-  try {
-    const id = req.params.userid;
-    const data = await handleGetUserDetails(id);
-    return res.status(STATUS.OK).json({
-      success: true,
-      message: `user found with id ${id}`,
-      data,
-    });
-  } catch (error) {
-    next(error);
-  }
-}
-
-export async function getUserProjects(
-  req: Request & {
-    params: {
-      userid: string;
-    };
-  },
-  res: Response,
-  next: NextFunction,
-) {
-  try {
-    const projects = await handleGetUserProjects(req.params.userid);
-    return res.status(STATUS.OK).json({
-      success: true,
-      projects,
     });
   } catch (error) {
     next(error);

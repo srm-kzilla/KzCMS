@@ -1,0 +1,35 @@
+import multer, { FileFilterCallback } from 'multer';
+import path from 'path';
+import { ERRORS } from '../errors';
+
+export const upload = multer({
+  limits: { fileSize: 10000000 },
+  fileFilter: function (req, file, cb) {
+    checkFileType(file, cb);
+  },
+  storage: multer.diskStorage({
+    destination: function (_, __, cb) {
+      cb(null, './tmp/uploads');
+    },
+    filename: function (req, _file, cb) {
+      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random());
+      if (!req.params.slug) {
+        cb(new Error('No Slug found'), `NoSlugFound-${uniqueSuffix}`);
+      }
+      const fileName = `${req.params.slug.toLowerCase()}-${uniqueSuffix.toLowerCase()}`;
+      cb(null, fileName);
+    },
+  }),
+});
+
+function checkFileType(file: Express.Multer.File, cb: FileFilterCallback) {
+  const filetypes = /jpeg|jpg|png|gif/;
+  const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+
+  const mimetype = filetypes.test(file.mimetype);
+  if (mimetype && extname) {
+    return cb(null, true);
+  } else {
+    cb(new Error('Unsupported file format'));
+  }
+}

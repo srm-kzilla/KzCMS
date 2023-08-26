@@ -1,17 +1,25 @@
-import { Request, Response, NextFunction } from 'express';
-import LoggerInstance from '@/loaders/logger';
+import { STATUS } from '@/shared/constants';
 import { ERRORS } from '@/shared/errors';
-import { CreateProjectType, DeleteProjectType } from '@/shared/types/project/project.schema';
+import {
+  CreateProjectType,
+  ProjectDataType,
+  ProjectMetadataType,
+  ProjectSlugType,
+  ProjectTitleType,
+} from '@/shared/types';
+import { NextFunction, Request, Response } from 'express';
 import {
   handleCreateProject,
+  handleCreateProjectData,
   handleDeleteProject,
+  handleDeleteProjectData,
   handleGetAllProjects,
   handleGetProject,
-  handleUpdateProject,
+  handleUpdateProjectData,
+  handleUpdateProjectMetadata,
 } from './projects.service';
-import { STATUS } from '@/shared/constants';
 
-export const getProjects = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const getAllProjects = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const data = await handleGetAllProjects();
     res.status(STATUS.OK).json({
@@ -23,15 +31,7 @@ export const getProjects = async (req: Request, res: Response, next: NextFunctio
   }
 };
 
-export const getProject = async (
-  req: Request & {
-    params: {
-      slug: string;
-    };
-  },
-  res: Response,
-  next: NextFunction,
-): Promise<void> => {
+export const getProject = async (req: Request<ProjectSlugType>, res: Response, next: NextFunction): Promise<void> => {
   try {
     const data = await handleGetProject(req.params.slug);
     res.status(STATUS.OK).json({
@@ -45,7 +45,7 @@ export const getProject = async (
 };
 
 export const createProject = async (
-  req: Request & CreateProjectType,
+  req: Request<unknown, unknown, CreateProjectType>,
   res: Response,
   next: NextFunction,
 ): Promise<void> => {
@@ -61,30 +61,37 @@ export const createProject = async (
   }
 };
 
-export const updateProject = async (
-  req: Request & {
-    body: {
-      title: string;
-      description?: string;
-      link?: string;
-      author?: string;
-    };
-  },
+export const updateProjectData = async (
+  req: Request<ProjectSlugType, unknown, ProjectDataType>,
   res: Response,
+  next: NextFunction,
 ): Promise<void> => {
   try {
-    const data = await handleUpdateProject({ slug: req.params.slug, data: req.body });
+    const data = await handleUpdateProjectData(req.params.slug, req.body);
     res.status(200).json(data);
   } catch (error) {
-    LoggerInstance.error(`Error while updating Project: ${error}`);
-    res
-      .status(error.statusCode ?? ERRORS.SERVER_ERROR.code)
-      .json({ success: false, message: error.message ?? ERRORS.SERVER_ERROR.message });
+    next(error);
+  }
+};
+
+export const updateProjectMetadata = async (
+  req: Request<ProjectSlugType, unknown, ProjectMetadataType>,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    await handleUpdateProjectMetadata(req.params.slug, req.body.newName, req.body.newSlug);
+    res.status(STATUS.OK).json({
+      success: true,
+      message: `project \`${req.params.slug}\` updated`,
+    });
+  } catch (error) {
+    next(error);
   }
 };
 
 export const deleteProject = async (
-  req: Request & DeleteProjectType,
+  req: Request<ProjectSlugType>,
   res: Response,
   next: NextFunction,
 ): Promise<void> => {
@@ -93,6 +100,45 @@ export const deleteProject = async (
     res.status(STATUS.OK).json({
       success: true,
       message: `project \`${req.params.slug}\` deleted`,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const createProjectData = async (
+  req: Request<ProjectSlugType, unknown, ProjectDataType> & {
+    file: Express.Multer.File;
+  },
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    if (!req.file) {
+      throw { statusCode: ERRORS.MALFORMED_BODY.code, message: 'No Image provided' };
+    }
+
+    await handleCreateProjectData(req.params.slug, req.body, req.file);
+    res.status(STATUS.OK).json({
+      success: true,
+      message: `Data Created`,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const deleteProjectData = async (
+  req: Request<ProjectSlugType, unknown, ProjectTitleType>,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    await handleDeleteProjectData(req.params.slug, req.body.title);
+
+    res.status(STATUS.OK).json({
+      success: true,
+      message: `project \`${req.params.slug}\` - \`${req.body.title}\` Data deleted`,
     });
   } catch (error) {
     next(error);
