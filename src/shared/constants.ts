@@ -12,5 +12,7 @@ export const MESSAGES_TEXT = {
 };
 
 export const LINK_REGEX_PATTERN = /https:\/\/(?:[\w.-]+)\.s3\.ap-south-1\.amazonaws\.com\/(.+)/;
+
 export const SALT_ROUNDS = 10;
+
 export const EMAIL_REGEX_PATTERN = /^((?!\.)[\w\-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$/gm;
