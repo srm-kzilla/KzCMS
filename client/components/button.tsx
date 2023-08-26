@@ -9,7 +9,7 @@ const Button = ({ buttonTitle, ...rest }: ButtonPropsType) => {
     <button
       type="button"
       {...rest}
-      className="text-[#C4D3E0] bg-gradient-to-tr from-btn-blue to-btn-purple hover:bg-gradient-to-br font-medium p-4 rounded-lg text-sm w-32 text-center z-10 duration-300"
+      className="text-button-textColor bg-button-idle-gradient from-blue to-purple hover:bg-button-hover-gradient font-medium p-4 mt-12 rounded-lg text-sm w-32 text-center z-10 duration-300"
     >
       {buttonTitle}
     </button>
