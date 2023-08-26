@@ -38,18 +38,46 @@ export const handleVerifyUser = async (email: string, verify: boolean): Promise<
 };
 
 export async function handleUpdateUserProjects(data: UpdateProjectSchemaType) {
-  const updated_project = await (await db())
-    .collection('projects')
-    .updateOne({ projectSlug: data.projectSlug }, { $set: { userAccess: data.newUserAccess } });
-  if (!updated_project) {
-    throw { statusCode: ERRORS.SERVER_ERROR.code, message: ERRORS.SERVER_ERROR.message.error };
+  const project = await (await db()).collection('projects').findOne({ projectSlug: data.projectSlug });
+  if (!project) {
+    throw { statusCode: ERRORS.RESOURCE_NOT_FOUND.code, message: ERRORS.RESOURCE_NOT_FOUND.message.error };
   }
 
   const new_users = data.newUserAccess;
   const deleted_users = data.deletedUserAccess;
 
-  const collection = await (await db()).collection('users');
-  const bulkOperations: AnyBulkWriteOperation<{}>[] = [];
+  const projects_collection = await (await db()).collection('projects');
+  const projectsBulkOperations: AnyBulkWriteOperation<{}>[] = [];
+
+  for (let i = 0; i < new_users.length; i++) {
+    const query: AnyBulkWriteOperation<{}> = {
+      updateOne: {
+        filter: { projectSlug: data.projectSlug, userAccess: { $nin: [new_users[i]] } },
+        update: { $push: { userAccess: new_users[i] } },
+      },
+    };
+    projectsBulkOperations.push(query);
+  }
+
+  for (let i = 0; i < deleted_users.length; i++) {
+    const query: AnyBulkWriteOperation<{}> = {
+      updateOne: {
+        filter: { projectSlug: data.projectSlug, userAccess: { $in: [new_users[i]] } },
+        update: { $pull: { userAccess: deleted_users[i] } },
+      },
+    };
+    projectsBulkOperations.push(query);
+  }
+
+  if (projectsBulkOperations.length > 0) {
+    const success = projects_collection.bulkWrite(projectsBulkOperations);
+    if (!success) {
+      throw { statusCode: ERRORS.SERVER_ERROR.code, message: ERRORS.SERVER_ERROR.message.error };
+    }
+  }
+
+  const users_collection = await (await db()).collection('users');
+  const usersBulkOperations: AnyBulkWriteOperation<{}>[] = [];
 
   for (let i = 0; i < new_users.length; i++) {
     const query: AnyBulkWriteOperation<{}> = {
@@ -58,21 +86,21 @@ export async function handleUpdateUserProjects(data: UpdateProjectSchemaType) {
         update: { $push: { projects: data.projectSlug } },
       },
     };
-    bulkOperations.push(query);
+    usersBulkOperations.push(query);
   }
 
   for (let i = 0; i < deleted_users.length; i++) {
     const query: AnyBulkWriteOperation<{}> = {
       updateOne: { filter: { email: deleted_users[i] }, update: { $pull: { projects: data.projectSlug } } },
     };
-    bulkOperations.push(query);
+    usersBulkOperations.push(query);
   }
 
-  if (bulkOperations.length > 0) {
-    const success = collection.bulkWrite(bulkOperations);
+  if (usersBulkOperations.length > 0) {
+    const success = users_collection.bulkWrite(usersBulkOperations);
     if (!success) {
       throw { statusCode: ERRORS.SERVER_ERROR.code, message: ERRORS.SERVER_ERROR.message.error };
     }
   }
-  return new_users;
+  return project.userAccess;
 }
