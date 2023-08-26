@@ -1,18 +1,18 @@
+import authenticateToken from '@/shared/middlewares/authentication';
+import { upload } from '@/shared/middlewares/multer';
+import { validateRequest } from '@/shared/middlewares/validator';
+import { ProjectMetadataSchema, ProjectSlugSchmea } from '@/shared/types';
 import { Router } from 'express';
 import {
   createProject,
   createProjectData,
   deleteProject,
   deleteProjectData,
-  getProject,
   getAllProjects,
+  getProject,
   updateProjectData,
   updateProjectMetadata,
 } from './projects.controller';
-import authenticateToken from '@/shared/middlewares/authentication';
-import { upload } from '@/shared/middlewares/multer';
-import { validateRequest } from '@/shared/middlewares/validator';
-import { ProjectMetadataSchema, ProjectSlugSchmea } from '@/shared/types';
 
 export default (): Router => {
   const app = Router();
