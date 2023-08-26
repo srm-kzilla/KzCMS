@@ -23,7 +23,7 @@ export async function handleDeleteUser(email: string) {
   if (user.isDeleted) {
     throw { statusCode: ERRORS.USER_ALREADY_DELETED.code, message: ERRORS.USER_ALREADY_DELETED.message };
   }
-  await (await db()).collection('users').updateOne({ email }, { $set: { isDeleted: true } });
+  await (await db()).collection('users').updateOne({ email }, { $set: { isDeleted: true, isVerified: false } });
 }
 
 export const handleVerifyUser = async (email: string, verify: boolean): Promise<void> => {
