@@ -45,28 +45,44 @@ export async function handleUpdateUserProjects(data: UpdateProjectSchemaType) {
 
   const new_users = data.newUserAccess;
   const deleted_users = data.deletedUserAccess;
-  
+
   const projects_collection = await (await db()).collection('projects');
   const projectsBulkOperations: AnyBulkWriteOperation<{}>[] = [];
 
+  const users_collection = await (await db()).collection('users');
+  const usersBulkOperations: AnyBulkWriteOperation<{}>[] = [];
+
   for (let i = 0; i < new_users.length; i++) {
-    const query: AnyBulkWriteOperation<{}> = {
+    const projectUpdateQuery: AnyBulkWriteOperation<{}> = {
       updateOne: {
         filter: { projectSlug: data.projectSlug, userAccess: { $nin: [new_users[i]] } },
         update: { $push: { userAccess: new_users[i] } },
       },
     };
-    projectsBulkOperations.push(query);
+    projectsBulkOperations.push(projectUpdateQuery);
+
+    const usersUpdateQuery: AnyBulkWriteOperation<object> = {
+      updateOne: {
+        filter: { email: new_users[i], projects: { $nin: [data.projectSlug] } },
+        update: { $push: { projects: data.projectSlug } },
+      },
+    };
+    usersBulkOperations.push(usersUpdateQuery);
   }
 
   for (let i = 0; i < deleted_users.length; i++) {
-    const query: AnyBulkWriteOperation<{}> = {
+    const projectUpdateQuery: AnyBulkWriteOperation<{}> = {
       updateOne: {
         filter: { projectSlug: data.projectSlug },
         update: { $pull: { userAccess: deleted_users[i] } },
       },
     };
-    projectsBulkOperations.push(query);
+    projectsBulkOperations.push(projectUpdateQuery);
+
+    const usersUpdateQuery: AnyBulkWriteOperation<object> = {
+      updateOne: { filter: { email: deleted_users[i] }, update: { $pull: { projects: data.projectSlug } } },
+    };
+    usersBulkOperations.push(usersUpdateQuery);
   }
 
   if (projectsBulkOperations.length > 0) {
@@ -74,27 +90,6 @@ export async function handleUpdateUserProjects(data: UpdateProjectSchemaType) {
     if (!success) {
       throw { statusCode: ERRORS.SERVER_ERROR.code, message: ERRORS.SERVER_ERROR.message.error };
     }
-  }
-
-  const users_collection = await (await db()).collection('users');
-  const usersBulkOperations: AnyBulkWriteOperation<{}>[] = [];
-
-
-  for (let i = 0; i < new_users.length; i++) {
-    const query: AnyBulkWriteOperation<object> = {
-      updateOne: {
-        filter: { email: new_users[i], projects: { $nin: [data.projectSlug] } },
-        update: { $push: { projects: data.projectSlug } },
-      },
-    };
-    usersBulkOperations.push(query);
-  }
-
-  for (let i = 0; i < deleted_users.length; i++) {
-    const query: AnyBulkWriteOperation<object> = {
-      updateOne: { filter: { email: deleted_users[i] }, update: { $pull: { projects: data.projectSlug } } },
-    };
-    usersBulkOperations.push(query);
   }
 
   if (usersBulkOperations.length > 0) {
