@@ -54,7 +54,7 @@ export const handleCreateProject = async ({ projectName, typeName }: CreateProje
   return slug;
 };
 
-export const handleUpdateProjectData = async (slug: string, data: ProjectDataType) => {
+export const handleUpdateProjectData = async (slug: string, data: Omit<ProjectDataType, 'image'>) => {
   const projectsCollection = (await db()).collection('projects');
   const project = await projectsCollection.findOne({ projectSlug: slug, 'data.title': data.title });
   if (!project) {
