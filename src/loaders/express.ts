@@ -50,5 +50,9 @@ export default ({ app }: { app: express.Application }): void => {
 
   app.use(config.API.PREFIX, routes());
 
+  app.all('*', (req, res, next) => {
+    throw { statusCode: 404, message: 'Endpoint Not Found' };
+  });
+
   app.use(errorHandler);
 };
