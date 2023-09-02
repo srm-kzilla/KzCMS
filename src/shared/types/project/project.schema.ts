@@ -26,6 +26,7 @@ export const ProjectSchema = z.object({
 
 export const ProjectDataSchema = z.object({
   title: z.string(),
+  newTitle: z.string().optional(),
   description: z.string().optional(),
   image: z.any().optional(),
   link: z.string().url().optional(),

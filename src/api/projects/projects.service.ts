@@ -62,9 +62,12 @@ export const handleUpdateProjectData = async (slug: string, data: Omit<ProjectDa
   }
   const filter = { _id: new ObjectId(project._id), 'data.title': data.title };
 
+  if (!data.newTitle) {
+    data.newTitle = data.title;
+  }
   const update = {
     $set: {
-      'data.$.title': data.title,
+      'data.$.title': data.newTitle,
       'data.$.description': data.description,
       'data.$.link': data.link,
       'data.$.author': data.author,
