@@ -102,11 +102,17 @@ export const handleGetAllProjects = async () => {
   return projects as unknown as ProjectDataType[];
 };
 
-export const handleGetProject = async (projectSlug: string) => {
-  const projects = await (await db()).collection('projects').findOne({
-    projectSlug,
-  });
-  return projects as unknown as ProjectDataType;
+export const handleGetProject = async (projectSlug: string, email: string) => {
+  const projectsCollection = (await db()).collection('projects');
+  const project = await projectsCollection.findOne({ projectSlug });
+  if (!project) {
+    throw { errorCode: ERRORS.RESOURCE_NOT_FOUND.code, message: ERRORS.RESOURCE_NOT_FOUND.message };
+  }
+  if (!project.userAccess.includes(email)) {
+    throw { errorCode: ERRORS.UNAUTHORIZED.code, message: ERRORS.UNAUTHORIZED.message.error };
+  }
+
+  return project.data as unknown as ProjectDataType;
 };
 
 export const handleDeleteProject = async (slug: string) => {

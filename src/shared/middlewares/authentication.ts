@@ -18,7 +18,7 @@ export default function authenticateToken({ verifyAdmin } = { verifyAdmin: false
       const { email } = verifyToken(token);
 
       const data = await (await db()).collection('users').findOne({ email });
-      //
+
       if (!data) {
         LoggerInstance.error('User Not Found');
         throw { statusCode: 404, message: 'User Not Found' };
