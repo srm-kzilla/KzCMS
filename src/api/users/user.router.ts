@@ -8,7 +8,7 @@ export default (): Router => {
 
   app.get('/', getUsers);
   app.get('/user', validateRequest('body', AuthGetSchema), getUserDetails);
-  app.get('/user/projects', validateRequest('body', AuthGetSchema), getUserProjects);
+  app.get('/user/projects' , getUserProjects);
 
   return app;
 };
