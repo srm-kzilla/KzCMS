@@ -104,7 +104,7 @@ export const handleGetAllProjects = async () => {
 
 export const handleGetProject = async (projectSlug: string, email: string) => {
   const projectsCollection = (await db()).collection('projects');
-  const project = await projectsCollection.findOne({ projectSlug });
+  const project = await projectsCollection.findOne({ projectSlug }) as unknown as ProjectType | null;
   if (!project) {
     throw { errorCode: ERRORS.RESOURCE_NOT_FOUND.code, message: ERRORS.RESOURCE_NOT_FOUND.message };
   }
