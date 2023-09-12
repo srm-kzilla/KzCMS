@@ -1,5 +1,5 @@
 import { MESSAGES_TEXT, STATUS } from '@/shared/constants';
-import { AuthGetUserType, userType as UserType } from '@/shared/types';
+import { AuthGetUserType, userType } from '@/shared/types';
 import { NextFunction, Request, Response } from 'express';
 import { handleGetUserDetails, handleGetUserProjects, handleGetUsers } from './user.service';
 
@@ -40,7 +40,7 @@ export async function getUserProjects(
   next: NextFunction,
 ) {
   try {
-    const user: UserType = res.locals.user;
+    const user: userType = res.locals.user;
     const projects = await handleGetUserProjects(user.email);
     return res.status(STATUS.OK).json({
       success: true,
