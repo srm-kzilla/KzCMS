@@ -40,8 +40,8 @@ export async function getUserProjects(
   next: NextFunction,
 ) {
   try {
-    const user: userType = res.locals.user;
-    const projects = await handleGetUserProjects(user.email);
+    const { email }: userType = res.locals.user;
+    const projects = await handleGetUserProjects(email);
     return res.status(STATUS.OK).json({
       success: true,
       projects,
