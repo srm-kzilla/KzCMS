@@ -1,12 +1,12 @@
 import { z } from 'zod';
-import { emailSchema } from '../user/user.schema';
+import { EmailSchema } from '../user/user.schema';
 
 export const VerifyUserSchema = z.object({
-  email: emailSchema,
+  email: EmailSchema,
   verify: z.boolean(),
 });
 
-const userEmailSchema = z.array(z.string().email()).refine(
+const UserEmailSchema = z.array(z.string().email()).refine(
   array => {
     const set = new Set(array);
     return set.size === array.length;
@@ -17,10 +17,10 @@ const userEmailSchema = z.array(z.string().email()).refine(
 )
 
 export const UpdateProjectSchema = z.object({
-  adminEmail: emailSchema,
+  adminEmail: EmailSchema,
   projectSlug: z.string(),
-  newUserAccess: userEmailSchema,
-  deletedUserAccess: userEmailSchema
+  newUserAccess: UserEmailSchema,
+  deletedUserAccess: UserEmailSchema
 });
 
 export type UpdateProjectSchemaType = z.infer<typeof UpdateProjectSchema>;
