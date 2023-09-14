@@ -33,7 +33,9 @@ export const getAllProjects = async (req: Request, res: Response, next: NextFunc
 
 export const getProject = async (req: Request<ProjectSlugType>, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const data = await handleGetProject(req.params.slug);
+    const email = res.locals.user.email;
+
+    const data = await handleGetProject(req.params.slug, email);
     res.status(STATUS.OK).json({
       success: true,
       slug: req.params.slug,

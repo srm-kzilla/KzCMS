@@ -1,13 +1,13 @@
 import { z } from 'zod';
-import { emailSchema } from '../user/user.schema';
+import { EmailSchema } from '../user/user.schema';
 
 export const AuthSchema = z.object({
-  email: emailSchema,
+  email: EmailSchema,
   password: z.string().min(5, { message: 'Must be 5 characters long or more' }),
 });
 
 export const AuthGetSchema = z.object({
-  email: emailSchema,
+  email: EmailSchema,
 });
 
 export type UserSchemaType = z.infer<typeof AuthSchema>;

@@ -8,21 +8,11 @@ export const handleGetUsers = async (): Promise<WithId<Document>[]> => {
 };
 
 export async function handleGetUserProjects(email: string) {
-  const user = await (await db()).collection('users').findOne(
-    { email },
-    {
-      projection: {
-        projects: 1,
-      },
-    },
-  );
-  if (!user) {
-    throw {
-      statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
-      message: `User not found with id ${email}`,
-    };
-  }
-  return user.projects;
+  const collection: Collection<Document> = (await db()).collection('projects');
+
+  const projects = await collection.find({ userAccess: { $in: [email] } }).toArray();
+
+  return projects;
 }
 
 export async function handleGetUserDetails(email: string) {
