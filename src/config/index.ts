@@ -6,7 +6,15 @@ config();
 const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'production']).default('development'),
   PORT: z.string().regex(/^\d+$/).optional().default('5050'),
-  MONGODB_URI: z.string().startsWith('mongodb+srv://').includes('mongodb.net'),
+  MONGODB_URI: z.string().refine(value => {
+    if (value.startsWith('mongodb+srv://')) {
+      return value.includes('mongodb.net');
+    } else if (value.startsWith('mongodb://')) {
+      return true;
+    } else {
+      return false;
+    }
+  }),
   JWT_SECRET: z.string(),
   LEVEL: z.enum(['error', 'warn', 'info', 'http', 'verbose', 'debug', 'silly']).optional().default('silly'),
   PREFIX: z.string().optional().default('/api'),
