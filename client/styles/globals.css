@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 body {
-    @apply bg-cms-dark text-white overflow-x-hidden;
+    @apply bg-primary text-white overflow-x-hidden font-Montserrat;
 }
 
 ::-webkit-scrollbar {
@@ -11,7 +11,7 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-    @apply bg-cms-grey m-0 rounded-full p-0;
+    @apply bg-light m-0 rounded-full p-0;
     box-sizing: border-box;
 }
 
