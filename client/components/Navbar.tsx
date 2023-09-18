@@ -6,19 +6,18 @@ import ManageProjectIcon from 'remixicon-react/Layout2LineIcon';
 import SettingsIcon from 'remixicon-react/Settings4LineIcon';
 import LogoutIcon from 'remixicon-react/LogoutBoxRLineIcon';
 import { useRouter } from 'next/router';
-import CloseIcon from 'remixicon-react/CloseLineIcon';
 import UserIcon from 'remixicon-react/UserLineIcon';
 import MenuIcon from 'remixicon-react/MenuLineIcon';
 import Image from 'next/image';
 
-export interface userProps {
+export interface UserProps {
   name: string;
   email?: string;
   avatar?: string;
   id?: string;
 }
 
-const Navbar = ({ user }: { user: userProps }) => {
+const Navbar = ({ user }: { user: UserProps }) => {
   const [options, setOptions] = useState(false);
   const [mobileNav, setMobileNav] = useState(false);
 
