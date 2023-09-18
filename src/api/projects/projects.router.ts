@@ -11,6 +11,7 @@ import {
   getAllProjects,
   getProject,
   updateProjectData,
+  updateProjectImage,
   updateProjectMetadata,
 } from './projects.controller';
 
@@ -28,6 +29,7 @@ export default (): Router => {
   app.get('/:slug', authenticateToken(), getProject);
 
   app.patch('/:slug/data', authenticateToken(), updateProjectData);
+  app.patch('/:slug/:title/image', authenticateToken(), upload.single('image'), updateProjectImage);
   app.post('/', authenticateToken({ verifyAdmin: true }), createProject);
   app.post(
     '/:slug',

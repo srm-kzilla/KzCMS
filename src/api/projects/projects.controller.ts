@@ -1,8 +1,9 @@
-import { STATUS } from '@/shared/constants';
+import { STATUS, MESSAGES_TEXT } from '@/shared/constants';
 import { ERRORS } from '@/shared/errors';
 import {
   CreateProjectType,
   ProjectDataType,
+  ProjectImageSlugType,
   ProjectMetadataType,
   ProjectSlugType,
   ProjectTitleType,
@@ -11,6 +12,7 @@ import { NextFunction, Request, Response } from 'express';
 import {
   handleCreateProject,
   handleCreateProjectData,
+  handleUpdateProjectImage,
   handleDeleteProject,
   handleDeleteProjectData,
   handleGetAllProjects,
@@ -71,6 +73,28 @@ export const updateProjectData = async (
   try {
     const data = await handleUpdateProjectData(req.params.slug, req.body);
     res.status(200).json(data);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updateProjectImage = async (
+  req: Request<ProjectImageSlugType, unknown, ProjectDataType> & {
+    file: Express.Multer.File;
+  },
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    if (!req.file) {
+      throw { statusCode: ERRORS.MALFORMED_BODY.code, message: 'No Image provided' };
+    }
+
+    await handleUpdateProjectImage(req.params, req.file);
+    res.status(STATUS.OK).json({
+      success: true,
+      message: MESSAGES_TEXT.IMAGE_UPDATED,
+    });
   } catch (error) {
     next(error);
   }
