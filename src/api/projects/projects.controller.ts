@@ -1,4 +1,4 @@
-import { STATUS } from '@/shared/constants';
+import { STATUS, MESSAGES_TEXT } from '@/shared/constants';
 import { ERRORS } from '@/shared/errors';
 import {
   CreateProjectType,
@@ -12,7 +12,7 @@ import { NextFunction, Request, Response } from 'express';
 import {
   handleCreateProject,
   handleCreateProjectData,
-  handleCreateProjectImage,
+  handleUpdateProjectImage,
   handleDeleteProject,
   handleDeleteProjectData,
   handleGetAllProjects,
@@ -90,10 +90,10 @@ export const updateProjectImage = async (
       throw { statusCode: ERRORS.MALFORMED_BODY.code, message: 'No Image provided' };
     }
 
-    await handleCreateProjectImage(req.params, req.file);
+    await handleUpdateProjectImage(req.params, req.file);
     res.status(STATUS.OK).json({
       success: true,
-      message: `Image Updated`,
+      message: MESSAGES_TEXT.IMAGE_UPDATED,
     });
   } catch (error) {
     next(error);
