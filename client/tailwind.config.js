@@ -13,26 +13,13 @@ module.exports = {
         'button-hover-gradient': 'linear-gradient(to right, #5653FF, #B10DFF)',
       },
       fontFamily: {
-        raleway: ['Raleway', 'sans serif'],
+        Montserrat: ['Montserrat', 'sans serif'],
       },
       colors: {
-        cms: {
-          dark: '#0d1117',
-          grey: '#161b22',
-          lightGrey: '#2C3239',
-          blue: '#5b4fff',
-          purple: '#ad10ff',
-        },
-        button: {
-          blue: '#5653FF',
-          purple: '#B10DFF',
-          textColor: '#C4D3E0',
-        },
-        login: {
-          grey: "#27262C",
-          blue: "#7D7AFF",
-          
-        }
+          primary: '#1E1E1E',
+          secondary: '#2D2D2D',
+          highlight: '#9EC1A3',
+          light: '#7F8CA0',       
       },
     },
     plugins: [],
