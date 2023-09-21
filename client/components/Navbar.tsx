@@ -128,7 +128,7 @@ const Navbar = ({ user }: { user: UserProps }) => {
           </div>
         </div>
       </div>
-      <div className="w-full h-fit bg-primary absolute bottom-0 lg:hidden p-3 flex flex-col gap-3">
+      <div className="w-full h-fit bg-primary absolute bottom-0 lg:hidden p-3 flex flex-col gap-3 z-10">
         <div className="w-full h-16 bg-secondary rounded-lg p-2 flex items-center justify-between">
           <div className="flex gap-5 items-center">
             <div>

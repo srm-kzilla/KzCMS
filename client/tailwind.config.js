@@ -19,7 +19,11 @@ module.exports = {
           primary: '#1E1E1E',
           secondary: '#2D2D2D',
           highlight: '#9EC1A3',
-          light: '#7F8CA0',       
+          light: '#7F8CA0', 
+          card: {
+            red: "#FF0000",
+            gray: "#999999"
+          }      
       },
     },
     plugins: [],
