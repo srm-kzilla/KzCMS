@@ -1,7 +1,7 @@
-import { envSchemaType } from './src/config/index';
+import { EnvSchemaType } from './src/config/index';
 declare global {
   namespace NodeJS {
-    interface ProcessEnv extends envSchemaType {
+    interface ProcessEnv extends EnvSchemaType {
       JATIN: string;
     }
   }
