@@ -3,25 +3,30 @@ import React from 'react';
 import ProjectCard from '@/components/Project-card';
 interface ProjectCard {
   title: string;
-  ImageCount: string;
+  imagecount: number;
+  description: any;
 }
-const Card: React.FC = () => {
+const Card = () => {
   const cardData: ProjectCard[] = [
     {
       title: 'Mozofest',
-      ImageCount: '24 Images',
+      imagecount: 24,
+      description: 'Images',
     },
     {
       title: 'Mozofest',
-      ImageCount: '24 Images',
+      imagecount: 24,
+      description: 'Images',
     },
     {
       title: 'Mozofest',
-      ImageCount: '24 Images',
+      imagecount: 24,
+      description: 'Images',
     },
     {
       title: 'Mozofest',
-      ImageCount: '24 Images',
+      imagecount: 24,
+      description: 'Images',
     },
   ];
 
@@ -38,7 +43,9 @@ const Card: React.FC = () => {
           </div>
           <div className="flex flex-wrap py-5 sm:gap-2">
             {cardData.map((Card, index) => (
-              <ProjectCard key={index} title={Card.title} ImageCount={Card.ImageCount} />
+              <div key={index}>
+                <ProjectCard title={Card.title} imagecount={Card.imagecount} description={Card.description} />
+              </div>
             ))}
           </div>
         </div>
