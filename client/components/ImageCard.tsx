@@ -41,7 +41,7 @@ const ImageCard = (data: ImageCardPropsType) => {
             ></Image>
             <h1 className="text-3xl font-bold absolute bottom-10 z-10 w-full bg-white/50 text-gray-900 group-hover:hidden text-center">{title}</h1>
           </div>
-          <div className="scroll overflow-y-scroll absolute inset-0 h-full w-full bg-black/80 text-center text-slate-200 [transform:rotateY(180deg)] [backface-visibility:hidden] flex flex-col items-center justify-center gap-3 py-5 px-3">
+          <div className="absolute inset-0 h-full w-full bg-black/80 text-center text-slate-200 [transform:rotateY(180deg)] [backface-visibility:hidden] flex flex-col items-center justify-center gap-3 py-5 px-3">
             <div className="text-4xl font-bold">{title}</div>
             <div className="flex">
               <LinkIcon />
