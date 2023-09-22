@@ -4,16 +4,16 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
 export interface ImageCardPropsType {
-  imageLink: String;
-  title: String;
-  sponsorLink?: String;
-  description: String;
-  authorName: String;
+  imageLink: string;
+  title: string;
+  sponsorLink?: string;
+  description: string;
+  authorName: string;
 }
 
 const ImageCard = (data: ImageCardPropsType) => {
   const { imageLink, title, sponsorLink, description, authorName } = data;
-  const [projectName, setProjectName] = useState<string | null>(null);
+  const [projectName, setProjectName] = useState<string>();
 
   const router = useRouter();
   useEffect(() => {
@@ -22,18 +22,13 @@ const ImageCard = (data: ImageCardPropsType) => {
     }
   }, [router.isReady]);
 
-  const imgLoader = ({}) => {
-    return imageLink as string;;
-  };
-
   return (
     <article className="">
       <div className="group h-[300px] w-[320px] md:w-[400px] [perspective:1000px] rounded-xl overflow-hidden">
         <div className="relative h-full w-full shadow-xl transition-all duration-500 [transform-style:preserve-3d] group-focus:[transform:rotateY(180deg)] group-hover:[transform:rotateY(180deg)]">
           <div className="absolute inset-0 bg-slate-100 flex">
             <Image
-              src={imageLink as string}
-              loader={imgLoader}
+              src={imageLink}
               alt="Project data image"
               width={500}
               height={500}
@@ -44,7 +39,7 @@ const ImageCard = (data: ImageCardPropsType) => {
             <div className="text-4xl font-bold">{title}</div>
             <div className="flex">
               <LinkIcon />
-              <a href={sponsorLink as string} target="_blank" className=" font-semibold ml-2">
+              <a href={sponsorLink} target="_blank" className=" font-semibold ml-2">
                 {sponsorLink}
               </a>
             </div>

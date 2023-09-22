@@ -2,7 +2,7 @@ import { ImageCardPropsType } from '@/components/ImageCard';
 import { ImageCardsListPropsType } from '@/components/ImageCardList';
 
 const imageCardMockData: ImageCardPropsType = {
-  imageLink: 'https://picsum.photos/320/300.jpg',
+  imageLink: 'https://picsum.photos/900/900.jpg',
   title: 'Title',
   sponsorLink: 'https://eatwholy.com/',
   description:
