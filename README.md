@@ -1,51 +1,56 @@
-<div align="center">
-  <img alt="logo" src="docs/logo.svg" height="120" />
-</div>
+# KzCMS
 
 <div align="center">
-  <img style="margin-right: 16px;" alt="nodejs" src="https://upload.wikimedia.org/wikipedia/commons/d/d9/Node.js_logo.svg" height="60" />
-  <img alt="typescript" src="https://upload.wikimedia.org/wikipedia/commons/4/4c/Typescript_logo_2020.svg" height="60" />
-  <img alt="express" src="https://upload.wikimedia.org/wikipedia/commons/6/64/Expressjs.png" height="60" />
-  <img alt="mongodb" src="https://upload.wikimedia.org/wikipedia/commons/9/93/MongoDB_Logo.svg" height="60" />
+  <img alt="SRMKZILLA Logo" src="client/public/srmkzilla-gradient-logo.svg" height="56" />
 </div>
-
-<br>
 <p align="center">
-Bootstrapped using <code>Springboard</code>
+A Content Management System to manage content, allowing multiple contributors to create, edit and publish.
 </p>
 <p align="center">
-crafted with <span style="color: #DE6C5E;">&hearts;</span> by your friends on the <a href="https://srmkzilla.net">SRMKZILLA</a> team
+crafted with <span style="color: #8b0000;">&hearts;</span> by your friends on the <a href="https://srmkzilla.net">SRMKZILLA</a> team.
 </p>
 <p align="center">
     <img src="https://img.shields.io/badge/version-0.1.0-orange" alt="version 0.1.0"/>
+    <img src="https://img.shields.io/badge/license-MIT-brightgreen" alt="license MIT"/>
+    <img src="https://img.shields.io/badge/author-SRMKZILLA-orange" alt="author SRMKZILLA"/>
 </p>
 
-> Star the [repo](https://github.com/srm-kzilla/springboard). Show the love. ❣
+## Structure
 
-## Built With 🚀
-
-- [Node.js](https://nodejs.org/)
-- [TypeScript](https://www.typescriptlang.org/)
-- [Express](https://expressjs.com/)
-- [MongoDB](https://www.mongodb.com/)
+`KzCMS` is a monorepo having the backend server written in TypeScript and the frontend under the `client` folder.<br>
 
 ## Installation 🔧
 
 Install dependencies
 
 ```
-$ yarn
-# or
-$ npm install
+$ pnpm i
+```
+
+Build the server
+
+```
+$ pnpm build 
 ```
 
 Start the server
 
 ```
-$ yarn start
-# or
-$ npm run start
+$ pnpm start
 ```
+
+## Stack
+
+![Next JS](https://img.shields.io/badge/Next-black?style=for-the-badge&logo=next.js&logoColor=white)
+![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
+![NodeJS](https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white)
+![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![MongoDB](https://img.shields.io/badge/mongodb-%23081D2A.svg?style=for-the-badge&logo=mongodb&logoColor=green)
+
+
+## License 📜
+
+`KzCMS` is available under the MIT license. See the LICENSE file for more info.
 
 ## Contributing 🤝
 
