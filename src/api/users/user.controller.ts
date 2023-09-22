@@ -4,13 +4,13 @@ import { NextFunction, Request, Response } from 'express';
 import { handleGetUserDetails, handleGetUserProjects, handleGetUsers } from './user.service';
 
 export const getUsers = async (
-  req: Request<unknown, unknown, unknown, { verified?: boolean; unverified?: boolean }>,
+  req: Request<unknown, unknown, unknown, { status: 'verified' | 'unverified' }>,
   res: Response,
   next: NextFunction,
 ) => {
   try {
-    const { verified = false, unverified = false } = req.query;
-    const data = await handleGetUsers(verified, unverified);
+    const { status } = req.query;
+    const data = await handleGetUsers(status);
     res.status(STATUS.OK).json({
       success: true,
       message: MESSAGES_TEXT.FETCH_USERS,

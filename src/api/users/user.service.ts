@@ -1,7 +1,7 @@
 import db from '@/loaders/database';
 import { ERRORS } from '@/shared/errors';
 
-export const handleGetUsers = async (Verified: boolean, unVerified: boolean) => {
+export const handleGetUsers = async (status: string) => {
   const users = await (
     await db()
   )
@@ -12,7 +12,12 @@ export const handleGetUsers = async (Verified: boolean, unVerified: boolean) => 
   const verifiedUsers = users.filter(user => user.isVerified);
   const unVerifiedUsers = users.filter(user => !user.isVerified);
 
-  return Verified && !unVerified ? verifiedUsers : !Verified && unVerified ? unVerifiedUsers : users;
+  if (status === 'verified') {
+    return verifiedUsers;
+  } else if (status === 'unverified') {
+    return unVerifiedUsers;
+  }
+  return users;
 };
 
 export async function handleGetUserProjects(email: string) {
