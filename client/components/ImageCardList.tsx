@@ -1,6 +1,6 @@
 import React from 'react';
-import ImageCard from './ImageCard';
-import { ImageCardPropsType } from './ImageCard';
+import ImageCard from '@/components/ImageCard';
+import { ImageCardPropsType } from '@/components/ImageCard';
 
 export interface ImageCardsListPropsType {
   imageCards: ImageCardPropsType[];
