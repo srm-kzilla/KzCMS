@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 export interface ImageCardPropsType {
   imageLink: String;
   title: String;
-  sponsorLink: String | null;
+  sponsorLink?: String;
   description: String;
   autorName: String;
 }
@@ -39,7 +39,6 @@ const ImageCard = (data: ImageCardPropsType) => {
               height={500}
               unoptimized
             ></Image>
-            <h1 className="text-3xl font-bold absolute bottom-10 z-10 w-full bg-white/50 text-gray-900 group-hover:hidden text-center">{title}</h1>
           </div>
           <div className="absolute inset-0 h-full w-full bg-black/80 text-center text-slate-200 [transform:rotateY(180deg)] [backface-visibility:hidden] flex flex-col items-center justify-center gap-3 py-5 px-3">
             <div className="text-4xl font-bold">{title}</div>
