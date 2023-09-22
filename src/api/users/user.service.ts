@@ -9,26 +9,25 @@ export const handleGetUsers = async (Verified: boolean, unVerified: boolean) => 
     .find({ isDeleted: false }, { projection: { _id: 0, password: 0 } })
     .toArray();
 
-  const verifiedUsers = users.filter(user => user.isVerified === true);
-  const unVerifiedUsers = users.filter(user => user.isVerified === false);
+  const verifiedUsers = users.filter(user => user.isVerified);
+  const unVerifiedUsers = users.filter(user => !user.isVerified);
 
-  if (Verified && !unVerified) {
-    return verifiedUsers;
-  } else if (!Verified && unVerified) {
-    return unVerifiedUsers;
-  } else {
-    return users;
-  }
+  return Verified && !unVerified ? verifiedUsers : !Verified && unVerified ? unVerifiedUsers : users;
 };
 
 export async function handleGetUserProjects(email: string) {
   const collection = (await db()).collection('projects');
 
-  return await collection.find({ userAccess: { $in: [email] }, isDeleted: false }, {
-    projection: {
-      _id: 0,
-    },
-  }).toArray();
+  return await collection
+    .find(
+      { userAccess: { $in: [email] }, isDeleted: false },
+      {
+        projection: {
+          _id: 0,
+        },
+      },
+    )
+    .toArray();
 }
 
 export async function handleGetUserDetails(email: string) {
