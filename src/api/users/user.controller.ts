@@ -3,9 +3,14 @@ import { AuthGetUserType, UserType } from '@/shared/types';
 import { NextFunction, Request, Response } from 'express';
 import { handleGetUserDetails, handleGetUserProjects, handleGetUsers } from './user.service';
 
-export const getUsers = async (req: Request, res: Response, next: NextFunction) => {
+export const getUsers = async (
+  req: Request<unknown, unknown, unknown, { status: 'verified' | 'unverified' }>,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
-    const data = await handleGetUsers();
+    const { status } = req.query;
+    const data = await handleGetUsers(status);
     res.status(STATUS.OK).json({
       success: true,
       message: MESSAGES_TEXT.FETCH_USERS,
@@ -22,7 +27,7 @@ export async function getUserDetails(
   next: NextFunction,
 ) {
   try {
-    const email = req.body.email;
+    const { email } = res.locals.user as UserType;
     const data = await handleGetUserDetails(email);
     return res.status(STATUS.OK).json({
       success: true,

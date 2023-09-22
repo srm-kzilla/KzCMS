@@ -23,7 +23,7 @@ const ImageCard = (data: ImageCardPropsType) => {
   }, [router.isReady]);
 
   return (
-    <article className="">
+    <article>
       <div className="group h-[300px] w-[320px] md:w-[400px] [perspective:1000px] rounded-xl overflow-hidden">
         <div className="relative h-full w-full shadow-xl transition-all duration-500 [transform-style:preserve-3d] group-focus:[transform:rotateY(180deg)] group-hover:[transform:rotateY(180deg)]">
           <div className="absolute inset-0 bg-slate-100 flex">
