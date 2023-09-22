@@ -13,17 +13,17 @@ export interface ImageCardPropsType {
 
 const ImageCard = (data: ImageCardPropsType) => {
   const { imageLink, title, sponsorLink, description, autorName } = data;
-  const [project, setProject] = useState<any>(null);
+  const [projectName, setProjectName] = useState<string | null>(null);
 
   const router = useRouter();
   useEffect(() => {
     if (router.isReady) {
-      setProject(router.query.project);
+      setProjectName(router.query.project as string);
     }
   }, [router.isReady]);
 
   const imgLoader = ({}) => {
-    return `${imageLink}`;
+    return imageLink as string;;
   };
 
   return (
@@ -44,9 +44,9 @@ const ImageCard = (data: ImageCardPropsType) => {
             <div className="text-4xl font-bold">{title}</div>
             <div className="flex">
               <LinkIcon />
-              <div onClick={() => window.open(sponsorLink as string)} className=" font-semibold ml-2">
+              <a href={sponsorLink as string} target="_blank" className=" font-semibold ml-2">
                 {sponsorLink}
-              </div>
+              </a>
             </div>
             <div className="text-card-gray font-semibold mb-2">{description}</div>
             <div className="flex gap-2">
