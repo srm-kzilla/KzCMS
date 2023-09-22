@@ -17,7 +17,7 @@ export default (): Router => {
     adminRouter(),
   );
   app.use('/projects', projectsRouter());
-  app.use('/users', authenticateToken(), userRouter());
+  app.use('/users', userRouter());
 
   return app;
 };

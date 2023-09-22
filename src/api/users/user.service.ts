@@ -1,25 +1,46 @@
 import db from '@/loaders/database';
 import { ERRORS } from '@/shared/errors';
-import { Collection, WithId } from 'mongodb';
 
-export const handleGetUsers = async (): Promise<WithId<Document>[]> => {
-  const collection: Collection<Document> = (await db()).collection('users');
-  return await collection.find({}, { projection: { password: 0 } }).toArray();
+export const handleGetUsers = async (status: string) => {
+  const users = await (
+    await db()
+  )
+    .collection('users')
+    .find({ isDeleted: false }, { projection: { _id: 0, password: 0 } })
+    .toArray();
+
+  const verifiedUsers = users.filter(user => user.isVerified);
+  const unVerifiedUsers = users.filter(user => !user.isVerified);
+
+  if (status === 'verified') {
+    return verifiedUsers;
+  } else if (status === 'unverified') {
+    return unVerifiedUsers;
+  }
+  return users;
 };
 
 export async function handleGetUserProjects(email: string) {
-  const collection: Collection<Document> = (await db()).collection('projects');
+  const collection = (await db()).collection('projects');
 
-  const projects = await collection.find({ userAccess: { $in: [email] } }).toArray();
-
-  return projects;
+  return await collection
+    .find(
+      { userAccess: { $in: [email] }, isDeleted: false },
+      {
+        projection: {
+          _id: 0,
+        },
+      },
+    )
+    .toArray();
 }
 
 export async function handleGetUserDetails(email: string) {
   const user = await (await db()).collection('users').findOne(
-    { email: email },
+    { email: email, isDeleted: false },
     {
       projection: {
+        _id: 0,
         password: 0,
       },
     },
