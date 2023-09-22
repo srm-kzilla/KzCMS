@@ -8,11 +8,11 @@ export interface ImageCardPropsType {
   title: String;
   sponsorLink?: String;
   description: String;
-  autorName: String;
+  authorName: String;
 }
 
 const ImageCard = (data: ImageCardPropsType) => {
-  const { imageLink, title, sponsorLink, description, autorName } = data;
+  const { imageLink, title, sponsorLink, description, authorName } = data;
   const [projectName, setProjectName] = useState<string | null>(null);
 
   const router = useRouter();
@@ -53,7 +53,7 @@ const ImageCard = (data: ImageCardPropsType) => {
               <button className="p-1 rounded-xl w-20 border-2 font-bold">Edit</button>
               <button className="p-1 rounded-xl w-20 border-2 border-card-red text-card-red font-bold">Delete</button>
             </div>
-            <div className=" text-[#797979]">Last edited by : {autorName}</div>
+            <div className=" text-[#797979]">Last edited by : {authorName}</div>
           </div>
         </div>
       </div>
