@@ -1,30 +1,15 @@
-import { CardsListPropsType } from '@/components/CardsList';
+import { ImageCardPropsType } from '@/components/ImageCard';
+import { ImageCardsListPropsType } from '@/components/ImageCardList';
 
-export const cardListMock: CardsListPropsType = {
-  cards: [
-    {
-      title: 'Mozofest',
-      websiteUrl: 'https://mozofest.srmkzilla.net/',
-      manageUrl: '/mozofest',
-      cardType: 'products',
-    },
-    {
-      title: 'Product',
-      websiteUrl: 'https://mozofest.srmkzilla.net/',
-      manageUrl: '/mozofest',
-      cardType: 'products',
-    },
-    {
-      title: 'Event',
-      websiteUrl: 'https://mozofest.srmkzilla.net/',
-      manageUrl: '/mozofest',
-      cardType: 'events',
-    },
-    {
-      title: 'Mozofest',
-      websiteUrl: 'https://mozofest.srmkzilla.net/',
-      manageUrl: '/mozofest',
-      cardType: 'others',
-    },
-  ],
+const imageCardMockData: ImageCardPropsType = {
+  imageLink: 'https://picsum.photos/900/900.jpg',
+  title: 'Title',
+  sponsorLink: 'https://eatwholy.com/',
+  description:
+    "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard",
+  authorName: 'Author Name',
+};
+
+export const imageCardListData: ImageCardsListPropsType = {
+  imageCards: [imageCardMockData, imageCardMockData, imageCardMockData, imageCardMockData, imageCardMockData],
 };
