@@ -1,4 +1,4 @@
-import { EnvSchemaType } from './src/config/index';
+import { EnvSchemaType } from '@/config/index';
 declare global {
   namespace NodeJS {
     interface ProcessEnv extends EnvSchemaType {}
