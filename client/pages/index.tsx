@@ -1,31 +1,35 @@
 import Layout from '@/components/Layout';
-import React from 'react';
 import ProjectCard from '@/components/Project-card';
 interface ProjectCard {
   title: string;
-  imagecount: number;
-  description: any;
+  imageCount: number;
+  description: string;
 }
 const Card = () => {
   const cardData: ProjectCard[] = [
     {
       title: 'Mozofest',
-      imagecount: 24,
+      imageCount: 24,
       description: 'Images',
     },
     {
       title: 'Mozofest',
-      imagecount: 24,
+      imageCount: 24,
       description: 'Images',
     },
     {
       title: 'Mozofest',
-      imagecount: 24,
+      imageCount: 24,
       description: 'Images',
     },
     {
       title: 'Mozofest',
-      imagecount: 24,
+      imageCount: 24,
+      description: 'Images',
+    },
+    {
+      title: 'Mozofest',
+      imageCount: 24,
       description: 'Images',
     },
   ];
@@ -37,14 +41,14 @@ const Card = () => {
           name: 'Paddy',
         }}
       >
-        <div className="gap-10">
+        <div className="flex flex-col gap-10">
           <div className="w-full h-fit">
             <h1 className="font-bold text-2xl lg:text-4xl">MY PROJECTS</h1>
           </div>
-          <div className="flex flex-wrap py-5 sm:gap-2">
-            {cardData.map((Card, index) => (
-              <div key={index}>
-                <ProjectCard title={Card.title} imagecount={Card.imagecount} description={Card.description} />
+          <div className="flex-wrap flex gap-5 w-full">
+            {cardData.map((item, key) => (
+              <div key={key}>
+                <ProjectCard title={item.title} imageCount={item.imageCount} description={item.description} />
               </div>
             ))}
           </div>
