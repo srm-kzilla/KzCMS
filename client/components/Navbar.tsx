@@ -9,15 +9,11 @@ import { useRouter } from 'next/router';
 import UserIcon from 'remixicon-react/UserLineIcon';
 import MenuIcon from 'remixicon-react/MenuLineIcon';
 import Image from 'next/image';
+import { parseCookies, setCookie, destroyCookie } from 'nookies';
+import UserDataType from '@/interfaces/userDataType';
 
-export interface UserProps {
-  name: string;
-  email?: string;
-  avatar?: string;
-  id?: string;
-}
 
-const Navbar = ({ user }: { user: UserProps }) => {
+const Navbar = ({ user }: { user: UserDataType }) => {
   const [options, setOptions] = useState(false);
   const [mobileNav, setMobileNav] = useState(false);
 
@@ -88,7 +84,10 @@ const Navbar = ({ user }: { user: UserProps }) => {
                     <h1>Settings</h1>
                   </div>
                 </div>
-                <div className="flex gap-2 items-center hover:bg-primary duration-300 cursor-pointer p-4">
+                <div className="flex gap-2 items-center hover:bg-primary duration-300 cursor-pointer p-4" onClick={() => {
+                  destroyCookie(null, 'token');
+                  router.push('/login');
+                }}>
                   <div>
                     <LogoutIcon className="text-red-500" size={20} />
                   </div>
@@ -106,16 +105,14 @@ const Navbar = ({ user }: { user: UserProps }) => {
             >
               <div className="flex w-full gap-3 items-center">
                 <div className="w-fit h-full flex items-center">
-                  {user.avatar ? (
-                    <img className="w-8 h-8 rounded-full" src={user.avatar} alt="avatar" />
-                  ) : (
+                  
                     <UserIcon size={25} />
-                  )}
+                 
                 </div>
                 <div className="w-3/4 flex flex-col">
                   <div className="flex gap-1 items-center">
                     <div>
-                      <h1 className="text-sm font-bold">{user.name}</h1>
+                      <h1 className="text-sm font-bold">{user.email}</h1>
                     </div>
                   </div>
                   <h1 className="text-light text-xs">Admin</h1>
