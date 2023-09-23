@@ -1,7 +1,7 @@
+import { deleteUser, getToken, updateUser, updateUserProjects, verifyUser } from '@/api/admin/admin.controller';
 import { validateRequest } from '@/shared/middlewares/validator';
 import { AuthGetSchema, AuthSchema, GetTokenSchema, UpdateProjectSchema, VerifyUserSchema } from '@/shared/types';
 import { Router } from 'express';
-import { deleteUser, getToken, updateUser, updateUserProjects, verifyUser } from './admin.controller';
 
 export default (): Router => {
   const app = Router();

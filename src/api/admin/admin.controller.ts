@@ -1,15 +1,15 @@
 import { NextFunction, Request, Response } from 'express';
 
-import { MESSAGES_TEXT, STATUS } from '@/shared/constants';
-import { GetTokenSchemaType, UpdateProjectSchemaType, VerifyUserType } from '@/shared/types/admin/admin.schema';
-import { UserSchemaType } from '@/shared/types/auth/auth.schema';
 import {
   handleDeleteUser,
   handleGetToken,
   handleUpdateUser,
   handleUpdateUserProjects,
   handleVerifyUser,
-} from './admin.service';
+} from '@/api/admin/admin.service';
+import { MESSAGES_TEXT, STATUS } from '@/shared/constants';
+import { GetTokenSchemaType, UpdateProjectSchemaType, VerifyUserType } from '@/shared/types/admin/admin.schema';
+import { UserSchemaType } from '@/shared/types/auth/auth.schema';
 
 export const updateUser = async (req: Request<unknown, unknown, UserSchemaType>, res: Response, next: NextFunction) => {
   try {
