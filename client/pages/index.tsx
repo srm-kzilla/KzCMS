@@ -15,7 +15,6 @@ interface ProjectListDataType {
 }
 
 export default function Home({ user, projectList }: { user: UserDataType; projectList: ProjectListDataType[] }) {
-  console.log(projectList);
   return (
     <div className="w-full flex min-h-screen h-fit">
       <Layout user={user}>
