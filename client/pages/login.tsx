@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import server from '@/utils/server';
 import Image from 'next/image';
-import { parseCookies, setCookie, destroyCookie } from 'nookies';
+import { setCookie } from 'nookies';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import nookies from 'nookies';
 
 const Login = () => {
   const [user, setUser] = useState({
@@ -34,7 +35,6 @@ const Login = () => {
       router.push('/');
     } catch (err: any) {
       setError(!error);
-      console.log(err);
     }
   };
 
@@ -98,3 +98,20 @@ const Login = () => {
 };
 
 export default Login;
+
+export const getServerSideProps = async (ctx: any) => {
+  const cookies = nookies.get(ctx);
+
+  if (cookies.token) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {},
+  };
+};
