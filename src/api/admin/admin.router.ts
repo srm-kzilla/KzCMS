@@ -1,11 +1,12 @@
 import { validateRequest } from '@/shared/middlewares/validator';
-import { AuthGetSchema, AuthSchema, UpdateProjectSchema, VerifyUserSchema } from '@/shared/types';
+import { AuthGetSchema, AuthSchema, GetTokenSchema, UpdateProjectSchema, VerifyUserSchema } from '@/shared/types';
 import { Router } from 'express';
-import { deleteUser, updateUser, updateUserProjects, verifyUser } from './admin.controller';
+import { deleteUser, getToken, updateUser, updateUserProjects, verifyUser } from './admin.controller';
 
 export default (): Router => {
   const app = Router();
 
+  app.get('/get-token', validateRequest('body', GetTokenSchema), getToken);
   app.patch('/verify', validateRequest('body', VerifyUserSchema), verifyUser);
   app.patch('/update/user-projects', validateRequest('body', UpdateProjectSchema), updateUserProjects);
   app.patch('/update/user', validateRequest('body', AuthSchema), updateUser);

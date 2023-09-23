@@ -1,9 +1,15 @@
 import { NextFunction, Request, Response } from 'express';
 
 import { MESSAGES_TEXT, STATUS } from '@/shared/constants';
-import { UpdateProjectSchemaType, VerifyUserType } from '@/shared/types/admin/admin.schema';
+import { GetTokenSchemaType, UpdateProjectSchemaType, VerifyUserType } from '@/shared/types/admin/admin.schema';
 import { UserSchemaType } from '@/shared/types/auth/auth.schema';
-import { handleDeleteUser, handleUpdateUser, handleUpdateUserProjects, handleVerifyUser } from './admin.service';
+import {
+  handleDeleteUser,
+  handleGetToken,
+  handleUpdateUser,
+  handleUpdateUserProjects,
+  handleVerifyUser,
+} from './admin.service';
 
 export const updateUser = async (req: Request<unknown, unknown, UserSchemaType>, res: Response, next: NextFunction) => {
   try {
@@ -12,6 +18,23 @@ export const updateUser = async (req: Request<unknown, unknown, UserSchemaType>,
     res.status(STATUS.OK).json({
       success: true,
       message: MESSAGES_TEXT.UPDATE_USER,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getToken = async (
+  req: Request<unknown, unknown, GetTokenSchemaType>,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { projectSlug } = req.body;
+    const token = await handleGetToken(projectSlug);
+    res.status(STATUS.OK).json({
+      success: true,
+      token,
     });
   } catch (error) {
     next(error);

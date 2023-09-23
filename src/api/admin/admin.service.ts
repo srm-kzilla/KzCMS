@@ -15,6 +15,16 @@ export const handleUpdateUser = async (email: string, password: string): Promise
   await (await db()).collection('users').updateOne({ email }, { $set: { password: hash } });
 };
 
+export const handleGetToken = async (slug: string): Promise<string> => {
+  const data = await (await db()).collection('projects').findOne({ projectSlug: slug }, { projection: { token: 1 } });
+
+  if (!data) {
+    throw { statusCode: ERRORS.RESOURCE_NOT_FOUND.code, message: ERRORS.RESOURCE_NOT_FOUND.message };
+  }
+
+  return data.token;
+};
+
 export async function handleDeleteUser(email: string) {
   const user = await (await db()).collection('users').findOne({ email });
   if (!user) {
