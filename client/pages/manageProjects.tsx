@@ -1,5 +1,6 @@
 import Layout from '@/components/Layout'
 import React from 'react'
+import nookies from 'nookies';
 
 const manageProjects = () => {
   return (
@@ -20,3 +21,20 @@ const manageProjects = () => {
 }
 
 export default manageProjects
+
+export const getServerSideProps = async (ctx: any) => {
+  const cookies = nookies.get(ctx)
+
+  if (!cookies.token) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false
+      }
+    }
+  }
+
+  return {
+    props: {}
+  }
+}

@@ -2,6 +2,7 @@ import ImageCardList from '@/components/ImageCardList';
 import Layout from '@/components/Layout';
 import { useRouter } from 'next/router';
 import { imageCardListData } from '@/mock/Data';
+import nookies from 'nookies';
 
 export default function Project() {
   const router = useRouter();
@@ -23,3 +24,20 @@ export default function Project() {
     </div>
   );
 }
+
+export const getServerSideProps = async (ctx: any) => {
+  const cookies = nookies.get(ctx);
+
+  if (!cookies.token) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {},
+  };
+};
