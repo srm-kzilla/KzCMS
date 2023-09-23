@@ -1,14 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import server from '@/utils/server';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 const SignUp = () => {
-  const [user, setUser] = React.useState({
+  const [user, setUser] = useState({
     email: '',
     password: '',
   });
-  const [error, setError] = React.useState(null);
+  const [error, setError] = useState<boolean>(false);
   const router = useRouter();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -25,8 +26,9 @@ const SignUp = () => {
     try {
       const response = await server.post('/api/auth/signup', user);
       router.push('/login');
-    } catch (error: any) {
-      setError(error);
+    } catch (err: any) {
+      setError(!error);
+      console.log(err);
     }
   };
 
@@ -69,6 +71,19 @@ const SignUp = () => {
                 SignUp
               </button>
             </div>
+            <div className="w-full flex justify-center">
+              <h1 className="text-card-gray">
+                Already a user?{' '}
+                <Link className="text-highlight" href={'/login'}>
+                  Login
+                </Link>
+              </h1>
+            </div>
+            {error && (
+              <div className="w-full flex justify-center">
+                <h1 className="text-red-500">Something went wrong</h1>
+              </div>
+            )}
           </div>
         </form>
       </div>

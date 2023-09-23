@@ -1,15 +1,13 @@
 import Layout from '@/components/Layout';
+import UserDataType from '@/interfaces/userDataType';
+import server from '@/utils/server';
 import nookies from 'nookies';
 import React from 'react';
 
-const manageUsers = () => {
+const manageUsers = ({ user }: { user: UserDataType }) => {
   return (
     <div className="w-full flex min-h-screen h-fit">
-      <Layout
-        user={{
-          name: 'Paddy',
-        }}
-      >
+      <Layout user={user}>
         <div className="w-full h-full flex flex-col gap-10">
           <div className="w-full h-fit">
             <h1 className="font-bold text-2xl lg:text-4xl">MANAGE USERS</h1>
@@ -34,7 +32,15 @@ export const getServerSideProps = async (ctx: any) => {
     };
   }
 
+  const userResponse = await server.get('/api/users/user', {
+    headers: {
+      Authorization: `Bearer ${cookies.token}`,
+    },
+  });
+
   return {
-    props: {},
+    props: {
+      user: userResponse.data.data as UserDataType,
+    },
   };
 };

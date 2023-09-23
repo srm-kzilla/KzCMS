@@ -1,15 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import server from '@/utils/server';
 import Image from 'next/image';
 import { parseCookies, setCookie, destroyCookie } from 'nookies';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 const Login = () => {
-  const [user, setUser] = React.useState({
+  const [user, setUser] = useState({
     email: '',
     password: '',
   });
-  const [error, setError] = React.useState(null);
+  const [error, setError] = useState<boolean>(false);
   const router = useRouter();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -21,7 +22,6 @@ const Login = () => {
 
   const handleSUbmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(user);
 
     try {
       const response = await server.post('/api/auth/login', user);
@@ -32,8 +32,9 @@ const Login = () => {
       });
 
       router.push('/');
-    } catch (error: any) {
-      setError(error);
+    } catch (err: any) {
+      setError(!error);
+      console.log(err);
     }
   };
 
@@ -76,6 +77,19 @@ const Login = () => {
                 Login
               </button>
             </div>
+            <div className="w-full flex justify-center">
+              <h1 className="text-card-gray">
+                Not a user?{' '}
+                <Link className="text-highlight" href={'/signUp'}>
+                  Sign Up
+                </Link>
+              </h1>
+            </div>
+            {error && (
+              <div className="w-full flex justify-center">
+                <h1 className="text-red-500">Something went wrong</h1>
+              </div>
+            )}
           </div>
         </form>
       </div>

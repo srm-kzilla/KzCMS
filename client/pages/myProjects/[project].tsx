@@ -3,17 +3,15 @@ import Layout from '@/components/Layout';
 import { useRouter } from 'next/router';
 import { imageCardListData } from '@/mock/Data';
 import nookies from 'nookies';
+import UserDataType from '@/interfaces/userDataType';
+import server from '@/utils/server';
 
-export default function Project() {
+export default function Project({ user }: { user: UserDataType }) {
   const router = useRouter();
 
   return (
     <div>
-      <Layout
-        user={{
-          name: 'Paddy',
-        }}
-      >
+      <Layout user={user}>
         <div className="w-full h-full flex flex-col gap-10">
           <div className="w-full h-fit">
             <h1 className="font-bold text-2xl lg:text-4xl">{router.query.project?.toString().toUpperCase()}</h1>
@@ -37,7 +35,15 @@ export const getServerSideProps = async (ctx: any) => {
     };
   }
 
+  const userResponse = await server.get('/api/users/user', {
+    headers: {
+      Authorization: `Bearer ${cookies.token}`,
+    },
+  });
+
   return {
-    props: {},
+    props: {
+      user: userResponse.data.data as UserDataType,
+    },
   };
 };
