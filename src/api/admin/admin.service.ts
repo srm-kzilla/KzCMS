@@ -3,7 +3,6 @@ import { SALT_ROUNDS } from '@/shared/constants';
 import { ERRORS } from '@/shared/errors';
 import { UpdateProjectSchemaType } from '@/shared/types';
 import bcrypt from 'bcrypt';
-import e from 'express';
 import { AnyBulkWriteOperation } from 'mongodb';
 
 export const handleUpdateUser = async (email: string, password: string): Promise<void> => {
@@ -103,7 +102,7 @@ export async function handleUpdateUserProjects(data: UpdateProjectSchemaType): P
 }
 
 export async function handleToggleProject(slug: string, status: string) {
-  const isEnabled = status === 'enable' ? true : false;
+  const isEnabled = status === 'enable';
 
   const project = await (await db())
     .collection('projects')

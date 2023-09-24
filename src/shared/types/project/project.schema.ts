@@ -51,7 +51,7 @@ export const ProjectTitleSchema = z.object({
   title: z.string(),
 });
 
-export const toggleProjectSchema = z.object({
+export const ToggleProjectSchema = z.object({
   setStatus: z.string().refine(value => value === 'enable' || value === 'disable', {
     message: 'setStatus can only be "enable" or "disable"',
   }),
