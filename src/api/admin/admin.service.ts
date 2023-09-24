@@ -103,7 +103,6 @@ export async function handleUpdateUserProjects(data: UpdateProjectSchemaType): P
 
 export async function handleToggleProject(slug: string, query: string) {
   const status = query ? (query === 'enable') : undefined;
-  console.log(slug);
   const project = await (await db()).collection('projects').findOne({ projectSlug: slug });
 
   if (!project) {
