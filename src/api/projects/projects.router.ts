@@ -1,7 +1,7 @@
 import authenticateToken from '@/shared/middlewares/authentication';
 import { upload } from '@/shared/middlewares/multer';
 import { validateRequest } from '@/shared/middlewares/validator';
-import { ProjectMetadataSchema, ProjectSlugSchmea } from '@/shared/types';
+import { ProjectMetadataSchema, ProjectSlugSchema } from '@/shared/types';
 import { Router } from 'express';
 import {
   createProject,
@@ -34,7 +34,7 @@ export default (): Router => {
   app.post(
     '/:slug',
     authenticateToken(),
-    validateRequest('params', ProjectSlugSchmea),
+    validateRequest('params', ProjectSlugSchema),
     upload.single('image'),
     createProjectData,
   );
@@ -42,11 +42,11 @@ export default (): Router => {
   app.delete(
     '/:slug',
     authenticateToken({ verifyAdmin: true }),
-    validateRequest('params', ProjectSlugSchmea),
+    validateRequest('params', ProjectSlugSchema),
     deleteProject,
   );
 
-  app.delete('/:slug/data', authenticateToken(), validateRequest('params', ProjectSlugSchmea), deleteProjectData);
+  app.delete('/:slug/data', authenticateToken(), validateRequest('params', ProjectSlugSchema), deleteProjectData);
 
   return app;
 };
