@@ -37,7 +37,7 @@ export const handleVerifyUser = async (email: string, verify: boolean): Promise<
   }
 };
 
-export async function handleUpdateUserProjects(data: UpdateProjectSchemaType) {
+export async function handleUpdateUserProjects(data: UpdateProjectSchemaType): Promise<boolean> {
   const project = await (await db()).collection('projects').findOne({ projectSlug: data.projectSlug });
   if (!project) {
     throw { statusCode: ERRORS.RESOURCE_NOT_FOUND.code, message: ERRORS.RESOURCE_NOT_FOUND.message.error };
@@ -99,4 +99,23 @@ export async function handleUpdateUserProjects(data: UpdateProjectSchemaType) {
     }
   }
   return project.userAccess;
+}
+
+export async function handleToggleProject(slug: string, query: string) {
+  const status = query ? (query === 'enable') : undefined;
+  console.log(slug);
+  const project = await (await db()).collection('projects').findOne({ projectSlug: slug });
+
+  if (!project) {
+    throw { statusCode: ERRORS.RESOURCE_NOT_FOUND.code, message: ERRORS.RESOURCE_NOT_FOUND.message };
+  }
+
+  if (!status) {
+    const status = !project.isEnabled;
+    await (await db()).collection('projects').findOneAndUpdate({ projectSlug: slug }, { $set: { isEnabled: status } });
+    return status;
+  }
+
+  await (await db()).collection('projects').findOneAndUpdate({ projectSlug: slug }, { $set: { isEnabled: query } });
+  return status;
 }
