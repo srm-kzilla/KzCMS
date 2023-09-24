@@ -45,14 +45,14 @@ export const ERRORS = {
     code: 404,
     message: {
       error: 'not found',
-      error_description: 'User Does Not Exsist',
+      error_description: 'User Does Not Exists',
     },
   },
   RESOURCE_CONFLICT: {
     code: 409,
     message: {
       error: 'Resource Conflict',
-      error_description: 'Resource already exsists',
+      error_description: 'Resource already exists',
     },
   },
   USER_ALREADY_DELETED: {

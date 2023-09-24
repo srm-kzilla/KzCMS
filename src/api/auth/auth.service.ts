@@ -28,7 +28,7 @@ export async function handleExistingUser({ email, password }: UserSchemaType): P
   const data = await (await db()).collection('users').findOne({ email: email });
 
   if (!data) {
-    throw { statusCode: 404, message: 'User Does Not Exsist' };
+    throw { statusCode: 404, message: 'User Does Not Exists' };
   }
 
   const res = await bcrypt.compare(password, data.password);

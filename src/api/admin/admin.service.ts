@@ -46,14 +46,14 @@ export async function handleUpdateUserProjects(data: UpdateProjectSchemaType) {
   const new_users = data.newUserAccess;
   const deleted_users = data.deletedUserAccess;
 
-  const projects_collection = await (await db()).collection('projects');
-  const projectsBulkOperations: AnyBulkWriteOperation<{}>[] = [];
+  const projects_collection = (await db()).collection('projects');
+  const projectsBulkOperations: AnyBulkWriteOperation<object>[] = [];
 
-  const users_collection = await (await db()).collection('users');
-  const usersBulkOperations: AnyBulkWriteOperation<{}>[] = [];
+  const users_collection = (await db()).collection('users');
+  const usersBulkOperations: AnyBulkWriteOperation<object>[] = [];
 
   for (let i = 0; i < new_users.length; i++) {
-    const projectUpdateQuery: AnyBulkWriteOperation<{}> = {
+    const projectUpdateQuery: AnyBulkWriteOperation<object> = {
       updateOne: {
         filter: { projectSlug: data.projectSlug, userAccess: { $nin: [new_users[i]] } },
         update: { $push: { userAccess: new_users[i] } },
@@ -71,7 +71,7 @@ export async function handleUpdateUserProjects(data: UpdateProjectSchemaType) {
   }
 
   for (let i = 0; i < deleted_users.length; i++) {
-    const projectUpdateQuery: AnyBulkWriteOperation<{}> = {
+    const projectUpdateQuery: AnyBulkWriteOperation<object> = {
       updateOne: {
         filter: { projectSlug: data.projectSlug },
         update: { $pull: { userAccess: deleted_users[i] } },
