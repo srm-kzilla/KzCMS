@@ -51,6 +51,10 @@ export const ProjectTitleSchema = z.object({
   title: z.string(),
 });
 
+export const toggleProjectSchema = z.object({
+  setStatus: z.union([z.literal('enable'), z.literal('disable')]),
+});
+
 export type CreateProjectType = z.infer<typeof CreateProjectSchema>;
 export type BaseProjectType = z.infer<typeof BaseProjectSchema>;
 export type ProjectType = z.infer<typeof ProjectSchema>;
