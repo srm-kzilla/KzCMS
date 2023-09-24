@@ -1,9 +1,16 @@
 import { NextFunction, Request, Response } from 'express';
-
 import { MESSAGES_TEXT, STATUS } from '@/shared/constants';
 import { UpdateProjectSchemaType, VerifyUserType } from '@/shared/types/admin/admin.schema';
 import { UserSchemaType } from '@/shared/types/auth/auth.schema';
-import { handleDeleteUser, handleUpdateUser, handleUpdateUserProjects, handleVerifyUser } from './admin.service';
+import {
+  handleDeleteUser,
+  handleUpdateUser,
+  handleUpdateUserProjects,
+  handleVerifyUser,
+  handleToggleProject,
+} from '@/api/admin/admin.service';
+import { ProjectSlugType } from '@/shared/types';
+import { ERRORS } from '@/shared/errors';
 
 export const updateUser = async (req: Request<unknown, unknown, UserSchemaType>, res: Response, next: NextFunction) => {
   try {
@@ -47,11 +54,11 @@ export const verifyUser = async (req: Request<unknown, unknown, VerifyUserType>,
   }
 };
 
-export async function updateUserProjects(
+export const updateUserProjects = async (
   req: Request<unknown, unknown, UpdateProjectSchemaType>,
   res: Response,
   next: NextFunction,
-) {
+) => {
   try {
     const data = await handleUpdateUserProjects(req.body);
     res.status(STATUS.OK).json({
@@ -62,4 +69,27 @@ export async function updateUserProjects(
   } catch (error) {
     next(error);
   }
-}
+};
+
+export const toggleProject = async (
+  req: Request<ProjectSlugType, unknown, unknown, { setStatus: 'enable' | 'disable' }>,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const status = req.query.setStatus;
+    if (!status) {
+      throw {
+        statusCode: ERRORS.MALFORMED_BODY.code,
+        message: 'Please provide a valid status of the project',
+      };
+    }
+    await handleToggleProject(req.params.slug, status);
+    res.status(STATUS.OK).json({
+      success: true,
+      message: 'Project Status Updated',
+    });
+  } catch (error) {
+    next(error);
+  }
+};
