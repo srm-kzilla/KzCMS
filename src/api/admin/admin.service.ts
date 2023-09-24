@@ -3,6 +3,7 @@ import { SALT_ROUNDS } from '@/shared/constants';
 import { ERRORS } from '@/shared/errors';
 import { UpdateProjectSchemaType } from '@/shared/types';
 import bcrypt from 'bcrypt';
+import e from 'express';
 import { AnyBulkWriteOperation } from 'mongodb';
 
 export const handleUpdateUser = async (email: string, password: string): Promise<void> => {
@@ -101,20 +102,21 @@ export async function handleUpdateUserProjects(data: UpdateProjectSchemaType): P
   return project.userAccess;
 }
 
-export async function handleToggleProject(slug: string, query: string) {
-  const status = query ? (query === 'enable') : undefined;
-  const project = await (await db()).collection('projects').findOne({ projectSlug: slug });
+export async function handleToggleProject(slug: string, status: string) {
+  const isEnabled = status === 'enable' ? true : false;
 
-  if (!project) {
-    throw { statusCode: ERRORS.RESOURCE_NOT_FOUND.code, message: ERRORS.RESOURCE_NOT_FOUND.message };
+  const project = await (await db())
+    .collection('projects')
+    .findOneAndUpdate({ projectSlug: slug }, { $set: { isEnabled } }, { returnDocument: 'before' });
+
+  if (!project.value) {
+    throw { statusCode: ERRORS.RESOURCE_NOT_FOUND.code, message: ERRORS.RESOURCE_NOT_FOUND.message.error };
   }
 
-  if (!status) {
-    const status = !project.isEnabled;
-    await (await db()).collection('projects').findOneAndUpdate({ projectSlug: slug }, { $set: { isEnabled: status } });
-    return status;
+  if (project.value.isEnabled === isEnabled) {
+    throw {
+      statusCode: ERRORS.RESOURCE_CONFLICT.code,
+      message: `Project is Already ${isEnabled ? 'Enabled' : 'Disabled'}`,
+    };
   }
-
-  await (await db()).collection('projects').findOneAndUpdate({ projectSlug: slug }, { $set: { isEnabled: query } });
-  return status;
 }

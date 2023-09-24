@@ -8,8 +8,9 @@ import {
   handleUpdateUserProjects,
   handleVerifyUser,
   handleToggleProject,
-} from './admin.service';
+} from '@/api/admin/admin.service';
 import { ProjectSlugType } from '@/shared/types';
+import { ERRORS } from '@/shared/errors';
 
 export const updateUser = async (req: Request<unknown, unknown, UserSchemaType>, res: Response, next: NextFunction) => {
   try {
@@ -76,10 +77,17 @@ export const toggleProject = async (
   next: NextFunction,
 ) => {
   try {
-    const status = await handleToggleProject(req.params.slug, req.query.setStatus);
+    const status = req.query.setStatus;
+    if (!status) {
+      throw {
+        statusCode: ERRORS.MALFORMED_BODY.code,
+        message: 'Please provide a valid status of the project',
+      };
+    }
+    await handleToggleProject(req.params.slug, status);
     res.status(STATUS.OK).json({
       success: true,
-      message: `Project Status is now ${status ? 'Enabled' : 'Disabled'}`,
+      message: 'Project Status Updated',
     });
   } catch (error) {
     next(error);
