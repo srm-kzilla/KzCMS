@@ -14,13 +14,11 @@ const UserEmailSchema = z.array(z.string().email()).refine(
   {
     message: 'Array must contain unique email addresses',
   },
-)
+);
 
 export const UpdateProjectSchema = z.object({
-  adminEmail: EmailSchema,
   projectSlug: z.string(),
-  newUserAccess: UserEmailSchema,
-  deletedUserAccess: UserEmailSchema
+  userAccess: UserEmailSchema,
 });
 
 export type UpdateProjectSchemaType = z.infer<typeof UpdateProjectSchema>;
