@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from 'express';
-
 import { MESSAGES_TEXT, STATUS } from '@/shared/constants';
 import { UpdateProjectSchemaType, VerifyUserType } from '@/shared/types/admin/admin.schema';
 import { UserSchemaType } from '@/shared/types/auth/auth.schema';
@@ -47,11 +46,11 @@ export const verifyUser = async (req: Request<unknown, unknown, VerifyUserType>,
   }
 };
 
-export async function updateUserProjects(
+export const updateUserProjects = async (
   req: Request<unknown, unknown, UpdateProjectSchemaType>,
   res: Response,
   next: NextFunction,
-) {
+) => {
   try {
     const data = await handleUpdateUserProjects(req.body);
     res.status(STATUS.OK).json({
@@ -62,4 +61,4 @@ export async function updateUserProjects(
   } catch (error) {
     next(error);
   }
-}
+};
