@@ -37,7 +37,7 @@ export const handleVerifyUser = async (email: string, verify: boolean): Promise<
   }
 };
 
-export async function handleUpdateUserProjects(data: UpdateProjectSchemaType): Promise<boolean> {
+export async function handleUpdateUserProjects(data: UpdateProjectSchemaType) {
   const project = await (await db()).collection('projects').findOne({ projectSlug: data.projectSlug });
 
   if (!project) {
@@ -75,25 +75,6 @@ export async function handleUpdateUserProjects(data: UpdateProjectSchemaType): P
   }
 
   await projects_collection.updateOne({ projectSlug: data.projectSlug }, { $set: { userAccess: data.userAccess } });
-}
-
-export async function handleToggleProject(slug: string, status: string) {
-  const isEnabled = status === 'enable';
-
-  const project = await (await db())
-    .collection('projects')
-    .findOneAndUpdate({ projectSlug: slug }, { $set: { isEnabled } }, { returnDocument: 'before' });
-
-  if (!project.value) {
-    throw { statusCode: ERRORS.RESOURCE_NOT_FOUND.code, message: ERRORS.RESOURCE_NOT_FOUND.message.error };
-  }
-
-  if (project.value.isEnabled === isEnabled) {
-    throw {
-      statusCode: ERRORS.RESOURCE_CONFLICT.code,
-      message: `Project is Already ${isEnabled ? 'Enabled' : 'Disabled'}`,
-    };
-  }
 }
 
 export async function handleToggleProject(slug: string, status: string) {
