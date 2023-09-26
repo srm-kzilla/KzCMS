@@ -1,15 +1,18 @@
-import { ImageCardPropsType } from '@/components/ImageCard';
-import { ImageCardsListPropsType } from '@/components/ImageCardList';
+import ProjectDataType from '@/interfaces/ProjectDataType';
 
-const imageCardMockData: ImageCardPropsType = {
-  imageLink: 'https://picsum.photos/900/900.jpg',
+const imageCardMockData: ProjectDataType = {
+  imageURL: 'https://picsum.photos/900/900.jpg',
   title: 'Title',
-  sponsorLink: 'https://eatwholy.com/',
+  link: 'https://eatwholy.com/',
   description:
     "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard",
-  authorName: 'Author Name',
+  author: 'Author Name',
 };
 
-export const imageCardListData: ImageCardsListPropsType = {
-  imageCards: [imageCardMockData, imageCardMockData, imageCardMockData, imageCardMockData, imageCardMockData],
-};
+export const imageCardListData: ProjectDataType[] = [
+  imageCardMockData,
+  imageCardMockData,
+  imageCardMockData,
+  imageCardMockData,
+  imageCardMockData,
+];
