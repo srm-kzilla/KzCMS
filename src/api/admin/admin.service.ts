@@ -3,7 +3,7 @@ import { SALT_ROUNDS } from '@/shared/constants';
 import { ERRORS } from '@/shared/errors';
 import { UpdateProjectSchemaType } from '@/shared/types';
 import bcrypt from 'bcrypt';
-import { AnyBulkWriteOperation } from 'mongodb';
+import { AnyBulkWriteOperation, Document } from 'mongodb';
 
 export const handleUpdateUser = async (email: string, password: string): Promise<void> => {
   const data = await (await db()).collection('users').findOne({ email: email });
@@ -37,68 +37,44 @@ export const handleVerifyUser = async (email: string, verify: boolean): Promise<
   }
 };
 
-export async function handleUpdateUserProjects(data: UpdateProjectSchemaType): Promise<boolean> {
+export async function handleUpdateUserProjects(data: UpdateProjectSchemaType) {
   const project = await (await db()).collection('projects').findOne({ projectSlug: data.projectSlug });
+
   if (!project) {
     throw { statusCode: ERRORS.RESOURCE_NOT_FOUND.code, message: ERRORS.RESOURCE_NOT_FOUND.message.error };
   }
 
-  const new_users = data.newUserAccess;
-  const deleted_users = data.deletedUserAccess;
+  const newUsers = data.userAccess.filter(email => !project.userAccess.includes(email));
+  const deletedUsers = project.userAccess.filter(email => !newUsers.includes(email));
 
-  const projects_collection = await (await db()).collection('projects');
-  const projectsBulkOperations: AnyBulkWriteOperation<{}>[] = [];
+  const projects_collection = (await db()).collection('projects');
+  const users_collection = (await db()).collection('users');
 
-  const users_collection = await (await db()).collection('users');
-  const usersBulkOperations: AnyBulkWriteOperation<{}>[] = [];
+  const bulkWriteOperations: AnyBulkWriteOperation<Document>[] = [];
 
-  for (let i = 0; i < new_users.length; i++) {
-    const projectUpdateQuery: AnyBulkWriteOperation<{}> = {
-      updateOne: {
-        filter: { projectSlug: data.projectSlug, userAccess: { $nin: [new_users[i]] } },
-        update: { $push: { userAccess: new_users[i] } },
+  if (newUsers.length > 0) {
+    bulkWriteOperations.push({
+      updateMany: {
+        filter: { email: { $in: newUsers } },
+        update: { $push: { projects: project.projectSlug } },
       },
-    };
-    projectsBulkOperations.push(projectUpdateQuery);
+    });
+  }
 
-    const usersUpdateQuery: AnyBulkWriteOperation<object> = {
-      updateOne: {
-        filter: { email: new_users[i], projects: { $nin: [data.projectSlug] } },
-        update: { $push: { projects: data.projectSlug } },
+  if (deletedUsers.length > 0) {
+    bulkWriteOperations.push({
+      updateMany: {
+        filter: { email: { $in: deletedUsers } },
+        update: { $pull: { projects: project.projectSlug } },
       },
-    };
-    usersBulkOperations.push(usersUpdateQuery);
+    });
   }
 
-  for (let i = 0; i < deleted_users.length; i++) {
-    const projectUpdateQuery: AnyBulkWriteOperation<{}> = {
-      updateOne: {
-        filter: { projectSlug: data.projectSlug },
-        update: { $pull: { userAccess: deleted_users[i] } },
-      },
-    };
-    projectsBulkOperations.push(projectUpdateQuery);
-
-    const usersUpdateQuery: AnyBulkWriteOperation<object> = {
-      updateOne: { filter: { email: deleted_users[i] }, update: { $pull: { projects: data.projectSlug } } },
-    };
-    usersBulkOperations.push(usersUpdateQuery);
+  if (bulkWriteOperations.length > 0) {
+    await users_collection.bulkWrite(bulkWriteOperations);
   }
 
-  if (projectsBulkOperations.length > 0) {
-    const success = projects_collection.bulkWrite(projectsBulkOperations);
-    if (!success) {
-      throw { statusCode: ERRORS.SERVER_ERROR.code, message: ERRORS.SERVER_ERROR.message.error };
-    }
-  }
-
-  if (usersBulkOperations.length > 0) {
-    const success = users_collection.bulkWrite(usersBulkOperations);
-    if (!success) {
-      throw { statusCode: ERRORS.SERVER_ERROR.code, message: ERRORS.SERVER_ERROR.message.error };
-    }
-  }
-  return project.userAccess;
+  await projects_collection.updateOne({ projectSlug: data.projectSlug }, { $set: { userAccess: data.userAccess } });
 }
 
 export async function handleToggleProject(slug: string, status: string) {

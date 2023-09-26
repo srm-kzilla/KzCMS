@@ -1,16 +1,16 @@
-import { NextFunction, Request, Response } from 'express';
-import { MESSAGES_TEXT, STATUS } from '@/shared/constants';
-import { UpdateProjectSchemaType, VerifyUserType } from '@/shared/types/admin/admin.schema';
-import { UserSchemaType } from '@/shared/types/auth/auth.schema';
 import {
   handleDeleteUser,
+  handleToggleProject,
   handleUpdateUser,
   handleUpdateUserProjects,
   handleVerifyUser,
-  handleToggleProject,
 } from '@/api/admin/admin.service';
-import { ProjectSlugType } from '@/shared/types';
+import { MESSAGES_TEXT, STATUS } from '@/shared/constants';
 import { ERRORS } from '@/shared/errors';
+import { ProjectSlugType } from '@/shared/types';
+import { UpdateProjectSchemaType, VerifyUserType } from '@/shared/types/admin/admin.schema';
+import { UserSchemaType } from '@/shared/types/auth/auth.schema';
+import { NextFunction, Request, Response } from 'express';
 
 export const updateUser = async (req: Request<unknown, unknown, UserSchemaType>, res: Response, next: NextFunction) => {
   try {
@@ -63,7 +63,7 @@ export const updateUserProjects = async (
     const data = await handleUpdateUserProjects(req.body);
     res.status(STATUS.OK).json({
       success: true,
-      message: MESSAGES_TEXT.UPDATE_USER,
+      message: MESSAGES_TEXT.UPDATE_USER_ACCESS,
       userAccess: data,
     });
   } catch (error) {
