@@ -9,9 +9,8 @@ import { useRouter } from 'next/router';
 import UserIcon from 'remixicon-react/UserLineIcon';
 import MenuIcon from 'remixicon-react/MenuLineIcon';
 import Image from 'next/image';
-import { parseCookies, setCookie, destroyCookie } from 'nookies';
+import { destroyCookie } from 'nookies';
 import UserDataType from '@/interfaces/userDataType';
-
 
 const Navbar = ({ user }: { user: UserDataType }) => {
   const [options, setOptions] = useState(false);
@@ -48,28 +47,32 @@ const Navbar = ({ user }: { user: UserDataType }) => {
                   </div>
                   <h1 className="text-sm font-medium text-text-secondary">MY PROJECTS</h1>
                 </div>
-                <div
-                  className="w-full flex gap-2 hover:bg-secondary duration-300 cursor-pointer px-4 py-2 rounded-md"
-                  onClick={() => {
-                    router.push('/manageProjects');
-                  }}
-                >
+                {user.isAdmin && (
                   <div>
-                    <ManageProjectIcon className="text-highlight" size={20} />
+                    <div
+                      className="w-full flex gap-2 hover:bg-secondary duration-300 cursor-pointer px-4 py-2 rounded-md"
+                      onClick={() => {
+                        router.push('/manageProjects');
+                      }}
+                    >
+                      <div>
+                        <ManageProjectIcon className="text-highlight" size={20} />
+                      </div>
+                      <h1 className="text-sm font-medium text-text-secondary">MANAGE PROJECTS</h1>
+                    </div>
+                    <div
+                      className="w-full flex gap-2 hover:bg-secondary duration-300 cursor-pointer px-4 py-2 rounded-md"
+                      onClick={() => {
+                        router.push('/manageUsers');
+                      }}
+                    >
+                      <div>
+                        <UserIcon className="text-highlight" size={20} />
+                      </div>
+                      <h1 className="text-sm font-medium text-text-secondary">MANAGE USERS</h1>
+                    </div>
                   </div>
-                  <h1 className="text-sm font-medium text-text-secondary">MANAGE PROJECTS</h1>
-                </div>
-                <div
-                  className="w-full flex gap-2 hover:bg-secondary duration-300 cursor-pointer px-4 py-2 rounded-md"
-                  onClick={() => {
-                    router.push('/manageUsers');
-                  }}
-                >
-                  <div>
-                    <UserIcon className="text-highlight" size={20} />
-                  </div>
-                  <h1 className="text-sm font-medium text-text-secondary">MANAGE USERS</h1>
-                </div>
+                )}
               </div>
             </div>
           </div>
@@ -84,10 +87,13 @@ const Navbar = ({ user }: { user: UserDataType }) => {
                     <h1>Settings</h1>
                   </div>
                 </div>
-                <div className="flex gap-2 items-center hover:bg-primary duration-300 cursor-pointer p-4" onClick={() => {
-                  destroyCookie(null, 'token');
-                  router.push('/login');
-                }}>
+                <div
+                  className="flex gap-2 items-center hover:bg-primary duration-300 cursor-pointer p-4"
+                  onClick={() => {
+                    destroyCookie(null, 'token');
+                    router.push('/login');
+                  }}
+                >
                   <div>
                     <LogoutIcon className="text-red-500" size={20} />
                   </div>
@@ -105,9 +111,7 @@ const Navbar = ({ user }: { user: UserDataType }) => {
             >
               <div className="flex w-full gap-3 items-center">
                 <div className="w-fit h-full flex items-center">
-                  
-                    <UserIcon size={25} />
-                 
+                  <UserIcon size={25} />
                 </div>
                 <div className="w-3/4 flex flex-col">
                   <div className="flex gap-1 items-center">
@@ -161,28 +165,32 @@ const Navbar = ({ user }: { user: UserDataType }) => {
                   </div>
                   <h1 className="text-sm font-medium text-text-secondary">MY PROJECTS</h1>
                 </div>
-                <div
-                  className="w-full flex gap-2 hover:bg-secondary duration-300 cursor-pointer px-4 py-2 rounded-md"
-                  onClick={() => {
-                    router.push('/manageProjects');
-                  }}
-                >
+                {user.isAdmin && (
                   <div>
-                    <ManageProjectIcon className="text-highlight" size={20} />
+                    <div
+                      className="w-full flex gap-2 hover:bg-secondary duration-300 cursor-pointer px-4 py-2 rounded-md"
+                      onClick={() => {
+                        router.push('/manageProjects');
+                      }}
+                    >
+                      <div>
+                        <ManageProjectIcon className="text-highlight" size={20} />
+                      </div>
+                      <h1 className="text-sm font-medium text-text-secondary">MANAGE PROJECTS</h1>
+                    </div>
+                    <div
+                      className="w-full flex gap-2 hover:bg-secondary duration-300 cursor-pointer px-4 py-2 rounded-md"
+                      onClick={() => {
+                        router.push('/manageUsers');
+                      }}
+                    >
+                      <div>
+                        <UserIcon className="text-highlight" size={20} />
+                      </div>
+                      <h1 className="text-sm font-medium text-text-secondary">MANAGE USERS</h1>
+                    </div>
                   </div>
-                  <h1 className="text-sm font-medium text-text-secondary">MANAGE PROJECTS</h1>
-                </div>
-                <div
-                  className="w-full flex gap-2 hover:bg-secondary duration-300 cursor-pointer px-4 py-2 rounded-md"
-                  onClick={() => {
-                    router.push('/manageUsers');
-                  }}
-                >
-                  <div>
-                    <UserIcon className="text-highlight" size={20} />
-                  </div>
-                  <h1 className="text-sm font-medium text-text-secondary">MANAGE USERS</h1>
-                </div>
+                )}
               </div>
             </div>
             <div className="w-full flex flex-col">
