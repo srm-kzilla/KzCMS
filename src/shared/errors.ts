@@ -16,7 +16,7 @@ export const ERRORS = {
   INVALID_ACCESS_TOKEN: {
     code: 401,
     message: {
-      error: 'unauthorized',
+      error: 'Unauthorized',
       error_description: 'Invalid token',
     },
   },
@@ -30,21 +30,29 @@ export const ERRORS = {
   RESOURCE_NOT_FOUND: {
     code: 404,
     message: {
-      error: 'not found',
+      error: 'Not Found',
       error_description: 'Resource was not found',
     },
   },
+
   MALFORMED_BODY: {
     code: 400,
     message: {
-      error: 'bad request',
+      error: 'Bad Request',
       error_description: 'Malformed body passed',
+    },
+  },
+  MALFORMED_PROJECT_STATUS: {
+    code: 400,
+    message: {
+      error: 'Bad Request',
+      error_description: 'Please provide a valid status of the project'
     },
   },
   USER_NOT_FOUND: {
     code: 404,
     message: {
-      error: 'not found',
+      error: 'User Not Found',
       error_description: 'User Does Not Exists',
     },
   },
