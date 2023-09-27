@@ -1,11 +1,11 @@
 import ImageCardList from '@/components/ImageCardList';
 import Layout from '@/components/Layout';
 import { useRouter } from 'next/router';
-import { imageCardListData } from '@/mock/Data';
 import nookies from 'nookies';
 import UserDataType from '@/interfaces/userDataType';
 import server from '@/utils/server';
 import ProjectDataType from '@/interfaces/ProjectDataType';
+import { AxiosResponse } from 'axios';
 
 export default function Project({ user, projectData }: { user: UserDataType; projectData: ProjectDataType[] }) {
   const router = useRouter();
@@ -22,6 +22,10 @@ export default function Project({ user, projectData }: { user: UserDataType; pro
       </Layout>
     </div>
   );
+}
+
+interface projectDataResponseType {
+  data: AxiosResponse<ProjectDataType[]>;
 }
 
 export const getServerSideProps = async (ctx: any) => {
@@ -43,16 +47,17 @@ export const getServerSideProps = async (ctx: any) => {
     },
   });
 
-  const projectDataResponse = await server.get(`/api/projects/${project}`, {
+  const projectDataResponse : projectDataResponseType = await server.get(`/api/projects/${project}`, {
     headers: {
       Authorization: `Bearer ${cookies.token}`,
     },
   });
+  
 
   return {
     props: {
       user: userResponse.data.data as UserDataType,
-      projectData: projectDataResponse.data.data,
+      projectData: projectDataResponse.data.data as ProjectDataType[],
     },
   };
 };
