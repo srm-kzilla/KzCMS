@@ -4,6 +4,8 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import nookies from 'nookies';
 import Link from 'next/link';
+import { GetServerSidePropsContext } from 'next';
+
 
 const SignUp = () => {
   const [user, setUser] = useState({
@@ -92,7 +94,7 @@ const SignUp = () => {
 
 export default SignUp;
 
-export const getServerSideProps = async (ctx: any) => {
+export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   const cookies = nookies.get(ctx);
 
   if (cookies.token) {

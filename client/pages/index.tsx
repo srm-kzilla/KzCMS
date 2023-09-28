@@ -3,16 +3,9 @@ import React from 'react';
 import nookies from 'nookies';
 import server from '@/utils/server';
 import UserDataType from '@/interfaces/userDataType';
-import ProjectDataType from '@/interfaces/projectDataType';
 import ProjectCard from '@/components/ProjectCard';
-
-interface ProjectListDataType {
-  _id: string;
-  projectSlug: string;
-  projectName: string;
-  data: ProjectDataType[];
-  userAccess: string[];
-}
+import { GetServerSidePropsContext } from 'next';
+import ProjectListDataType from '@/interfaces/projectListDataType';
 
 export default function Home({ user, projectList }: { user: UserDataType; projectList: ProjectListDataType[] }) {
   return (
@@ -37,7 +30,7 @@ export default function Home({ user, projectList }: { user: UserDataType; projec
   );
 }
 
-export const getServerSideProps = async (ctx: any) => {
+export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   const cookies = nookies.get(ctx);
 
   if (!cookies.token) {
@@ -49,7 +42,6 @@ export const getServerSideProps = async (ctx: any) => {
     };
   }
 
-  // Get user data
   const userResponse = await server.get('/api/users/user', {
     headers: {
       Authorization: `Bearer ${cookies.token}`,
@@ -58,14 +50,12 @@ export const getServerSideProps = async (ctx: any) => {
 
   const user: UserDataType = userResponse.data.data;
 
-  // Get project list data
   const projectListDataResponse = await server.get('/api/projects', {
     headers: {
       Authorization: `Bearer ${cookies.token}`,
     },
   });
 
-  // Filter project list data to only include projects that the user has access to
   const projectList: ProjectListDataType[] = projectListDataResponse.data.data.filter(
     (project: ProjectListDataType) => {
       return project.userAccess?.includes(user.email);

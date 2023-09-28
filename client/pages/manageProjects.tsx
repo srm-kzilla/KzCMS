@@ -3,6 +3,7 @@ import React from 'react';
 import nookies from 'nookies';
 import UserDataType from '@/interfaces/userDataType';
 import server from '@/utils/server';
+import { GetServerSidePropsContext } from 'next';
 
 const manageProjects = ({ user }: { user: UserDataType }) => {
   return (
@@ -20,7 +21,7 @@ const manageProjects = ({ user }: { user: UserDataType }) => {
 
 export default manageProjects;
 
-export const getServerSideProps = async (ctx: any) => {
+export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   const cookies = nookies.get(ctx);
 
   if (!cookies.token) {

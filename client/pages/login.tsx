@@ -5,6 +5,7 @@ import { setCookie } from 'nookies';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import nookies from 'nookies';
+import { GetServerSidePropsContext } from 'next';
 
 const Login = () => {
   const [user, setUser] = useState({
@@ -99,7 +100,7 @@ const Login = () => {
 
 export default Login;
 
-export const getServerSideProps = async (ctx: any) => {
+export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   const cookies = nookies.get(ctx);
 
   if (cookies.token) {
