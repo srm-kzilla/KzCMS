@@ -2,17 +2,11 @@ import Image from 'next/image';
 import LinkIcon from 'remixicon-react/LinkIcon';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import ProjectDataType from '@/interfaces/ProjectDataType';
 
-export interface ImageCardPropsType {
-  imageLink: string;
-  title: string;
-  sponsorLink?: string;
-  description: string;
-  authorName: string;
-}
 
-const ImageCard = (data: ImageCardPropsType) => {
-  const { imageLink, title, sponsorLink, description, authorName } = data;
+const ImageCard = (data: ProjectDataType) => {
+  const { imageURL, title, link, description, author } = data;
   const [projectName, setProjectName] = useState<string>();
 
   const router = useRouter();
@@ -28,7 +22,7 @@ const ImageCard = (data: ImageCardPropsType) => {
         <div className="relative h-full w-full shadow-xl transition-all duration-500 [transform-style:preserve-3d] group-focus:[transform:rotateY(180deg)] group-hover:[transform:rotateY(180deg)]">
           <div className="absolute inset-0 bg-slate-100 flex">
             <Image
-              src={imageLink}
+              src={imageURL}
               alt="Project data image"
               width={500}
               height={500}
@@ -39,8 +33,8 @@ const ImageCard = (data: ImageCardPropsType) => {
             <div className="text-4xl font-bold">{title}</div>
             <div className="flex">
               <LinkIcon />
-              <a href={sponsorLink} target="_blank" className=" font-semibold ml-2">
-                {sponsorLink}
+              <a href={link} target="_blank" className=" font-semibold ml-2">
+                {link}
               </a>
             </div>
             <div className="text-card-gray font-semibold mb-2">{description}</div>
@@ -48,7 +42,7 @@ const ImageCard = (data: ImageCardPropsType) => {
               <button className="p-1 rounded-xl w-20 border-2 font-bold">Edit</button>
               <button className="p-1 rounded-xl w-20 border-2 border-card-red text-card-red font-bold">Delete</button>
             </div>
-            <div className=" text-[#797979]">Last edited by : {authorName}</div>
+            {author ? <div className=" text-[#797979]">Last edited by : {author}</div> : null}
           </div>
         </div>
       </div>

@@ -52,7 +52,7 @@ const Navbar = ({ user }: { user: UserDataType }) => {
                     <div
                       className="w-full flex gap-2 hover:bg-secondary duration-300 cursor-pointer px-4 py-2 rounded-md"
                       onClick={() => {
-                        router.push('/manageProjects');
+                        router.push('/manage-projects');
                       }}
                     >
                       <div>
@@ -63,7 +63,7 @@ const Navbar = ({ user }: { user: UserDataType }) => {
                     <div
                       className="w-full flex gap-2 hover:bg-secondary duration-300 cursor-pointer px-4 py-2 rounded-md"
                       onClick={() => {
-                        router.push('/manageUsers');
+                        router.push('/manage-users');
                       }}
                     >
                       <div>
@@ -170,7 +170,7 @@ const Navbar = ({ user }: { user: UserDataType }) => {
                     <div
                       className="w-full flex gap-2 hover:bg-secondary duration-300 cursor-pointer px-4 py-2 rounded-md"
                       onClick={() => {
-                        router.push('/manageProjects');
+                        router.push('/manage-projects');
                       }}
                     >
                       <div>
@@ -181,7 +181,7 @@ const Navbar = ({ user }: { user: UserDataType }) => {
                     <div
                       className="w-full flex gap-2 hover:bg-secondary duration-300 cursor-pointer px-4 py-2 rounded-md"
                       onClick={() => {
-                        router.push('/manageUsers');
+                        router.push('/manage-users');
                       }}
                     >
                       <div>

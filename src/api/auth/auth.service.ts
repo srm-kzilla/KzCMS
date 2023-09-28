@@ -3,6 +3,7 @@ import { SALT_ROUNDS } from '@/shared/constants';
 import generateToken from '@/shared/middlewares/jwt';
 import { UserSchemaType } from '@/shared/types';
 import bcrypt from 'bcrypt';
+import { ERRORS } from '@/shared/errors';
 
 export async function handleAddNewUser(signup: UserSchemaType) {
   const data = await (await db()).collection('users').findOne({ email: signup.email });
@@ -28,12 +29,12 @@ export async function handleExistingUser({ email, password }: UserSchemaType): P
   const data = await (await db()).collection('users').findOne({ email: email });
 
   if (!data) {
-    throw { statusCode: 404, message: 'User Does Not Exsist' };
+    throw { statusCode: ERRORS.USER_NOT_FOUND.code, message: ERRORS.USER_NOT_FOUND.message };
   }
 
   const res = await bcrypt.compare(password, data.password);
   if (!res) {
-    throw { statusCode: 401, message: 'Incorrect Password / Not Allowed' };
+    throw { statusCode: ERRORS.UNAUTHORIZED.code, message: ERRORS.UNAUTHORIZED.message };
   }
   return generateToken(email);
 }
