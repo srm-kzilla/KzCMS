@@ -15,7 +15,7 @@ const ProjectCard = ({ projectData }: { projectData: ProjectCardProps }) => {
     <div
       className="w-full lg:w-96 h-fit rounded-lg bg-secondary p-6 flex flex-col gap-10 hover:scale-105 duration-300 cursor-pointer"
       onClick={() => {
-        router.push(`/myProjects/${projectData.projectSlug}`);
+        router.push(`/my-projects/${projectData.projectSlug}`);
       }}
     >
       <div className="w-full overflow-hidden">
