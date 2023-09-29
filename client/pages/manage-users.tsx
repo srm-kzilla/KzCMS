@@ -1,6 +1,7 @@
 import Layout from '@/components/Layout';
 import UserDataType from '@/interfaces/userDataType';
 import server from '@/utils/server';
+import { GetServerSidePropsContext } from 'next';
 import nookies from 'nookies';
 import React from 'react';
 
@@ -20,7 +21,7 @@ const manageUsers = ({ user }: { user: UserDataType }) => {
 
 export default manageUsers;
 
-export const getServerSideProps = async (ctx: any) => {
+export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   const cookies = nookies.get(ctx);
 
   if (!cookies.token) {
