@@ -1,25 +1,25 @@
 import Layout from '@/components/Layout';
 import React from 'react';
 import nookies from 'nookies';
-import server from '@/utils/server';
 import UserDataType from '@/interfaces/userDataType';
-import ProjectCard from '@/components/ProjectCard';
+import server from '@/utils/server';
 import { GetServerSidePropsContext } from 'next';
 import ProjectListDataType from '@/interfaces/projectListDataType';
+import ProjectCard from '@/components/ProjectCard';
 
-export default function Home({ user, projectList }: { user: UserDataType; projectList: ProjectListDataType[] }) {
+const Index = ({ user, projectList }: { user: UserDataType; projectList: ProjectListDataType[] }) => {
   return (
     <div className="w-full flex min-h-screen h-fit">
       <Layout user={user}>
         <div className="w-full h-full flex flex-col gap-10">
           <div className="w-full h-fit">
-            <h1 className="font-bold text-2xl lg:text-4xl">MY PROJECTS</h1>
+            <h1 className="font-bold text-2xl lg:text-4xl">MANAGE PROJECTS</h1>
           </div>
           <div className="flex flex-col md:flex-wrap md:flex-row justify-center gap-5 md:justify-start h-fit w-full">
             {projectList.map((project, key) => {
               return (
                 <div key={key}>
-                  <ProjectCard projectData={project} redirectUrl={'/my-projects'} />
+                  <ProjectCard projectData={project} redirectUrl={'/manage-projects'} />
                 </div>
               );
             })}
@@ -28,7 +28,9 @@ export default function Home({ user, projectList }: { user: UserDataType; projec
       </Layout>
     </div>
   );
-}
+};
+
+export default Index;
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   const cookies = nookies.get(ctx);
@@ -56,11 +58,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     },
   });
 
-  const projectList: ProjectListDataType[] = projectListDataResponse.data.data.filter(
-    (project: ProjectListDataType) => {
-      return project.userAccess?.includes(user.email);
-    },
-  );
+  const projectList: ProjectListDataType[] = projectListDataResponse.data.data;
 
   return {
     props: {

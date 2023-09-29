@@ -202,7 +202,13 @@ const Navbar = ({ user }: { user: UserDataType }) => {
                   <h1>Settings</h1>
                 </div>
               </div>
-              <div className="w-full flex gap-2 hover:bg-secondary duration-300 cursor-pointer px-4 py-2 rounded-md">
+              <div
+                className="w-full flex gap-2 hover:bg-secondary duration-300 cursor-pointer px-4 py-2 rounded-md"
+                onClick={() => {
+                  destroyCookie(null, 'token');
+                  router.push('/login');
+                }}
+              >
                 <div>
                   <LogoutIcon className="text-red-500" size={20} />
                 </div>

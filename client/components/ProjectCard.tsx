@@ -9,13 +9,13 @@ interface ProjectCardProps {
   data: ProjectDataType[];
 }
 
-const ProjectCard = ({ projectData }: { projectData: ProjectCardProps }) => {
+const ProjectCard = ({ projectData, redirectUrl }: { projectData: ProjectCardProps, redirectUrl: string }) => {
   const router = useRouter();
   return (
     <div
       className="w-full lg:w-96 h-fit rounded-lg bg-secondary p-6 flex flex-col gap-10 hover:scale-105 duration-300 cursor-pointer"
       onClick={() => {
-        router.push(`/my-projects/${projectData.projectSlug}`);
+        router.push(`/${redirectUrl}/${projectData.projectSlug}`);
       }}
     >
       <div className="w-full overflow-hidden">
