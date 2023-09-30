@@ -1,17 +1,20 @@
 import Layout from '@/components/Layout';
+import UserDataType from '@/interfaces/userDataType';
+import { GetServerSidePropsContext } from 'next';
+import { useRouter } from 'next/router';
 import React from 'react';
 import nookies from 'nookies';
-import UserDataType from '@/interfaces/userDataType';
 import server from '@/utils/server';
-import { GetServerSidePropsContext } from 'next';
 
-const manageProjects = ({ user }: { user: UserDataType }) => {
+const ManageProject = ({ user }: { user: UserDataType }) => {
+  const router = useRouter();
+
   return (
-    <div className="w-full flex min-h-screen h-fit">
+    <div>
       <Layout user={user}>
         <div className="w-full h-full flex flex-col gap-10">
           <div className="w-full h-fit">
-            <h1 className="font-bold text-2xl lg:text-4xl">MANAGE PROJECTS</h1>
+            <h1 className="font-bold text-2xl lg:text-4xl">{router.query.project?.toString().toUpperCase()}</h1>
           </div>
         </div>
       </Layout>
@@ -19,10 +22,11 @@ const manageProjects = ({ user }: { user: UserDataType }) => {
   );
 };
 
-export default manageProjects;
+export default ManageProject;
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   const cookies = nookies.get(ctx);
+  const { project } = ctx.query;
 
   if (!cookies.token) {
     return {
