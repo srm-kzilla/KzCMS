@@ -3,7 +3,7 @@ import db from '@/loaders/database';
 import LoggerInstance from '@/loaders/logger';
 import { LINK_REGEX_PATTERN } from '@/shared/constants';
 import { ERRORS } from '@/shared/errors';
-import { CreateProjectType, ProjectDataType, ProjectImageSlugType, ProjectType } from '@/shared/types';
+import { CreateProjectType, ProjectDataType, ProjectImageSlugType, ProjectType, UserType } from '@/shared/types';
 import { DeleteObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import fs from 'fs';
 import { ObjectId, UpdateFilter } from 'mongodb';
@@ -49,6 +49,8 @@ export const handleCreateProject = async ({ projectName, typeName }: CreateProje
     projectName: `${projectName} | ${typeName}`,
     data: [],
     userAccess: [],
+    isEnabled: true,
+    isDeleted: false,
   });
 
   return slug;
@@ -102,13 +104,14 @@ export const handleGetAllProjects = async () => {
   return projects as unknown as ProjectDataType[];
 };
 
-export const handleGetProject = async (projectSlug: string, email: string) => {
+export const handleGetProject = async (projectSlug: string, user: UserType) => {
   const projectsCollection = (await db()).collection('projects');
   const project = (await projectsCollection.findOne({ projectSlug })) as unknown as ProjectType | null;
   if (!project) {
     throw { errorCode: ERRORS.RESOURCE_NOT_FOUND.code, message: ERRORS.RESOURCE_NOT_FOUND.message };
   }
-  if (!project.userAccess.includes(email)) {
+  console.log(!user.isAdmin && project.userAccess.includes(user.email));
+  if (!user.isAdmin && !project.userAccess.includes(user.email)) {
     throw { errorCode: ERRORS.UNAUTHORIZED.code, message: ERRORS.UNAUTHORIZED.message.error };
   }
 
