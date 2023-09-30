@@ -110,7 +110,7 @@ export const handleGetProject = async (projectSlug: string, user: UserType) => {
   if (!project) {
     throw { errorCode: ERRORS.RESOURCE_NOT_FOUND.code, message: ERRORS.RESOURCE_NOT_FOUND.message };
   }
-  console.log(!user.isAdmin && project.userAccess.includes(user.email));
+
   if (!user.isAdmin && !project.userAccess.includes(user.email)) {
     throw { errorCode: ERRORS.UNAUTHORIZED.code, message: ERRORS.UNAUTHORIZED.message.error };
   }
