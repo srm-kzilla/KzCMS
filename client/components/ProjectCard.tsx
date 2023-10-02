@@ -15,7 +15,7 @@ const ProjectCard = ({ projectData, redirectUrl }: { projectData: ProjectCardPro
     <div
       className="w-full lg:w-96 h-fit rounded-lg bg-secondary p-6 flex flex-col gap-10 hover:scale-105 duration-300 cursor-pointer"
       onClick={() => {
-        router.push(`/${redirectUrl}/${projectData.projectSlug}`);
+        router.push(`${redirectUrl}/${projectData.projectSlug}`);
       }}
     >
       <div className="w-full overflow-hidden">
