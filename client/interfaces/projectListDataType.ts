@@ -6,4 +6,6 @@ export default interface ProjectListDataType {
   projectName: string;
   data: ProjectDataType[];
   userAccess: string[];
+  isDeleted: boolean;
+  isEnabled: boolean;
 }
