@@ -70,7 +70,7 @@ const UserCard = ({
             >
               <div>
                 <input
-                  className="w-full px-4 py-2 rounded-lg bg-primary outline-none"
+                  className="w-full px-4 py-2 rounded-lg bg-primary outline-none text-sm lg:text-base"
                   type="text"
                   placeholder="New Password (At least 5 characters)"
                   pattern=".{5,}"
