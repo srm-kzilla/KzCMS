@@ -15,13 +15,10 @@ const Index = ({ user, projectList }: { user: UserDataType; projectList: Project
   const [typeName, setTypeName] = useState<string>('');
   const router = useRouter();
 
-  console.log(projectList);
-
   const handleCreateProject = async () => {
     const response = await axios.post('/api/create-project', {
       projectName,
       typeName,
-      token: nookies.get().token,
     });
 
     if (response.status === 200) {
@@ -157,9 +154,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     },
   });
 
-  const projectListData: ProjectListDataType[] = projectListDataResponse.data.data;
-
-  const projectList: ProjectListDataType[] = projectListData.filter((project: ProjectListDataType) => {
+  const projectList: ProjectListDataType[] = projectListDataResponse.data.data.filter((project: { isDeleted: any }) => {
     return !project.isDeleted;
   });
 

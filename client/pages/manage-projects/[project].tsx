@@ -2,7 +2,7 @@ import Layout from '@/components/Layout';
 import UserDataType from '@/interfaces/userDataType';
 import { GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import nookies from 'nookies';
 import server from '@/utils/server';
 import DeleteIcon from 'remixicon-react/DeleteBin7LineIcon';
@@ -38,6 +38,7 @@ const ManageProject = ({
   const [selectOptions, setSelectOptions] = useState<selectOptionType[]>([]);
   const [userAccessArray, setuserAccessArray] = useState<string[]>([]);
   const [deleteProjectModal, setDeleteProjectModal] = useState<boolean>(false);
+  const userAccessList = useRef<string[]>([]);
 
   const handleAddUserAccess = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -45,7 +46,6 @@ const ManageProject = ({
     const response = await axios.patch('/api/update-user-access', {
       projectSlug: router.query.project,
       userAccess: userAccessArray,
-      token: nookies.get().token,
     });
 
     if (response.status === 200) {
@@ -59,7 +59,6 @@ const ManageProject = ({
       userAccess: userAccessArray.filter(user => {
         return user !== email;
       }),
-      token: nookies.get().token,
     });
 
     if (response.status === 200) {
@@ -71,7 +70,6 @@ const ManageProject = ({
     e.preventDefault();
     const response = await axios.post('/api/delete-project', {
       projectSlug: router.query.project,
-      token: nookies.get().token,
     });
 
     if (response.status === 200) {
@@ -89,6 +87,7 @@ const ManageProject = ({
       }),
     );
 
+    userAccessList.current = projectData.userAccess;
     setuserAccessArray(projectData.userAccess);
   }, []);
 
@@ -171,7 +170,6 @@ const ManageProject = ({
                           className="text-red-500"
                           onClick={() => {
                             handleRemoveUserAccess(user);
-                            console.log(userAccessArray);
                           }}
                         >
                           <DeleteIcon />
@@ -268,6 +266,7 @@ const ManageProject = ({
                     </div>
                     <div>
                       <button
+                        disabled={userAccessArray === userAccessList.current}
                         type="submit"
                         className="w-full flex items-center justify-center px-6 py-2 border-2 border-white rounded-lg"
                       >
