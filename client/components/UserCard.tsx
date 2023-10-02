@@ -8,9 +8,9 @@ const UserCard = ({
   updateUserPassword,
 }: {
   user: UserDataType;
-  verifyUser: any;
-  deleteUser: any;
-  updateUserPassword: any;
+  verifyUser: (email: string) => void;
+  deleteUser: (email: string) => void;
+  updateUserPassword: (email: string, newPassword: string) => void;
 }) => {
   const [newPassword, setNewPassword] = useState<string>('');
   const [deleteModal, setDeleteModal] = useState<boolean>(false);

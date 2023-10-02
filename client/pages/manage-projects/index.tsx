@@ -15,7 +15,7 @@ const Index = ({ user, projectList }: { user: UserDataType; projectList: Project
   const [typeName, setTypeName] = useState<string>('');
   const router = useRouter();
 
-  const handleCreateProject = async (e: { preventDefault: () => void; }) => {
+  const handleCreateProject = async (e: React.FormEvent) => {
     e.preventDefault();
     const response = await axios.post('/api/create-project', {
       projectName,
