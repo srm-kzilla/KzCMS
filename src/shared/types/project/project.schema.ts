@@ -11,7 +11,7 @@ export const BaseProjectSchema = z.object({
 });
 
 export const ProjectSchema = z.object({
-  slug: z.string(),
+  projectSlug: z.string(),
   userAccess: z.array(z.string()),
   data: z.array(
     z.object({
@@ -22,6 +22,8 @@ export const ProjectSchema = z.object({
       author: z.string().optional(),
     }),
   ),
+  isEnabled: z.boolean(),
+  isDeleted: z.boolean(),
 });
 
 export const ProjectDataSchema = z.object({
