@@ -5,18 +5,25 @@ import { parseCookies } from 'nookies';
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const parsedCookies = parseCookies({ req });
 
-  if (req.method === 'POST') {
+  if (req.method === 'PATCH') {
     try {
-      const { projectSlug } = req.body;
+      const { email } = req.body;
       const { token } = parsedCookies;
-      await server.delete(`/api/projects/${projectSlug}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
+      await server.patch(
+        `/api/admin/verify`,
+        {
+          email,
+          verify: true,
         },
-      });
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
 
       return res.status(200).json({
-        message: 'Project Deleted Successfully',
+        message: 'User Verified Successfully',
       });
     } catch (e) {
       return res.status(500).json({ error: e });

@@ -7,16 +7,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   if (req.method === 'POST') {
     try {
-      const { projectSlug } = req.body;
+      const { email, password } = req.body;
       const { token } = parsedCookies;
-      await server.delete(`/api/projects/${projectSlug}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
+      await server.patch(
+        `/api/admin/update/user`,
+        {
+          email,
+          password
         },
-      });
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
 
       return res.status(200).json({
-        message: 'Project Deleted Successfully',
+        message: 'User Password Updated Successfully',
       });
     } catch (e) {
       return res.status(500).json({ error: e });
