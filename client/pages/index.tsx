@@ -8,6 +8,7 @@ import { GetServerSidePropsContext } from 'next';
 import ProjectListDataType from '@/interfaces/projectListDataType';
 
 export default function Home({ user, projectList }: { user: UserDataType; projectList: ProjectListDataType[] }) {
+  console.log(projectList);
   return (
     <div className="w-full flex min-h-screen h-fit">
       <Layout user={user}>
@@ -50,22 +51,17 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 
   const user: UserDataType = userResponse.data.data;
 
-  const projectListDataResponse = await server.get('/api/projects', {
+  const projectListDataResponse = await server.get('/api/users/user/projects', {
     headers: {
       Authorization: `Bearer ${cookies.token}`,
     },
   });
 
-  const projectList: ProjectListDataType[] = projectListDataResponse.data.data.filter(
-    (project: ProjectListDataType) => {
-      return project.userAccess?.includes(user.email);
-    },
-  );
 
   return {
     props: {
       user,
-      projectList,
+      projectList: projectListDataResponse.data.projects,
     },
   };
 };
