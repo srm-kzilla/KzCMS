@@ -1,12 +1,6 @@
 import { z } from 'zod';
-import { EMAIL_REGEX_PATTERN } from '@/shared/constants';
 
-export const EmailSchema = z
-  .string()
-  .email()
-  .refine(email => {
-    return EMAIL_REGEX_PATTERN.test(email);
-  }, "Invalid email format");
+export const EmailSchema = z.string().email({ message: 'Invalid email format' })
 
 export const UserSchema = z.object({
   email: EmailSchema,
