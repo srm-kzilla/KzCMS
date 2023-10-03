@@ -1,17 +1,14 @@
 import UserDataType from '@/interfaces/userDataType';
 import React, { useState } from 'react';
 
-const UserCard = ({
-  user,
-  verifyUser,
-  deleteUser,
-  updateUserPassword,
-}: {
+interface UserCardProps {
   user: UserDataType;
   verifyUser: (email: string) => void;
   deleteUser: (email: string) => void;
   updateUserPassword: (email: string, newPassword: string) => void;
-}) => {
+}
+
+const UserCard = ({ user, verifyUser, deleteUser, updateUserPassword }: UserCardProps) => {
   const [newPassword, setNewPassword] = useState<string>('');
   const [deleteModal, setDeleteModal] = useState<boolean>(false);
   const [passwordModal, setPasswordModal] = useState<boolean>(false);
@@ -106,20 +103,12 @@ const UserCard = ({
           <h1 className="font-bold text-base lg:text-2xl">{user.email}</h1>
         </div>
         <div className="w-full flex gap-2">
-          <div className="font-bold text-sm text-gray-500">{user.isAdmin ? <h1>Admin</h1> : <h1>User</h1>}</div>
+          <h1 className="font-bold text-sm text-gray-500">{user.isAdmin ? 'Admin' : 'User'}</h1>
           <div className="font-bold text-sm text-gray-500">
             <h1>|</h1>
           </div>
           <div className="font-bold text-sm text-gray-500">
-            {user.isVerified ? (
-              <div>
-                <h1>Verified</h1>
-              </div>
-            ) : (
-              <div>
-                <h1>Unverified</h1>
-              </div>
-            )}
+            <h1>{user.isVerified ? 'Verified' : 'Unverified'}</h1>
           </div>
         </div>
       </div>
