@@ -12,6 +12,7 @@ const UserCard = ({ user, verifyUser, deleteUser, updateUserPassword }: UserCard
   const [newPassword, setNewPassword] = useState<string>('');
   const [deleteModal, setDeleteModal] = useState<boolean>(false);
   const [passwordModal, setPasswordModal] = useState<boolean>(false);
+  const { email, isAdmin, isVerified } = user;
 
   return (
     <div className="w-full md:w-[400px] h-fit p-6 rounded-lg bg-secondary flex flex-col gap-5 overflow-hidden">
@@ -20,13 +21,13 @@ const UserCard = ({ user, verifyUser, deleteUser, updateUserPassword }: UserCard
           <div className="w-full lg:w-[500px] p-6 bg-secondary rounded-lg flex flex-col gap-5">
             <div className="w-full flex flex-col justify-center items-center">
               <h1 className="font-bold text-xl">Are you sure you want to delete </h1>
-              <h1 className="font-bold text-xl">{user.email}?</h1>
+              <h1 className="font-bold text-xl">{email}?</h1>
             </div>
             <form
               className="w-full h-full flex flex-col gap-5"
               onSubmit={e => {
                 e.preventDefault();
-                deleteUser(user.email);
+                deleteUser(email);
               }}
             >
               <div>
@@ -56,13 +57,13 @@ const UserCard = ({ user, verifyUser, deleteUser, updateUserPassword }: UserCard
           <div className="w-full lg:w-[500px] p-6 bg-secondary rounded-lg flex flex-col gap-5">
             <div className="w-full flex flex-col justify-center items-center">
               <h1 className="font-bold text-xl">Update password of </h1>
-              <h1 className="font-bold text-xl">{user.email}?</h1>
+              <h1 className="font-bold text-xl">{email}?</h1>
             </div>
             <form
               className="w-full h-full flex flex-col gap-5"
               onSubmit={e => {
                 e.preventDefault();
-                updateUserPassword(user.email, newPassword);
+                updateUserPassword(email, newPassword);
               }}
             >
               <div>
@@ -100,15 +101,15 @@ const UserCard = ({ user, verifyUser, deleteUser, updateUserPassword }: UserCard
       )}
       <div>
         <div>
-          <h1 className="font-bold text-base lg:text-2xl">{user.email}</h1>
+          <h1 className="font-bold text-base lg:text-2xl">{email}</h1>
         </div>
         <div className="w-full flex gap-2">
-          <h1 className="font-bold text-sm text-gray-500">{user.isAdmin ? 'Admin' : 'User'}</h1>
+          <h1 className="font-bold text-sm text-gray-500">{isAdmin ? 'Admin' : 'User'}</h1>
           <div className="font-bold text-sm text-gray-500">
             <h1>|</h1>
           </div>
           <div className="font-bold text-sm text-gray-500">
-            <h1>{user.isVerified ? 'Verified' : 'Unverified'}</h1>
+            <h1>{isVerified ? 'Verified' : 'Unverified'}</h1>
           </div>
         </div>
       </div>
@@ -124,11 +125,11 @@ const UserCard = ({ user, verifyUser, deleteUser, updateUserPassword }: UserCard
               <h1 className="font-bold text-sm md:text-base text-red-500">Delete User</h1>
             </button>
           </div>
-          {!user.isVerified && (
+          {!isVerified && (
             <div className="w-full">
               <button
                 onClick={() => {
-                  verifyUser(user.email);
+                  verifyUser(email);
                 }}
                 className="w-full flex items-center justify-center px-6 py-2 border-2 border-blue-500 rounded-lg"
               >
