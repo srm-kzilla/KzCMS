@@ -8,7 +8,6 @@ import { GetServerSidePropsContext } from 'next';
 import ProjectListDataType from '@/interfaces/projectListDataType';
 
 export default function Home({ user, projectList }: { user: UserDataType; projectList: ProjectListDataType[] }) {
-  console.log(projectList);
   return (
     <div className="w-full flex min-h-screen h-fit">
       <Layout user={user}>
@@ -56,7 +55,6 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
       Authorization: `Bearer ${cookies.token}`,
     },
   });
-
 
   return {
     props: {
