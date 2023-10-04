@@ -7,8 +7,7 @@ type RequestLocation = 'query' | 'body' | 'params';
 export function validateRequest(location: RequestLocation, schema: z.AnyZodObject) {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const validatedSchema = await schema.parseAsync(req[location]);
-      req[location] = validatedSchema;
+      req[location] = await schema.parseAsync(req[location]);
       next();
     } catch (error) {
       const message = error;
