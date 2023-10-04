@@ -11,7 +11,7 @@ export const MESSAGES_TEXT = {
   UPDATE_USER: 'User Updated Successfully',
   IMAGE_UPDATED: 'Image Updated Successfully',
   UPDATE_USER_ACCESS: 'User Access Updated Successfully',
-  UPDATE_PROJECT_ACCESS:  'Project Status Updated'
+  UPDATE_PROJECT_ACCESS: 'Project Status Updated',
 };
 
 export const LINK_REGEX_PATTERN = /https:\/\/[\w.-]+\.s3\.ap-south-1\.amazonaws\.com\/(.+)/;

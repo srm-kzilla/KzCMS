@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { Request, Response, NextFunction } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { ERRORS } from '../errors';
 
 type RequestLocation = 'query' | 'body' | 'params';

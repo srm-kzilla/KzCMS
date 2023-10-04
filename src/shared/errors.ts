@@ -24,7 +24,7 @@ export const ERRORS = {
     code: 401,
     message: {
       error: 'Unauthorized',
-      error_description: "You don't have permission to access this resource",
+      error_description: 'You don\'t have permission to access this resource',
     },
   },
   RESOURCE_NOT_FOUND: {
@@ -46,7 +46,7 @@ export const ERRORS = {
     code: 400,
     message: {
       error: 'Bad Request',
-      error_description: 'Please provide a valid status of the project'
+      error_description: 'Please provide a valid status of the project',
     },
   },
   USER_NOT_FOUND: {

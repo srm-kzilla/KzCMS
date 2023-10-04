@@ -4,16 +4,16 @@ import fs from 'fs';
 
 export const upload = multer({
   limits: { fileSize: 10000000 },
-  fileFilter: function (req, file, cb) {
+  fileFilter: function(req, file, cb) {
     checkFileType(file, cb);
   },
   storage: multer.diskStorage({
-    destination: function (_, __, cb) {
+    destination: function(_, __, cb) {
       const path = `./tmp/uploads`;
       fs.mkdirSync(path, { recursive: true });
       return cb(null, path);
     },
-    filename: function (req, _file, cb) {
+    filename: function(req, _file, cb) {
       const uniqueSuffix = Date.now() + '-' + Math.round(Math.random());
       if (!req.params.slug) {
         cb(new Error('No Slug found'), `NoSlugFound-${uniqueSuffix}`);
