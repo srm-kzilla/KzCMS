@@ -49,9 +49,9 @@ export const ProjectTitleSchema = z.object({
 });
 
 export const ToggleProjectSchema = z.object({
-  setStatus: z.string().refine(value => value === 'enable' || value === 'disable', {
-    message: 'setStatus can only be "enable" or "disable"',
-  }),
+  slug: z.string(),
+  isEnabled: z.boolean().optional(),
+  isDevelopment: z.boolean().optional(),
 });
 
 export type CreateProjectType = z.infer<typeof CreateProjectSchema>;
@@ -61,3 +61,4 @@ export type ProjectMetadataType = z.infer<typeof ProjectMetadataSchema>;
 export type ProjectSlugType = z.infer<typeof ProjectSlugSchema>;
 export type ProjectImageSlugType = z.infer<typeof ProjectImageSlugSchema>;
 export type ProjectTitleType = z.infer<typeof ProjectTitleSchema>;
+export type ToggleProjectType = z.infer<typeof ToggleProjectSchema>;
