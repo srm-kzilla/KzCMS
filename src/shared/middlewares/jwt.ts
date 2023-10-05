@@ -9,5 +9,7 @@ export default function generateToken(email: string): string {
 export function verifyToken(token: string) {
   const data = JWT.verify(token, config.JWT_SECRET) as string;
 
-  return data as unknown as { email: string };
+  return data as unknown as {
+    email: string
+  };
 }

@@ -7,7 +7,9 @@ import { rateLimit } from 'express-rate-limit';
 import config from '@/config';
 import { errorHandler } from '@/shared/middlewares/errorHandler';
 
-export default ({ app }: { app: express.Application }): void => {
+export default ({ app }: {
+  app: express.Application
+}): void => {
   /**
    * Health Check endpoints
    */
@@ -40,7 +42,7 @@ export default ({ app }: { app: express.Application }): void => {
   app.use(express.urlencoded({ extended: true }));
 
   const limiter = rateLimit({
-    windowMs: 1 * 60 * 1000,
+    windowMs: 60 * 1000, // You can add N * 60 * 1000, for N minutes
     max: 100,
     standardHeaders: true,
     legacyHeaders: false,

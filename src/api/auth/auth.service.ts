@@ -29,12 +29,12 @@ export async function handleExistingUser({ email, password }: UserSchemaType): P
   const data = await (await db()).collection('users').findOne({ email: email });
 
   if (!data) {
-    throw { statusCode: ERRORS.USER_NOT_FOUND.code, message: ERRORS.USER_NOT_FOUND.message };
+    throw { statusCode: ERRORS.USER_NOT_FOUND.code, message: ERRORS.USER_NOT_FOUND.message.error };
   }
 
   const res = await bcrypt.compare(password, data.password);
   if (!res) {
-    throw { statusCode: ERRORS.UNAUTHORIZED.code, message: ERRORS.UNAUTHORIZED.message };
+    throw { statusCode: ERRORS.UNAUTHORIZED.code, message: ERRORS.UNAUTHORIZED.message.error };
   }
   return generateToken(email);
 }
