@@ -42,7 +42,7 @@ export default ({ app }: {
   app.use(express.urlencoded({ extended: true }));
 
   const limiter = rateLimit({
-    windowMs: 60 * 1000, // You can add N * 60 * 1000, for N minutes
+    windowMs: 1 * 60 * 1000,
     max: 100,
     standardHeaders: true,
     legacyHeaders: false,
