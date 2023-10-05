@@ -4,7 +4,9 @@ import { NextFunction, Request, Response } from 'express';
 import { handleGetUserDetails, handleGetUserProjects, handleGetUsers } from './user.service';
 
 export const getUsers = async (
-  req: Request<unknown, unknown, unknown, { status: 'verified' | 'unverified' }>,
+  req: Request<unknown, unknown, unknown, {
+    status: 'verified' | 'unverified'
+  }>,
   res: Response,
   next: NextFunction,
 ) => {

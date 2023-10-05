@@ -7,7 +7,9 @@ import { rateLimit } from 'express-rate-limit';
 import config from '@/config';
 import { errorHandler } from '@/shared/middlewares/errorHandler';
 
-export default ({ app }: { app: express.Application }): void => {
+export default ({ app }: {
+  app: express.Application
+}): void => {
   /**
    * Health Check endpoints
    */

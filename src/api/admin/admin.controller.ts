@@ -72,7 +72,9 @@ export const updateUserProjects = async (
 };
 
 export const toggleProject = async (
-  req: Request<ProjectSlugType, unknown, unknown, { setStatus: 'enable' | 'disable' }>,
+  req: Request<ProjectSlugType, unknown, unknown, {
+    setStatus: 'enable' | 'disable'
+  }>,
   res: Response,
   next: NextFunction,
 ) => {

@@ -5,11 +5,6 @@ export const CreateProjectSchema = z.object({
   typeName: z.string(),
 });
 
-export const BaseProjectSchema = z.object({
-  slug: z.string(),
-  name: z.string(),
-});
-
 export const ProjectSchema = z.object({
   projectSlug: z.string(),
   userAccess: z.array(z.string()),
