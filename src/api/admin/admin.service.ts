@@ -91,7 +91,7 @@ export async function handleToggleProject(slug: string, status: Required<Omit<To
   if (isEnabled === project.isEnabled && isDevelopment === project.isDevelopment) {
     throw {
       statusCode: ERRORS.RESOURCE_CONFLICT.code,
-      message: ERRORS.RESOURCE_CONFLICT.message,
+      message: ERRORS.RESOURCE_CONFLICT.message.error,
     };
   }
 
