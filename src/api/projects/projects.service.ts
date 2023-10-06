@@ -1,6 +1,5 @@
 import config from '@/config';
 import db from '@/loaders/database';
-import LoggerInstance from '@/loaders/logger';
 import { LINK_REGEX_PATTERN } from '@/shared/constants';
 import { ERRORS } from '@/shared/errors';
 import { CreateProjectType, ProjectDataType, ProjectImageSlugType, ProjectType, UserType } from '@/shared/types';
@@ -41,7 +40,12 @@ export const handleCreateProject = async ({ projectName, typeName }: CreateProje
   const project = await projectsCollection.findOne({ projectSlug: slug });
 
   if (project) {
-    throw { success: false, statusCode: ERRORS.RESOURCE_CONFLICT.code, message: ERRORS.RESOURCE_CONFLICT.message, data: { projectName, typeName } };
+    throw {
+      success: false,
+      statusCode: ERRORS.RESOURCE_CONFLICT.code,
+      message: ERRORS.RESOURCE_CONFLICT.message,
+      data: { projectName, typeName },
+    };
   }
 
   await projectsCollection.insertOne({
@@ -60,7 +64,12 @@ export const handleUpdateProjectData = async (slug: string, data: Omit<ProjectDa
   const projectsCollection = (await db()).collection('projects');
   const project = await projectsCollection.findOne({ projectSlug: slug, 'data.title': data.title });
   if (!project) {
-    throw { success: false, statusCode: ERRORS.RESOURCE_NOT_FOUND.code, message: ERRORS.RESOURCE_NOT_FOUND.message, data };
+    throw {
+      success: false,
+      statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
+      message: ERRORS.RESOURCE_NOT_FOUND.message,
+      data,
+    };
   }
   const filter = { _id: new ObjectId(project._id), 'data.title': data.title };
 
@@ -218,10 +227,10 @@ export const handleDeleteProjectData = async (slug: string, title: string) => {
       }),
     );
   } catch (e) {
-    LoggerInstance.log({
-      level: 'error',
-      message: `Error deleting image from S3: ${e}`,
-    });
+    throw {
+      statusCode: ERRORS.DATA_OPERATION_FAILURE.code,
+      message: ERRORS.DATA_OPERATION_FAILURE.message,
+    };
   }
 
   const result = await projectsCollection.findOneAndUpdate(
