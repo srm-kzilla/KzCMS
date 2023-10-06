@@ -21,7 +21,7 @@ export default function authenticateToken({ verifyAdmin } = { verifyAdmin: false
 
       if (!data) {
         LoggerInstance.error('User Not Found');
-        throw { statusCode: ERRORS.RESOURCE_NOT_FOUND.code, message: ERRORS.RESOURCE_NOT_FOUND.message };
+        throw { statusCode: ERRORS.USER_NOT_FOUND.code, message: ERRORS.USER_NOT_FOUND.message };
       }
 
       if (verifyAdmin && !data.isAdmin) {
