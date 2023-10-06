@@ -2,7 +2,10 @@ import React, { useState } from 'react';
 import server from '@/utils/server';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
+import nookies from 'nookies';
 import Link from 'next/link';
+import { GetServerSidePropsContext } from 'next';
+
 
 const SignUp = () => {
   const [user, setUser] = useState({
@@ -21,14 +24,12 @@ const SignUp = () => {
 
   const handleSUbmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(user);
 
     try {
       const response = await server.post('/api/auth/signup', user);
       router.push('/login');
     } catch (err: any) {
       setError(!error);
-      console.log(err);
     }
   };
 
@@ -92,3 +93,20 @@ const SignUp = () => {
 };
 
 export default SignUp;
+
+export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
+  const cookies = nookies.get(ctx);
+
+  if (cookies.token) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {},
+  };
+};

@@ -7,7 +7,9 @@ import { rateLimit } from 'express-rate-limit';
 import config from '@/config';
 import { errorHandler } from '@/shared/middlewares/errorHandler';
 
-export default ({ app }: { app: express.Application }): void => {
+export default ({ app }: {
+  app: express.Application
+}): void => {
   /**
    * Health Check endpoints
    */
@@ -50,7 +52,7 @@ export default ({ app }: { app: express.Application }): void => {
 
   app.use(config.API.PREFIX, routes());
 
-  app.all('*', (req, res, next) => {
+  app.all('*', () => {
     throw { statusCode: 404, message: 'Endpoint Not Found' };
   });
 

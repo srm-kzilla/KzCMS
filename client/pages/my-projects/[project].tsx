@@ -6,6 +6,7 @@ import UserDataType from '@/interfaces/userDataType';
 import server from '@/utils/server';
 import ProjectDataType from '@/interfaces/ProjectDataType';
 import { AxiosResponse } from 'axios';
+import { GetServerSidePropsContext } from 'next';
 import { useState } from 'react';
 import AddCircleLineIcon from 'remixicon-react/AddCircleLineIcon';
 import CloseCircleLineIcon from 'remixicon-react/CloseCircleLineIcon';
@@ -64,7 +65,7 @@ interface projectDataResponseType {
   data: AxiosResponse<ProjectDataType[]>;
 }
 
-export const getServerSideProps = async (ctx: any) => {
+export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   const cookies = nookies.get(ctx);
   const { project } = ctx.query;
 

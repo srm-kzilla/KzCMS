@@ -1,4 +1,4 @@
-import { STATUS, MESSAGES_TEXT } from '@/shared/constants';
+import { MESSAGES_TEXT, STATUS } from '@/shared/constants';
 import { ERRORS } from '@/shared/errors';
 import {
   CreateProjectType,
@@ -12,12 +12,12 @@ import { NextFunction, Request, Response } from 'express';
 import {
   handleCreateProject,
   handleCreateProjectData,
-  handleUpdateProjectImage,
   handleDeleteProject,
   handleDeleteProjectData,
   handleGetAllProjects,
   handleGetProject,
   handleUpdateProjectData,
+  handleUpdateProjectImage,
   handleUpdateProjectMetadata,
 } from './projects.service';
 
@@ -35,9 +35,9 @@ export const getAllProjects = async (req: Request, res: Response, next: NextFunc
 
 export const getProject = async (req: Request<ProjectSlugType>, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const email = res.locals.user.email;
+    const { user } = res.locals;
 
-    const data = await handleGetProject(req.params.slug, email);
+    const data = await handleGetProject(req.params.slug, user);
     res.status(STATUS.OK).json({
       success: true,
       slug: req.params.slug,
