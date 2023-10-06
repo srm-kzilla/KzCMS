@@ -95,3 +95,13 @@ export async function handleToggleProject(slug: string, status: string) {
     };
   }
 }
+
+export async function handleUpdateDomains(slug: string, allowedDomains: string[]): Promise<void> {
+  const project = await (await db())
+    .collection('projects')
+    .findOneAndUpdate({ projectSlug: slug }, { $set: { allowedDomains } }, { returnDocument: 'before' });
+
+  if (!project.value) {
+    throw { statusCode: ERRORS.RESOURCE_NOT_FOUND.code, message: ERRORS.RESOURCE_NOT_FOUND.message.error };
+  }
+}

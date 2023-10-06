@@ -4,11 +4,16 @@ import {
   handleUpdateUser,
   handleUpdateUserProjects,
   handleVerifyUser,
+  handleUpdateDomains,
 } from '@/api/admin/admin.service';
 import { MESSAGES_TEXT, STATUS } from '@/shared/constants';
 import { ERRORS } from '@/shared/errors';
 import { ProjectSlugType } from '@/shared/types';
-import { UpdateProjectSchemaType, VerifyUserType } from '@/shared/types/admin/admin.schema';
+import {
+  UpdateProjectSchemaType,
+  VerifyUserType,
+  UpdateDomainsSchemaType,
+} from '@/shared/types/admin/admin.schema';
 import { UserSchemaType } from '@/shared/types/auth/auth.schema';
 import { NextFunction, Request, Response } from 'express';
 
@@ -72,9 +77,14 @@ export const updateUserProjects = async (
 };
 
 export const toggleProject = async (
-  req: Request<ProjectSlugType, unknown, unknown, {
-    setStatus: 'enable' | 'disable'
-  }>,
+  req: Request<
+    ProjectSlugType,
+    unknown,
+    unknown,
+    {
+      setStatus: 'enable' | 'disable';
+    }
+  >,
   res: Response,
   next: NextFunction,
 ) => {
@@ -90,6 +100,25 @@ export const toggleProject = async (
     res.status(STATUS.OK).json({
       success: true,
       message: 'Project Status Updated',
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updateProjectDomains = async (
+  req: Request<unknown, unknown, UpdateDomainsSchemaType>,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { allowedDomains, projectSlug } = req.body;
+
+    await handleUpdateDomains(projectSlug, allowedDomains);
+
+    res.status(STATUS.OK).json({
+      success: true,
+      message: MESSAGES_TEXT.UPDATE_ALLOWED_DOMAINS,
     });
   } catch (error) {
     next(error);
