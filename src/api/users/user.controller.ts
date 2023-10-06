@@ -31,7 +31,7 @@ export async function getUserDetails(
     const data = await handleGetUserDetails(email);
     return res.status(STATUS.OK).json({
       success: true,
-      message: `user found with id ${email}`,
+      message: MESSAGES_TEXT.FETCH_USER_DETAILS,
       data,
     });
   } catch (error) {

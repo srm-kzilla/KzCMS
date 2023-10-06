@@ -29,9 +29,9 @@ export const deleteUser = async (req: Request<unknown, unknown, UserSchemaType>,
   const user = req.body.email;
   try {
     await handleDeleteUser(user);
-    res.status(200).json({
+    res.status(STATUS.OK).json({
       success: true,
-      message: 'User Deleted Successfully',
+      message: MESSAGES_TEXT.DELETE_USER,
     });
   } catch (error) {
     next(error);
@@ -41,13 +41,11 @@ export const deleteUser = async (req: Request<unknown, unknown, UserSchemaType>,
 export const verifyUser = async (req: Request<unknown, unknown, VerifyUserType>, res: Response, next: NextFunction) => {
   const { email, verify } = req.body;
 
-  const userStatus = verify ? 'verified' : 'unverified';
-
   try {
     await handleVerifyUser(email, verify);
-    res.status(200).json({
+    res.status(STATUS.OK).json({
       success: true,
-      message: `User ${userStatus} successfully`,
+      message: MESSAGES_TEXT.VERIFY_USER,
     });
   } catch (error) {
     next(error);
@@ -80,14 +78,14 @@ export const toggleProject = async (
     const status = req.query.setStatus;
     if (!status) {
       throw {
-        statusCode: ERRORS.MALFORMED_BODY.code,
-        message: 'Please provide a valid status of the project',
+        statusCode: ERRORS.MALFORMED_PROJECT_STATUS.code,
+        message: ERRORS.MALFORMED_PROJECT_STATUS.message,
       };
     }
     await handleToggleProject(req.params.slug, status);
     res.status(STATUS.OK).json({
       success: true,
-      message: 'Project Status Updated',
+      message: MESSAGES_TEXT.UPDATE_PROJECT_ACCESS,
     });
   } catch (error) {
     next(error);
