@@ -33,7 +33,7 @@ const removeFileAfterUse = async (path: fs.PathLike) => {
 
 export const handleCreateProject = async ({ projectName, typeName }: CreateProjectType): Promise<string> => {
   if (!projectName || !typeName) {
-    throw { success: false, statusCode: ERRORS.MALFORMED_BODY.code, message: ERRORS.MALFORMED_BODY.message.error };
+    throw { statusCode: ERRORS.MALFORMED_BODY.code, message: ERRORS.MALFORMED_BODY.message.error };
   }
   const projectsCollection = (await db()).collection('projects');
   const slug = slugify(`${projectName} ${typeName}`, { lower: true, replacement: '-', trim: true });
@@ -41,7 +41,6 @@ export const handleCreateProject = async ({ projectName, typeName }: CreateProje
 
   if (project) {
     throw {
-      success: false,
       statusCode: ERRORS.RESOURCE_CONFLICT.code,
       message: ERRORS.RESOURCE_CONFLICT.message,
       data: { projectName, typeName },
@@ -65,7 +64,6 @@ export const handleUpdateProjectData = async (slug: string, data: Omit<ProjectDa
   const project = await projectsCollection.findOne({ projectSlug: slug, 'data.title': data.title });
   if (!project) {
     throw {
-      success: false,
       statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
       message: ERRORS.RESOURCE_NOT_FOUND.message,
       data,
