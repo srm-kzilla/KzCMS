@@ -6,6 +6,7 @@ import routes from '@/api';
 import { rateLimit } from 'express-rate-limit';
 import config from '@/config';
 import { errorHandler } from '@/shared/middlewares/errorHandler';
+import { ERRORS } from '@/shared/errors';
 
 export default ({ app }: { app: express.Application }): void => {
   /**
@@ -51,7 +52,7 @@ export default ({ app }: { app: express.Application }): void => {
   app.use(config.API.PREFIX, routes());
 
   app.all('*', () => {
-    throw { statusCode: 404, message: 'Endpoint Not Found' };
+    throw { statusCode: ERRORS.ENDPOINT_NOT_FOUND.code, message: ERRORS.ENDPOINT_NOT_FOUND.message };
   });
 
   app.use(errorHandler);

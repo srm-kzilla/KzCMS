@@ -41,7 +41,7 @@ export const handleCreateProject = async ({ projectName, typeName }: CreateProje
   const project = await projectsCollection.findOne({ projectSlug: slug });
 
   if (project) {
-    throw { success: false, message: `Project with slug '${slug}' already exists`, data: { projectName, typeName } };
+    throw { success: false, statusCode: ERRORS.RESOURCE_CONFLICT.code, message: ERRORS.RESOURCE_CONFLICT.message, data: { projectName, typeName } };
   }
 
   await projectsCollection.insertOne({
@@ -60,7 +60,7 @@ export const handleUpdateProjectData = async (slug: string, data: Omit<ProjectDa
   const projectsCollection = (await db()).collection('projects');
   const project = await projectsCollection.findOne({ projectSlug: slug, 'data.title': data.title });
   if (!project) {
-    throw { success: false, message: `Project with slug '${slug}' or title '${data.title}' not found`, data };
+    throw { success: false, statusCode: ERRORS.RESOURCE_NOT_FOUND.code, message: ERRORS.RESOURCE_NOT_FOUND.message, data };
   }
   const filter = { _id: new ObjectId(project._id), 'data.title': data.title };
 
@@ -112,7 +112,7 @@ export const handleGetProject = async (projectSlug: string, user: UserType) => {
   }
 
   if (!user.isAdmin && !project.userAccess.includes(user.email)) {
-    throw { errorCode: ERRORS.UNAUTHORIZED.code, message: ERRORS.UNAUTHORIZED.message.error };
+    throw { errorCode: ERRORS.UNAUTHORIZED.code, message: ERRORS.UNAUTHORIZED.message };
   }
 
   return project.data as unknown as ProjectDataType;
@@ -125,8 +125,8 @@ export const handleDeleteProject = async (slug: string) => {
 
   if (result.matchedCount !== 1 || result.modifiedCount !== 1) {
     throw {
-      statusCode: 400,
-      message: 'Project deletion failed',
+      statusCode: ERRORS.DATA_OPERATION_FAILURE.code,
+      message: ERRORS.DATA_OPERATION_FAILURE.message,
     };
   }
 };
