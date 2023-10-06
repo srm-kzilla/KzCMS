@@ -8,7 +8,9 @@ import config from '@/config';
 import { errorHandler } from '@/shared/middlewares/errorHandler';
 import { ERRORS } from '@/shared/errors';
 
-export default ({ app }: { app: express.Application }): void => {
+export default ({ app }: {
+  app: express.Application
+}): void => {
   /**
    * Health Check endpoints
    */
