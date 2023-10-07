@@ -54,7 +54,7 @@ export default ({ app }: {
   app.use(config.API.PREFIX, routes());
 
   app.all('*', () => {
-    throw { statusCode: ERRORS.ENDPOINT_NOT_FOUND.code, message: ERRORS.ENDPOINT_NOT_FOUND.message };
+    throw { statusCode: ERRORS.ENDPOINT_NOT_FOUND.code, message: ERRORS.ENDPOINT_NOT_FOUND.message.error };
   });
 
   app.use(errorHandler);

@@ -87,7 +87,7 @@ export const updateProjectImage = async (
 ): Promise<void> => {
   try {
     if (!req.file) {
-      throw { statusCode: ERRORS.MALFORMED_BODY.code, message: ERRORS.MALFORMED_BODY.message };
+      throw { statusCode: ERRORS.MALFORMED_BODY.code, message: ERRORS.MALFORMED_BODY.message.error };
     }
 
     await handleUpdateProjectImage(req.params, req.file);
@@ -141,7 +141,7 @@ export const createProjectData = async (
 ): Promise<void> => {
   try {
     if (!req.file) {
-      throw { statusCode: ERRORS.MALFORMED_BODY.code, message: ERRORS.MALFORMED_BODY.message };
+      throw { statusCode: ERRORS.MALFORMED_BODY.code, message: ERRORS.MALFORMED_BODY.message.error };
     }
 
     await handleCreateProjectData(req.params.slug, req.body, req.file);

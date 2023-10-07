@@ -81,7 +81,7 @@ export const toggleProject = async (
     if (!status) {
       throw {
         statusCode: ERRORS.MALFORMED_PROJECT_STATUS.code,
-        message: ERRORS.MALFORMED_PROJECT_STATUS.message,
+        message: ERRORS.MALFORMED_PROJECT_STATUS.message.error,
       };
     }
     await handleToggleProject(req.params.slug, status);

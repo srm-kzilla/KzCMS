@@ -42,7 +42,7 @@ export const handleCreateProject = async ({ projectName, typeName }: CreateProje
   if (project) {
     throw {
       statusCode: ERRORS.RESOURCE_CONFLICT.code,
-      message: ERRORS.RESOURCE_CONFLICT.message,
+      message: ERRORS.RESOURCE_CONFLICT.message.error,
       data: { projectName, typeName },
     };
   }
@@ -65,7 +65,7 @@ export const handleUpdateProjectData = async (slug: string, data: Omit<ProjectDa
   if (!project) {
     throw {
       statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
-      message: ERRORS.RESOURCE_NOT_FOUND.message,
+      message: ERRORS.RESOURCE_NOT_FOUND.message.error,
       data,
     };
   }
@@ -119,7 +119,7 @@ export const handleGetProject = async (projectSlug: string, user: UserType) => {
   }
 
   if (!user.isAdmin && !project.userAccess.includes(user.email)) {
-    throw { errorCode: ERRORS.UNAUTHORIZED.code, message: ERRORS.UNAUTHORIZED.message };
+    throw { errorCode: ERRORS.UNAUTHORIZED.code, message: ERRORS.UNAUTHORIZED.message.error };
   }
 
   return project.data as unknown as ProjectDataType;
@@ -133,7 +133,7 @@ export const handleDeleteProject = async (slug: string) => {
   if (result.matchedCount !== 1 || result.modifiedCount !== 1) {
     throw {
       statusCode: ERRORS.DATA_OPERATION_FAILURE.code,
-      message: ERRORS.DATA_OPERATION_FAILURE.message,
+      message: ERRORS.DATA_OPERATION_FAILURE.message.error,
     };
   }
 };
@@ -229,7 +229,7 @@ export const handleDeleteProjectData = async (slug: string, title: string) => {
   } catch (e) {
     throw {
       statusCode: ERRORS.DATA_OPERATION_FAILURE.code,
-      message: ERRORS.DATA_OPERATION_FAILURE.message,
+      message: ERRORS.DATA_OPERATION_FAILURE.message.error,
     };
   }
 

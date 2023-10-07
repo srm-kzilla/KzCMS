@@ -32,7 +32,7 @@ export const handleVerifyUser = async (email: string, verify: boolean): Promise<
   if (result.matchedCount !== 1 || result.modifiedCount !== 1) {
     throw {
       statusCode: ERRORS.DATA_OPERATION_FAILURE.code,
-      message: ERRORS.DATA_OPERATION_FAILURE.message,
+      message: ERRORS.DATA_OPERATION_FAILURE.message.error,
     };
   }
 };
@@ -41,7 +41,7 @@ export async function handleUpdateUserProjects(data: UpdateProjectSchemaType) {
   const project = await (await db()).collection('projects').findOne({ projectSlug: data.projectSlug });
 
   if (!project) {
-    throw { statusCode: ERRORS.RESOURCE_NOT_FOUND.code, message: ERRORS.RESOURCE_NOT_FOUND.message };
+    throw { statusCode: ERRORS.RESOURCE_NOT_FOUND.code, message: ERRORS.RESOURCE_NOT_FOUND.message.error };
   }
 
   const newUsers = data.userAccess.filter(email => !project.userAccess.includes(email));
@@ -85,13 +85,13 @@ export async function handleToggleProject(slug: string, status: string) {
     .findOneAndUpdate({ projectSlug: slug }, { $set: { isEnabled } }, { returnDocument: 'before' });
 
   if (!project.value) {
-    throw { statusCode: ERRORS.RESOURCE_NOT_FOUND.code, message: ERRORS.RESOURCE_NOT_FOUND.message };
+    throw { statusCode: ERRORS.RESOURCE_NOT_FOUND.code, message: ERRORS.RESOURCE_NOT_FOUND.message.error };
   }
 
   if (project.value.isEnabled === isEnabled) {
     throw {
       statusCode: ERRORS.INVARIANT_PROJECT_STATUS.code,
-      message: ERRORS.INVARIANT_PROJECT_STATUS.message,
+      message: ERRORS.INVARIANT_PROJECT_STATUS.message.error,
     };
   }
 }

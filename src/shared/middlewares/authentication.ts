@@ -11,7 +11,7 @@ export default function authenticateToken({ verifyAdmin } = { verifyAdmin: false
       const token = authHeader?.split(' ')[1];
 
       if (!token) {
-        throw { statusCode: ERRORS.MISSING_ACCESS_TOKEN.code, message: ERRORS.MISSING_ACCESS_TOKEN.message };
+        throw { statusCode: ERRORS.MISSING_ACCESS_TOKEN.code, message: ERRORS.MISSING_ACCESS_TOKEN.message.error };
       }
 
       const { email } = verifyToken(token);
@@ -19,15 +19,15 @@ export default function authenticateToken({ verifyAdmin } = { verifyAdmin: false
       const data = await (await db()).collection('users').findOne({ email });
 
       if (!data) {
-        throw { statusCode: ERRORS.USER_NOT_FOUND.code, message: ERRORS.USER_NOT_FOUND.message };
+        throw { statusCode: ERRORS.USER_NOT_FOUND.code, message: ERRORS.USER_NOT_FOUND.message.error };
       }
 
       if (verifyAdmin && !data.isAdmin) {
-        throw { statusCode: ERRORS.FORBIDDEN_ACCESS_ERROR.code, message: ERRORS.FORBIDDEN_ACCESS_ERROR.message };
+        throw { statusCode: ERRORS.FORBIDDEN_ACCESS_ERROR.code, message: ERRORS.FORBIDDEN_ACCESS_ERROR.message.error };
       }
 
       if (!verifyAdmin && !data.isVerified) {
-        throw { statusCode: ERRORS.FORBIDDEN_ACCESS_ERROR.code, message: ERRORS.FORBIDDEN_ACCESS_ERROR.message };
+        throw { statusCode: ERRORS.FORBIDDEN_ACCESS_ERROR.code, message: ERRORS.FORBIDDEN_ACCESS_ERROR.message.error };
       }
 
       res.locals.user = data;
