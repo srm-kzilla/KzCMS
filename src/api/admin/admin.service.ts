@@ -109,7 +109,5 @@ export async function handleUpdateDomains(slug: string, allowedDomains: string[]
     throw { statusCode: ERRORS.RESOURCE_CONFLICT.code, message: ERRORS.RESOURCE_CONFLICT.message.error };
   }
 
-  await (await db())
-    .collection('projects')
-    .findOneAndUpdate({ projectSlug: slug }, { $set: { allowedDomains } }, { returnDocument: 'before' });
+  await (await db()).collection('projects').updateOne({ projectSlug: slug }, { $set: { allowedDomains } });
 }
