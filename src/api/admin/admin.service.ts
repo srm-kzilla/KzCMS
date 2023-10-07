@@ -97,11 +97,19 @@ export async function handleToggleProject(slug: string, status: string) {
 }
 
 export async function handleUpdateDomains(slug: string, allowedDomains: string[]): Promise<void> {
-  const project = await (await db())
-    .collection('projects')
-    .findOneAndUpdate({ projectSlug: slug }, { $set: { allowedDomains } }, { returnDocument: 'before' });
+  const existingProject = await (await db()).collection('projects').findOne({ projectSlug: slug });
 
-  if (!project.value) {
+  if (!existingProject) {
     throw { statusCode: ERRORS.RESOURCE_NOT_FOUND.code, message: ERRORS.RESOURCE_NOT_FOUND.message.error };
   }
+
+  const areArraysEqual = JSON.stringify(existingProject.allowedDomains) === JSON.stringify(allowedDomains);
+
+  if (areArraysEqual) {
+    throw { statusCode: ERRORS.RESOURCE_CONFLICT.code, message: ERRORS.RESOURCE_CONFLICT.message.error };
+  }
+
+  await (await db())
+    .collection('projects')
+    .findOneAndUpdate({ projectSlug: slug }, { $set: { allowedDomains } }, { returnDocument: 'before' });
 }
