@@ -56,7 +56,6 @@ export default function EditData({
 
   return (
     <>
-      <ToastContainer theme="dark" />
       {addAssetState ? (
         <div className="absolute top-0 left-0 w-full h-full bg-black/70 backdrop-blur-sm z-10 flex justify-center items-center">
           <form
