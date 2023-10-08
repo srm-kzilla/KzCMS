@@ -24,7 +24,7 @@ export const ERRORS = {
     code: 401,
     message: {
       error: 'Unauthorized',
-      error_description: 'You don\'t have permission to access this resource',
+      error_description: "You don't have permission to access this resource",
     },
   },
   RESOURCE_NOT_FOUND: {
