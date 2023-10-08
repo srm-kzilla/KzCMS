@@ -81,7 +81,7 @@ export const toggleProject = async (
 
     if (isEnabled === undefined && isDevelopment === undefined) {
       throw {
-        status: ERRORS.MALFORMED_BODY.code,
+        statusCode: ERRORS.MALFORMED_BODY.code,
         message: ERRORS.MALFORMED_BODY.message.error,
       };
     }
