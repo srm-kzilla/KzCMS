@@ -105,9 +105,10 @@ export async function handleUpdateDomains(slug: string, allowedDomains: string[]
     throw { statusCode: ERRORS.RESOURCE_NOT_FOUND.code, message: ERRORS.RESOURCE_NOT_FOUND.message.error };
   }
 
-  const areArraysEqual = JSON.stringify(project.allowedDomains) === JSON.stringify(allowedDomains);
+  const sortedOriginal = project.allowedDomains.sort().join();
+  const sortedNew = allowedDomains.sort().join();
 
-  if (areArraysEqual) {
+  if (sortedOriginal === sortedNew) {
     throw { statusCode: ERRORS.RESOURCE_CONFLICT.code, message: ERRORS.RESOURCE_CONFLICT.message.error };
   }
 
