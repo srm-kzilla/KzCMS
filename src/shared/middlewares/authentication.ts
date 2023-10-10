@@ -11,7 +11,7 @@ export default function authenticateToken({ verifyAdmin } = { verifyAdmin: false
       const token = authHeader?.split(' ')[1];
 
       if (!token) {
-        throw { statusCode: 401, message: 'Token Not Found' };
+        throw { statusCode: ERRORS.MISSING_ACCESS_TOKEN.code, message: ERRORS.MISSING_ACCESS_TOKEN.message.error };
       }
 
       const { email } = verifyToken(token);
@@ -19,15 +19,15 @@ export default function authenticateToken({ verifyAdmin } = { verifyAdmin: false
       const data = await (await db()).collection('users').findOne({ email });
 
       if (!data) {
-        throw { statusCode: 404, message: 'User Not Found' };
+        throw { statusCode: ERRORS.USER_NOT_FOUND.code, message: ERRORS.USER_NOT_FOUND.message.error };
       }
 
       if (verifyAdmin && !data.isAdmin) {
-        throw { statusCode: 403, message: 'User Not Admin' };
+        throw { statusCode: ERRORS.FORBIDDEN_ACCESS_ERROR.code, message: ERRORS.FORBIDDEN_ACCESS_ERROR.message.error };
       }
 
       if (!verifyAdmin && !data.isVerified) {
-        throw { statusCode: 403, message: 'User Not Verified' };
+        throw { statusCode: ERRORS.FORBIDDEN_ACCESS_ERROR.code, message: ERRORS.FORBIDDEN_ACCESS_ERROR.message.error };
       }
 
       res.locals.user = data;
@@ -36,8 +36,8 @@ export default function authenticateToken({ verifyAdmin } = { verifyAdmin: false
     } catch (error) {
       LoggerInstance.error(error);
       res
-        .status(error.statusCode ?? ERRORS.SERVER_ERROR.code)
-        .json({ success: false, message: error.message ?? ERRORS.SERVER_ERROR.message.error });
+        .status(error.statusCode ?? ERRORS.UNAUTHORIZED.code)
+        .json({ success: false, message: error.message ?? ERRORS.UNAUTHORIZED.message.error });
     }
   };
 }
