@@ -54,6 +54,8 @@ export const handleCreateProject = async ({ projectName, typeName }: CreateProje
     userAccess: [],
     isEnabled: true,
     isDeleted: false,
+    isDevelopment: false,
+    allowedDomains: [],
   });
 
   return slug;

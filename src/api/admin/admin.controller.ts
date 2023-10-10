@@ -7,7 +7,7 @@ import {
 } from '@/api/admin/admin.service';
 import { MESSAGES_TEXT, STATUS } from '@/shared/constants';
 import { ERRORS } from '@/shared/errors';
-import { ProjectSlugType } from '@/shared/types';
+import { ProjectSlugType, ToggleProjectType } from '@/shared/types';
 import { UpdateProjectSchemaType, VerifyUserType } from '@/shared/types/admin/admin.schema';
 import { UserSchemaType } from '@/shared/types/auth/auth.schema';
 import { NextFunction, Request, Response } from 'express';
@@ -70,21 +70,27 @@ export const updateUserProjects = async (
 };
 
 export const toggleProject = async (
-  req: Request<ProjectSlugType, unknown, unknown, {
-    setStatus: 'enable' | 'disable'
-  }>,
+  req: Request<ProjectSlugType, unknown, ToggleProjectType>,
   res: Response,
   next: NextFunction,
 ) => {
   try {
-    const status = req.query.setStatus;
-    if (!status) {
+    const { isEnabled, isDevelopment, slug } = req.body;
+
+    if (isEnabled === undefined && isDevelopment === undefined) {
       throw {
         statusCode: ERRORS.MALFORMED_PROJECT_STATUS.code,
         message: ERRORS.MALFORMED_PROJECT_STATUS.message.error,
       };
     }
-    await handleToggleProject(req.params.slug, status);
+
+    const status = {
+      isEnabled: isEnabled ?? true,
+      isDevelopment: isDevelopment ?? false,
+    };
+
+    await handleToggleProject(slug, status);
+
     res.status(STATUS.OK).json({
       success: true,
       message: MESSAGES_TEXT.UPDATE_PROJECT_ACCESS,
