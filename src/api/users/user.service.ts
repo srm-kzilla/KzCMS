@@ -48,7 +48,7 @@ export async function handleGetUserDetails(email: string) {
   if (!user) {
     throw {
       status: ERRORS.RESOURCE_NOT_FOUND.code,
-      message: `User with email ${email} not found`,
+      message: ERRORS.RESOURCE_NOT_FOUND.message.error,
     };
   }
   return user;

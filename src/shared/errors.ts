@@ -3,38 +3,9 @@ export const ERRORS = {
     code: 500,
     message: {
       error: 'Internal Server Error',
-      error_description: 'Something bad happened at the server.',
+      error_description: 'Something bad happened at the server',
     },
   },
-  MISSING_ACCESS_TOKEN: {
-    code: 401,
-    message: {
-      error: 'unauthorized',
-      error_description: 'Authorization token is required',
-    },
-  },
-  INVALID_ACCESS_TOKEN: {
-    code: 401,
-    message: {
-      error: 'Unauthorized',
-      error_description: 'Invalid token',
-    },
-  },
-  UNAUTHORIZED: {
-    code: 401,
-    message: {
-      error: 'Unauthorized',
-      error_description: "You don't have permission to access this resource",
-    },
-  },
-  RESOURCE_NOT_FOUND: {
-    code: 404,
-    message: {
-      error: 'Not Found',
-      error_description: 'Resource was not found',
-    },
-  },
-
   MALFORMED_BODY: {
     code: 400,
     message: {
@@ -49,11 +20,54 @@ export const ERRORS = {
       error_description: 'Please provide a valid status of the project',
     },
   },
+  DATA_OPERATION_FAILURE: {
+    code: 400,
+    message: {
+      error: 'Bad Request',
+      error_description: 'Data operation failed',
+    },
+  },
+  MISSING_ACCESS_TOKEN: {
+    code: 401,
+    message: {
+      error: 'Unauthorized',
+      error_description: 'Authorization token is required',
+    },
+  },
+  UNAUTHORIZED: {
+    code: 401,
+    message: {
+      error: 'Unauthorized',
+      error_description: "You don't have permission to access this resource",
+    },
+  },
+  FORBIDDEN_ACCESS_ERROR: {
+    code: 403,
+    message: {
+      error: 'Access Forbidden',
+      error_description: "You don't have authorization to access this resource",
+    },
+  },
+  RESOURCE_NOT_FOUND: {
+    code: 404,
+    message: {
+      error: 'Not Found',
+      error_description: 'Resource was not found',
+    },
+  },
+
   USER_NOT_FOUND: {
     code: 404,
     message: {
       error: 'User Not Found',
-      error_description: 'User Does Not Exists',
+      error_description: 'User does not exists',
+    },
+  },
+  ENDPOINT_NOT_FOUND: {
+    code: 404,
+    message: {
+      error: 'Endpoint Not Found',
+      error_description: 'Endpoint not found',
     },
   },
   RESOURCE_CONFLICT: {
@@ -68,6 +82,13 @@ export const ERRORS = {
     message: {
       error: 'User Already Deleted',
       error_description: 'User already deleted',
+    },
+  },
+  INVARIANT_PROJECT_STATUS: {
+    code: 409,
+    message: {
+      error: 'Project Status Unchanged',
+      error_description: 'Project status matches the current status',
     },
   },
 };

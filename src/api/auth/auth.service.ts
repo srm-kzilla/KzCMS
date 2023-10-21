@@ -8,7 +8,7 @@ import { ERRORS } from '@/shared/errors';
 export async function handleAddNewUser(signup: UserSchemaType) {
   const data = await (await db()).collection('users').findOne({ email: signup.email });
   if (data) {
-    throw { statusCode: 409, message: 'This email already exists', success: false };
+    throw { statusCode: ERRORS.RESOURCE_CONFLICT.code, message: ERRORS.RESOURCE_CONFLICT.message.error };
   }
   const collection = (await db()).collection('users');
 

@@ -55,9 +55,9 @@ export const createProject = async (
 ): Promise<void> => {
   try {
     const data = await handleCreateProject({ projectName: req.body.projectName, typeName: req.body.typeName });
-    res.status(200).json({
+    res.status(STATUS.OK).json({
       success: true,
-      message: 'Project created',
+      message: MESSAGES_TEXT.CREATE_PROJECT,
       slug: data,
     });
   } catch (error) {
@@ -72,7 +72,7 @@ export const updateProjectData = async (
 ): Promise<void> => {
   try {
     const data = await handleUpdateProjectData(req.params.slug, req.body);
-    res.status(200).json(data);
+    res.status(STATUS.OK).json(data);
   } catch (error) {
     next(error);
   }
@@ -87,7 +87,7 @@ export const updateProjectImage = async (
 ): Promise<void> => {
   try {
     if (!req.file) {
-      throw { statusCode: ERRORS.MALFORMED_BODY.code, message: 'No Image provided' };
+      throw { statusCode: ERRORS.MALFORMED_BODY.code, message: ERRORS.MALFORMED_BODY.message.error };
     }
 
     await handleUpdateProjectImage(req.params, req.file);
@@ -109,7 +109,7 @@ export const updateProjectMetadata = async (
     await handleUpdateProjectMetadata(req.params.slug, req.body.newName, req.body.newSlug);
     res.status(STATUS.OK).json({
       success: true,
-      message: `project \`${req.params.slug}\` updated`,
+      message: MESSAGES_TEXT.UPDATE_PROJECT_METADATA,
     });
   } catch (error) {
     next(error);
@@ -125,7 +125,7 @@ export const deleteProject = async (
     await handleDeleteProject(req.params.slug);
     res.status(STATUS.OK).json({
       success: true,
-      message: `project \`${req.params.slug}\` deleted`,
+      message: MESSAGES_TEXT.DELETE_PROJECT,
     });
   } catch (error) {
     next(error);
@@ -141,13 +141,13 @@ export const createProjectData = async (
 ): Promise<void> => {
   try {
     if (!req.file) {
-      throw { statusCode: ERRORS.MALFORMED_BODY.code, message: 'No Image provided' };
+      throw { statusCode: ERRORS.MALFORMED_BODY.code, message: ERRORS.MALFORMED_BODY.message.error };
     }
 
     await handleCreateProjectData(req.params.slug, req.body, req.file);
     res.status(STATUS.OK).json({
       success: true,
-      message: `Data Created`,
+      message: MESSAGES_TEXT.CREATE_PROJECT_DATA,
     });
   } catch (error) {
     next(error);
@@ -164,7 +164,7 @@ export const deleteProjectData = async (
 
     res.status(STATUS.OK).json({
       success: true,
-      message: `project \`${req.params.slug}\` - \`${req.body.title}\` Data deleted`,
+      message: MESSAGES_TEXT.DELETE_PROJECT_DATA,
     });
   } catch (error) {
     next(error);

@@ -1,8 +1,7 @@
 import { z } from 'zod';
-import { EmailSchema } from '@/shared/types';
 
 export const VerifyUserSchema = z.object({
-  email: EmailSchema,
+  email: z.string().email({ message: 'Invalid email format' }),
   verify: z.boolean(),
 });
 

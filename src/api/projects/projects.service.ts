@@ -1,6 +1,5 @@
 import config from '@/config';
 import db from '@/loaders/database';
-import LoggerInstance from '@/loaders/logger';
 import { LINK_REGEX_PATTERN } from '@/shared/constants';
 import { ERRORS } from '@/shared/errors';
 import { CreateProjectType, ProjectDataType, ProjectImageSlugType, ProjectType, UserType } from '@/shared/types';
@@ -34,14 +33,18 @@ const removeFileAfterUse = async (path: fs.PathLike) => {
 
 export const handleCreateProject = async ({ projectName, typeName }: CreateProjectType): Promise<string> => {
   if (!projectName || !typeName) {
-    throw { success: false, statusCode: ERRORS.MALFORMED_BODY.code, message: ERRORS.MALFORMED_BODY.message.error };
+    throw { statusCode: ERRORS.MALFORMED_BODY.code, message: ERRORS.MALFORMED_BODY.message.error };
   }
   const projectsCollection = (await db()).collection('projects');
   const slug = slugify(`${projectName} ${typeName}`, { lower: true, replacement: '-', trim: true });
   const project = await projectsCollection.findOne({ projectSlug: slug });
 
   if (project) {
-    throw { success: false, message: `Project with slug '${slug}' already exists`, data: { projectName, typeName } };
+    throw {
+      statusCode: ERRORS.RESOURCE_CONFLICT.code,
+      message: ERRORS.RESOURCE_CONFLICT.message.error,
+      data: { projectName, typeName },
+    };
   }
 
   await projectsCollection.insertOne({
@@ -62,7 +65,11 @@ export const handleUpdateProjectData = async (slug: string, data: Omit<ProjectDa
   const projectsCollection = (await db()).collection('projects');
   const project = await projectsCollection.findOne({ projectSlug: slug, 'data.title': data.title });
   if (!project) {
-    throw { success: false, message: `Project with slug '${slug}' or title '${data.title}' not found`, data };
+    throw {
+      statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
+      message: ERRORS.RESOURCE_NOT_FOUND.message.error,
+      data,
+    };
   }
   const filter = { _id: new ObjectId(project._id), 'data.title': data.title };
 
@@ -127,8 +134,8 @@ export const handleDeleteProject = async (slug: string) => {
 
   if (result.matchedCount !== 1 || result.modifiedCount !== 1) {
     throw {
-      statusCode: 400,
-      message: 'Project deletion failed',
+      statusCode: ERRORS.DATA_OPERATION_FAILURE.code,
+      message: ERRORS.DATA_OPERATION_FAILURE.message.error,
     };
   }
 };
@@ -222,10 +229,10 @@ export const handleDeleteProjectData = async (slug: string, title: string) => {
       }),
     );
   } catch (e) {
-    LoggerInstance.log({
-      level: 'error',
-      message: `Error deleting image from S3: ${e}`,
-    });
+    throw {
+      statusCode: ERRORS.DATA_OPERATION_FAILURE.code,
+      message: ERRORS.DATA_OPERATION_FAILURE.message.error,
+    };
   }
 
   const result = await projectsCollection.findOneAndUpdate(

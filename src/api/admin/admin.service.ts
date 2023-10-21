@@ -31,8 +31,8 @@ export const handleVerifyUser = async (email: string, verify: boolean): Promise<
 
   if (result.matchedCount !== 1 || result.modifiedCount !== 1) {
     throw {
-      statusCode: 400,
-      message: 'User verification failed',
+      statusCode: ERRORS.DATA_OPERATION_FAILURE.code,
+      message: ERRORS.DATA_OPERATION_FAILURE.message.error,
     };
   }
 };
@@ -90,8 +90,8 @@ export async function handleToggleProject(slug: string, status: Required<Omit<To
 
   if (isEnabled === project.isEnabled && isDevelopment === project.isDevelopment) {
     throw {
-      statusCode: ERRORS.RESOURCE_CONFLICT.code,
-      message: ERRORS.RESOURCE_CONFLICT.message.error,
+      statusCode: ERRORS.INVARIANT_PROJECT_STATUS.code,
+      message: ERRORS.INVARIANT_PROJECT_STATUS.message.error,
     };
   }
 

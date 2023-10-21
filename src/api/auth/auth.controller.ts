@@ -1,14 +1,15 @@
 import { UserSchemaType } from '@/shared/types';
 import { NextFunction, Request, Response } from 'express';
 import { handleAddNewUser, handleExistingUser } from './auth.service';
+import { MESSAGES_TEXT, STATUS } from '@/shared/constants';
 
 export const addNewUser = async (req: Request<unknown, unknown, UserSchemaType>, res: Response, next: NextFunction) => {
   const user = req.body;
   try {
     await handleAddNewUser(user);
-    res.status(200).json({
+    res.status(STATUS.OK).json({
       success: true,
-      message: 'User created successfully',
+      message: MESSAGES_TEXT.CREATE_USER,
     });
   } catch (error) {
     next(error);
@@ -23,9 +24,9 @@ export const loginExistingUser = async (
   try {
     const userObj = { email: req.body.email, password: req.body.password };
     const token = await handleExistingUser(userObj);
-    res.status(200).json({
+    res.status(STATUS.OK).json({
       success: true,
-      message: 'Login Successful',
+      message: MESSAGES_TEXT.LOGIN_USER,
       token,
     });
   } catch (error) {
