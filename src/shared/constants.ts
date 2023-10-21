@@ -19,6 +19,7 @@ export const MESSAGES_TEXT = {
   CREATE_PROJECT: 'Project Created Successfully',
   CREATE_PROJECT_DATA: 'Project Data Created Successfully',
   UPDATE_PROJECT_ACCESS: 'Project Status Updated',
+  UPDATE_ALLOWED_DOMAINS: 'Allowed Domains Updated',
   UPDATE_PROJECT_METADATA: 'Project Updated Successfully',
   DELETE_PROJECT: 'Project Deleted Successfully',
   DELETE_PROJECT_DATA: 'Project Data Deleted Successfully',
@@ -28,3 +29,4 @@ export const LINK_REGEX_PATTERN = /https:\/\/[\w.-]+\.s3\.ap-south-1\.amazonaws\
 
 export const SALT_ROUNDS = 10;
 export const MONGODB_URI_REGEX_PATTERN = /^mongodb(?:\+srv)?:\/\/(?:\w+:\w+@)?\w+(?:\.\w+)*(?::\d+)?(?:\/\w+)?(?:\?\w+=\w+)?/g;
+

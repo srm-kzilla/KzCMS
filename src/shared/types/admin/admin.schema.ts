@@ -20,5 +20,11 @@ export const UpdateProjectSchema = z.object({
   userAccess: UserEmailSchema,
 });
 
+export const UpdateDomainsSchema = z.object({
+  projectSlug: z.string(),
+  allowedDomains: z.array(z.string()),
+});
+
 export type UpdateProjectSchemaType = z.infer<typeof UpdateProjectSchema>;
 export type VerifyUserType = z.infer<typeof VerifyUserSchema>;
+export type UpdateDomainsSchemaType = z.infer<typeof UpdateDomainsSchema>;

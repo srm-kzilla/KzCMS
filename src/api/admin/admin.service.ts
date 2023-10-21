@@ -97,3 +97,22 @@ export async function handleToggleProject(slug: string, status: Required<Omit<To
 
   await (await db()).collection('projects').updateOne({ projectSlug: slug }, { $set: { isEnabled, isDevelopment } });
 }
+
+export async function handleUpdateDomains(slug: string, allowedDomains: string[]): Promise<void> {
+  const project = await (await db())
+    .collection('projects')
+    .findOne({ projectSlug: slug }, { projection: { allowedDomains: 1 } });
+
+  if (!project) {
+    throw { statusCode: ERRORS.RESOURCE_NOT_FOUND.code, message: ERRORS.RESOURCE_NOT_FOUND.message.error };
+  }
+
+  const sortedOriginal = project.allowedDomains.sort().join();
+  const sortedNew = allowedDomains.sort().join();
+
+  if (sortedOriginal === sortedNew) {
+    throw { statusCode: ERRORS.RESOURCE_CONFLICT.code, message: ERRORS.RESOURCE_CONFLICT.message.error };
+  }
+
+  await (await db()).collection('projects').updateOne({ projectSlug: slug }, { $set: { allowedDomains } });
+}
