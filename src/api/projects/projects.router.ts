@@ -26,7 +26,7 @@ export default (): Router => {
     updateProjectMetadata,
   );
 
-  app.get('/:slug', authenticateToken(), getProject);
+  app.get('/:slug', getProject);
 
   app.patch('/:slug/data', authenticateToken(), updateProjectData);
   app.patch('/:slug/:title/image', authenticateToken(), upload.single('image'), updateProjectImage);
