@@ -20,11 +20,24 @@ export const UpdateProjectSchema = z.object({
   userAccess: UserEmailSchema,
 });
 
-export const UpdateDomainsSchema = z.object({
-  projectSlug: z.string(),
-  allowedDomains: z.array(z.string()),
+export const TokenSchema = z.object({
+  name: z.string(),
+  token: z.string(),
+});
+
+export const TokenGetSchema = z.object({
+  projectId: z.string(),
+});
+
+export const TokenUpdateSchema = z.object({
+  projectId: z.string(),
+  name: z.string(),
 });
 
 export type UpdateProjectSchemaType = z.infer<typeof UpdateProjectSchema>;
 export type VerifyUserType = z.infer<typeof VerifyUserSchema>;
-export type UpdateDomainsSchemaType = z.infer<typeof UpdateDomainsSchema>;
+
+export type Token = z.infer<typeof TokenSchema>;
+export type TokenCreateSchemaType = Pick<Token, 'name'>;
+export type TokenGetSchemaType = z.infer<typeof TokenGetSchema>;
+export type TokenUpdateSchemaType = z.infer<typeof TokenUpdateSchema>;

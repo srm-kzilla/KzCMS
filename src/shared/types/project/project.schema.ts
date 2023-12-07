@@ -17,8 +17,6 @@ export const ProjectSchema = z.object({
       author: z.string().optional(),
     }),
   ),
-  isEnabled: z.boolean(),
-  isDeleted: z.boolean(),
 });
 
 export const ProjectDataSchema = z.object({
@@ -48,12 +46,6 @@ export const ProjectTitleSchema = z.object({
   title: z.string(),
 });
 
-export const ToggleProjectSchema = z.object({
-  slug: z.string(),
-  isEnabled: z.boolean().optional(),
-  isDevelopment: z.boolean().optional(),
-});
-
 export type CreateProjectType = z.infer<typeof CreateProjectSchema>;
 export type ProjectType = z.infer<typeof ProjectSchema>;
 export type ProjectDataType = z.infer<typeof ProjectDataSchema>;
@@ -61,4 +53,3 @@ export type ProjectMetadataType = z.infer<typeof ProjectMetadataSchema>;
 export type ProjectSlugType = z.infer<typeof ProjectSlugSchema>;
 export type ProjectImageSlugType = z.infer<typeof ProjectImageSlugSchema>;
 export type ProjectTitleType = z.infer<typeof ProjectTitleSchema>;
-export type ToggleProjectType = z.infer<typeof ToggleProjectSchema>;

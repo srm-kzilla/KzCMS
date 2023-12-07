@@ -1,19 +1,19 @@
 import {
+  handleCreateToken,
+  handleDeleteToken,
   handleDeleteUser,
-  handleToggleProject,
+  handleGetTokens,
   handleUpdateUser,
   handleUpdateUserProjects,
   handleVerifyUser,
-  handleUpdateDomains,
 } from '@/api/admin/admin.service';
 import { MESSAGES_TEXT, STATUS } from '@/shared/constants';
-import { ERRORS } from '@/shared/errors';
 import {
+  TokenGetSchemaType,
+  TokenUpdateSchemaType,
   UpdateProjectSchemaType,
   VerifyUserType,
-  UpdateDomainsSchemaType,
 } from '@/shared/types/admin/admin.schema';
-import { ProjectSlugType, ToggleProjectType } from '@/shared/types';
 import { UserSchemaType } from '@/shared/types/auth/auth.schema';
 import { NextFunction, Request, Response } from 'express';
 
@@ -74,50 +74,53 @@ export const updateUserProjects = async (
   }
 };
 
-export const toggleProject = async (
-  req: Request<ProjectSlugType, unknown, ToggleProjectType>,
+export const getTokens = async (
+  req: Request<unknown, unknown, TokenGetSchemaType>,
   res: Response,
   next: NextFunction,
 ) => {
   try {
-    const { isEnabled, isDevelopment, slug } = req.body;
-
-    if (isEnabled === undefined && isDevelopment === undefined) {
-      throw {
-        statusCode: ERRORS.MALFORMED_PROJECT_STATUS.code,
-        message: ERRORS.MALFORMED_PROJECT_STATUS.message.error,
-      };
-    }
-
-    const status = {
-      isEnabled: isEnabled ?? true,
-      isDevelopment: isDevelopment ?? false,
-    };
-
-    await handleToggleProject(slug, status);
-
+    const { projectId } = req.body;
+    const { tokens } = await handleGetTokens(projectId);
     res.status(STATUS.OK).json({
       success: true,
-      message: MESSAGES_TEXT.UPDATE_PROJECT_ACCESS,
+      message: MESSAGES_TEXT.GET_TOKENS,
+      tokens,
     });
   } catch (error) {
     next(error);
   }
 };
 
-export const updateProjectDomains = async (
-  req: Request<unknown, unknown, UpdateDomainsSchemaType>,
+export const createToken = async (
+  req: Request<unknown, unknown, TokenUpdateSchemaType>,
   res: Response,
   next: NextFunction,
 ) => {
   try {
-    const { allowedDomains, projectSlug } = req.body;
-
-    await handleUpdateDomains(projectSlug, allowedDomains);
-
+    const { projectId, name } = req.body;
+    const { token } = await handleCreateToken(projectId, name);
     res.status(STATUS.OK).json({
       success: true,
-      message: MESSAGES_TEXT.UPDATE_ALLOWED_DOMAINS,
+      message: MESSAGES_TEXT.CREATE_TOKEN,
+      token,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const deleteToken = async (
+  req: Request<unknown, unknown, TokenUpdateSchemaType>,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { projectId, name } = req.body;
+    await handleDeleteToken(projectId, name);
+    res.status(STATUS.OK).json({
+      success: true,
+      message: MESSAGES_TEXT.DELETE_TOKEN,
     });
   } catch (error) {
     next(error);
