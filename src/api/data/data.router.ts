@@ -11,7 +11,7 @@ export default (): Router => {
     '/project/:id',
     validateRequest('params', ProjectIdSchema),
     validateToken({
-      path: 'params',
+      idFrom: 'params',
     }),
     getProjectData,
   );

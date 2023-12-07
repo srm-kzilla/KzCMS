@@ -7,17 +7,16 @@ import { Token } from '../types';
 
 type RequestLocation = 'body' | 'params' | 'query';
 
-export const validateToken = ({ path }: { path: RequestLocation }) => {
+export const validateToken = ({ idFrom }: { idFrom: RequestLocation }) => {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const authHeader = req.headers['authorization'];
-      const token = authHeader?.split(' ')[1];
+      const token = req.headers['api_key'] as string | undefined;
 
       if (!token) {
         throw { statusCode: ERRORS.MISSING_ACCESS_TOKEN.code, message: ERRORS.MISSING_ACCESS_TOKEN.message.error };
       }
 
-      const { id } = req[path] as { id: string };
+      const { id } = req[idFrom] as { id: string };
 
       const tokens = (await (await db()).collection('tokens').findOne({
         projectId: id,
