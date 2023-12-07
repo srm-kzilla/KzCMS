@@ -157,7 +157,7 @@ export async function handleDeleteToken(projectId: string, tokenName: string): P
 
   if (result.matchedCount !== 1 || result.modifiedCount !== 1) {
     throw {
-      statusCode: ERRORS.NOT_FOUND.code,
+      statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
       message: MESSAGES_TEXT.TOKEN_NOT_FOUND,
     };
   }

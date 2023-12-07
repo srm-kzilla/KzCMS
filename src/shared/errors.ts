@@ -34,13 +34,6 @@ export const ERRORS = {
       error_description: 'Authorization token is required',
     },
   },
-  NOT_FOUND: {
-    code: 404,
-    message: {
-      error: 'Not Found',
-      error_description: 'Resource not found',
-    },
-  },
   UNAUTHORIZED: {
     code: 401,
     message: {
