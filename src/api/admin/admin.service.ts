@@ -142,8 +142,6 @@ export async function handleCreateToken(projectId: string, tokenName: string): P
     tokens: Omit<Token, 'token'>[];
   };
 
-  console.log(tokens);
-
   if (tokens?.tokens.some(token => token.name === tokenName)) {
     throw { statusCode: ERRORS.RESOURCE_CONFLICT.code, message: MESSAGES_TEXT.TOKEN_WITH_SAME_NAME_EXISTS };
   }
