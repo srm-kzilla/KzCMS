@@ -1,7 +1,7 @@
 import db from '@/loaders/database';
 import { MESSAGES_TEXT, SALT_ROUNDS } from '@/shared/constants';
 import { ERRORS } from '@/shared/errors';
-import { ToggleProjectType, Token, UpdateProjectSchemaType } from '@/shared/types';
+import { Token, UpdateProjectSchemaType } from '@/shared/types';
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';
 import { AnyBulkWriteOperation, Document } from 'mongodb';
@@ -76,27 +76,6 @@ export async function handleUpdateUserProjects(data: UpdateProjectSchemaType) {
   }
 
   await projects_collection.updateOne({ projectSlug: data.projectSlug }, { $set: { userAccess: data.userAccess } });
-}
-
-export async function handleToggleProject(slug: string, status: Required<Omit<ToggleProjectType, 'slug'>>) {
-  const { isEnabled, isDevelopment } = status;
-
-  const project = await (await db())
-    .collection('projects')
-    .findOne({ projectSlug: slug }, { projection: { isEnabled: 1, isDevelopment: 1 } });
-
-  if (!project) {
-    throw { statusCode: ERRORS.RESOURCE_NOT_FOUND.code, message: ERRORS.RESOURCE_NOT_FOUND.message };
-  }
-
-  if (isEnabled === project.isEnabled && isDevelopment === project.isDevelopment) {
-    throw {
-      statusCode: ERRORS.INVARIANT_PROJECT_STATUS.code,
-      message: ERRORS.INVARIANT_PROJECT_STATUS.message.error,
-    };
-  }
-
-  await (await db()).collection('projects').updateOne({ projectSlug: slug }, { $set: { isEnabled, isDevelopment } });
 }
 
 export async function handleUpdateDomains(slug: string, allowedDomains: string[]): Promise<void> {
