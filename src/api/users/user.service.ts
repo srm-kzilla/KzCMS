@@ -29,6 +29,8 @@ export async function handleGetUserProjects(email: string) {
       {
         projection: {
           _id: 0,
+          projectName: 1,
+          projectSlug: 1,
         },
       },
     )

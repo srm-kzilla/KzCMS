@@ -28,6 +28,7 @@ export const MESSAGES_TEXT = {
   TOKEN_WITH_SAME_NAME_EXISTS: 'Token with same name already exists',
   DELETE_TOKEN: 'Token Deleted Successfully',
   TOKEN_NOT_FOUND: 'Token Not Found',
+  INVALID_TOKEN_OR_PROJECT_NOT_EXISTS: 'Invalid Token or Project Not Exists',
 };
 
 export const LINK_REGEX_PATTERN = /https:\/\/[\w.-]+\.s3\.ap-south-1\.amazonaws\.com\/(.+)/;

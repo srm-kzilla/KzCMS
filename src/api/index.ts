@@ -1,8 +1,9 @@
-import { Router } from 'express';
-import authRouter from './auth/auth.router';
 import authenticateToken from '@/shared/middlewares/authentication';
-import projectsRouter from './projects/projects.router';
+import { Router } from 'express';
 import adminRouter from './admin/admin.router';
+import authRouter from './auth/auth.router';
+import dataRouter from './data/data.router';
+import projectsRouter from './projects/projects.router';
 import userRouter from './users/user.router';
 
 export default (): Router => {
@@ -18,6 +19,7 @@ export default (): Router => {
   );
   app.use('/projects', projectsRouter());
   app.use('/users', userRouter());
+  app.use('/data', dataRouter());
 
   return app;
 };

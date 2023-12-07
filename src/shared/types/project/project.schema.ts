@@ -6,6 +6,7 @@ export const CreateProjectSchema = z.object({
 });
 
 export const ProjectSchema = z.object({
+  id: z.string(),
   projectSlug: z.string(),
   userAccess: z.array(z.string()),
   data: z.array(
@@ -27,6 +28,8 @@ export const ProjectDataSchema = z.object({
   link: z.string().url().optional(),
   author: z.string().optional(),
 });
+
+export const ProjectIdSchema = ProjectSchema.pick({ id: true });
 
 export const ProjectSlugSchema = z.object({
   slug: z.string(),
@@ -53,3 +56,4 @@ export type ProjectMetadataType = z.infer<typeof ProjectMetadataSchema>;
 export type ProjectSlugType = z.infer<typeof ProjectSlugSchema>;
 export type ProjectImageSlugType = z.infer<typeof ProjectImageSlugSchema>;
 export type ProjectTitleType = z.infer<typeof ProjectTitleSchema>;
+export type ProjectIdType = z.infer<typeof ProjectIdSchema>;
