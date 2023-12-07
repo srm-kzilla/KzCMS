@@ -110,7 +110,11 @@ export const handleUpdateProjectMetadata = async (slug: string, newName: string,
 
 export const handleGetAllProjects = async () => {
   const projects = await (await db()).collection('projects').find().toArray();
-  return projects as unknown as ProjectDataType[];
+  const modifiedProjects = projects.map(project => {
+    const { _id, ...rest } = project;
+    return { id: _id, ...rest };
+  });
+  return modifiedProjects as unknown as ProjectDataType[];
 };
 
 export const handleGetProject = async (projectSlug: string, user: UserType) => {
@@ -149,9 +153,7 @@ export const handleCreateProjectData = async (slug: string, data: ProjectDataTyp
     throw { statusCode: ERRORS.RESOURCE_NOT_FOUND.code, message: ERRORS.RESOURCE_NOT_FOUND.message.error };
   }
 
-  if (project.data.find((d: {
-    title: string
-  }) => d.title === data.title)) {
+  if (project.data.find((d: { title: string }) => d.title === data.title)) {
     await removeFileAfterUse(file.path);
     throw {
       statusCode: ERRORS.RESOURCE_CONFLICT.code,
@@ -268,9 +270,7 @@ export const handleUpdateProjectImage = async (data: ProjectImageSlugType, file:
       throw { statusCode: ERRORS.RESOURCE_NOT_FOUND.code, message: ERRORS.RESOURCE_NOT_FOUND.message.error };
     }
 
-    const projectData = project.data.find((d: {
-      title: string
-    }) => d.title === data.title);
+    const projectData = project.data.find((d: { title: string }) => d.title === data.title);
 
     if (!projectData) {
       throw { statusCode: ERRORS.RESOURCE_NOT_FOUND.code, message: ERRORS.RESOURCE_NOT_FOUND.message.error };
