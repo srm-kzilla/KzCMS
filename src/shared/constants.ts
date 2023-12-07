@@ -23,10 +23,15 @@ export const MESSAGES_TEXT = {
   UPDATE_PROJECT_METADATA: 'Project Updated Successfully',
   DELETE_PROJECT: 'Project Deleted Successfully',
   DELETE_PROJECT_DATA: 'Project Data Deleted Successfully',
+  GET_TOKENS: 'Tokens Fetched Successfully',
+  CREATE_TOKEN: 'Token Created Successfully',
+  TOKEN_WITH_SAME_NAME_EXISTS: 'Token with same name already exists',
+  DELETE_TOKEN: 'Token Deleted Successfully',
+  TOKEN_NOT_FOUND: 'Token Not Found',
 };
 
 export const LINK_REGEX_PATTERN = /https:\/\/[\w.-]+\.s3\.ap-south-1\.amazonaws\.com\/(.+)/;
 
 export const SALT_ROUNDS = 10;
-export const MONGODB_URI_REGEX_PATTERN = /^mongodb(?:\+srv)?:\/\/(?:\w+:\w+@)?\w+(?:\.\w+)*(?::\d+)?(?:\/\w+)?(?:\?\w+=\w+)?/g;
-
+export const MONGODB_URI_REGEX_PATTERN =
+  /^mongodb(?:\+srv)?:\/\/(?:\w+:\w+@)?\w+(?:\.\w+)*(?::\d+)?(?:\/\w+)?(?:\?\w+=\w+)?/g;

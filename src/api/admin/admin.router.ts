@@ -1,22 +1,26 @@
+import {
+  createToken,
+  deleteToken,
+  deleteUser,
+  getTokens,
+  toggleProject,
+  updateProjectDomains,
+  updateUser,
+  updateUserProjects,
+  verifyUser,
+} from '@/api/admin/admin.controller';
 import { validateRequest } from '@/shared/middlewares/validator';
 import {
   AuthGetSchema,
   AuthSchema,
   ToggleProjectSchema,
+  TokenGetSchema,
+  TokenUpdateSchema,
+  UpdateDomainsSchema,
   UpdateProjectSchema,
   VerifyUserSchema,
-  UpdateDomainsSchema,
 } from '@/shared/types';
 import { Router } from 'express';
-import {
-  deleteUser,
-  toggleProject,
-  updateUser,
-  updateUserProjects,
-  verifyUser,
-  updateProjectDomains,
-} from '@/api/admin/admin.controller';
-
 
 export default (): Router => {
   const app = Router();
@@ -27,5 +31,10 @@ export default (): Router => {
   app.patch('/update/project/allowed-domains', validateRequest('body', UpdateDomainsSchema), updateProjectDomains);
   app.patch('/toggle/project', validateRequest('body', ToggleProjectSchema), toggleProject);
   app.delete('/user', validateRequest('body', AuthGetSchema), deleteUser);
+
+  app.get('/tokens', validateRequest('body', TokenGetSchema), getTokens);
+  app.post('/tokens/create', validateRequest('body', TokenUpdateSchema), createToken);
+  app.delete('/tokens/delete', validateRequest('body', TokenUpdateSchema), deleteToken);
+
   return app;
 };

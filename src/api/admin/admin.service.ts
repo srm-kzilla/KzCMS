@@ -1,8 +1,9 @@
 import db from '@/loaders/database';
-import { SALT_ROUNDS } from '@/shared/constants';
+import { MESSAGES_TEXT, SALT_ROUNDS } from '@/shared/constants';
 import { ERRORS } from '@/shared/errors';
-import { ToggleProjectType, UpdateProjectSchemaType } from '@/shared/types';
+import { ToggleProjectType, Token, UpdateProjectSchemaType } from '@/shared/types';
 import bcrypt from 'bcrypt';
+import crypto from 'crypto';
 import { AnyBulkWriteOperation, Document } from 'mongodb';
 
 export const handleUpdateUser = async (email: string, password: string): Promise<void> => {
@@ -115,4 +116,72 @@ export async function handleUpdateDomains(slug: string, allowedDomains: string[]
   }
 
   await (await db()).collection('projects').updateOne({ projectSlug: slug }, { $set: { allowedDomains } });
+}
+
+export async function handleGetTokens(projectId: string): Promise<{ tokens: string[] }> {
+  const result = (await (await db()).collection('tokens').findOne(
+    { projectId },
+    {
+      projection: { 'tokens.name': 1, _id: 0 },
+    },
+  )) as unknown as { tokens: Token[] };
+
+  if (!result) {
+    throw { statusCode: ERRORS.RESOURCE_NOT_FOUND.code, message: ERRORS.RESOURCE_NOT_FOUND.message.error };
+  }
+
+  const tokens = result.tokens.map(token => token.name);
+
+  return { tokens: tokens };
+}
+
+export async function handleCreateToken(projectId: string, tokenName: string): Promise<{ token: string }> {
+  const tokens = (await (await db())
+    .collection('tokens')
+    .findOne({ projectId }, { projection: { 'tokens.name': 1 } })) as unknown as {
+    tokens: Omit<Token, 'token'>[];
+  };
+
+  console.log(tokens);
+
+  if (tokens?.tokens.some(token => token.name === tokenName)) {
+    throw { statusCode: ERRORS.RESOURCE_CONFLICT.code, message: MESSAGES_TEXT.TOKEN_WITH_SAME_NAME_EXISTS };
+  }
+
+  const token = crypto.randomBytes(16).toString('hex');
+
+  const result = await (await db()).collection('tokens').updateOne(
+    { projectId },
+    {
+      $push: { tokens: { name: tokenName, token } },
+    },
+    {
+      upsert: true,
+    },
+  );
+
+  if (result.matchedCount !== 1 || result.modifiedCount !== 1) {
+    throw {
+      statusCode: ERRORS.DATA_OPERATION_FAILURE.code,
+      message: ERRORS.DATA_OPERATION_FAILURE.message.error,
+    };
+  }
+
+  return { token: token };
+}
+
+export async function handleDeleteToken(projectId: string, tokenName: string): Promise<void> {
+  const result = await (await db()).collection('tokens').updateOne(
+    { projectId },
+    {
+      $pull: { tokens: { name: tokenName } },
+    },
+  );
+
+  if (result.matchedCount !== 1 || result.modifiedCount !== 1) {
+    throw {
+      statusCode: ERRORS.NOT_FOUND.code,
+      message: MESSAGES_TEXT.TOKEN_NOT_FOUND,
+    };
+  }
 }

@@ -1,19 +1,24 @@
 import {
+  handleCreateToken,
+  handleDeleteToken,
   handleDeleteUser,
+  handleGetTokens,
   handleToggleProject,
+  handleUpdateDomains,
   handleUpdateUser,
   handleUpdateUserProjects,
   handleVerifyUser,
-  handleUpdateDomains,
 } from '@/api/admin/admin.service';
 import { MESSAGES_TEXT, STATUS } from '@/shared/constants';
 import { ERRORS } from '@/shared/errors';
+import { ProjectSlugType, ToggleProjectType } from '@/shared/types';
 import {
+  TokenGetSchemaType,
+  TokenUpdateSchemaType,
+  UpdateDomainsSchemaType,
   UpdateProjectSchemaType,
   VerifyUserType,
-  UpdateDomainsSchemaType,
 } from '@/shared/types/admin/admin.schema';
-import { ProjectSlugType, ToggleProjectType } from '@/shared/types';
 import { UserSchemaType } from '@/shared/types/auth/auth.schema';
 import { NextFunction, Request, Response } from 'express';
 
@@ -118,6 +123,59 @@ export const updateProjectDomains = async (
     res.status(STATUS.OK).json({
       success: true,
       message: MESSAGES_TEXT.UPDATE_ALLOWED_DOMAINS,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getTokens = async (
+  req: Request<unknown, unknown, TokenGetSchemaType>,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { projectId } = req.body;
+    const { tokens } = await handleGetTokens(projectId);
+    res.status(STATUS.OK).json({
+      success: true,
+      message: MESSAGES_TEXT.GET_TOKENS,
+      tokens,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const createToken = async (
+  req: Request<unknown, unknown, TokenUpdateSchemaType>,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { projectId, name } = req.body;
+    const { token } = await handleCreateToken(projectId, name);
+    res.status(STATUS.OK).json({
+      success: true,
+      message: MESSAGES_TEXT.CREATE_TOKEN,
+      token,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const deleteToken = async (
+  req: Request<unknown, unknown, TokenUpdateSchemaType>,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { projectId, name } = req.body;
+    await handleDeleteToken(projectId, name);
+    res.status(STATUS.OK).json({
+      success: true,
+      message: MESSAGES_TEXT.DELETE_TOKEN,
     });
   } catch (error) {
     next(error);
