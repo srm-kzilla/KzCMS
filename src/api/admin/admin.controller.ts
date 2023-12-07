@@ -3,19 +3,14 @@ import {
   handleDeleteToken,
   handleDeleteUser,
   handleGetTokens,
-  handleToggleProject,
-  handleUpdateDomains,
   handleUpdateUser,
   handleUpdateUserProjects,
   handleVerifyUser,
 } from '@/api/admin/admin.service';
 import { MESSAGES_TEXT, STATUS } from '@/shared/constants';
-import { ERRORS } from '@/shared/errors';
-import { ProjectSlugType, ToggleProjectType } from '@/shared/types';
 import {
   TokenGetSchemaType,
   TokenUpdateSchemaType,
-  UpdateDomainsSchemaType,
   UpdateProjectSchemaType,
   VerifyUserType,
 } from '@/shared/types/admin/admin.schema';
@@ -73,56 +68,6 @@ export const updateUserProjects = async (
       success: true,
       message: MESSAGES_TEXT.UPDATE_USER_ACCESS,
       userAccess: data,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
-export const toggleProject = async (
-  req: Request<ProjectSlugType, unknown, ToggleProjectType>,
-  res: Response,
-  next: NextFunction,
-) => {
-  try {
-    const { isEnabled, isDevelopment, slug } = req.body;
-
-    if (isEnabled === undefined && isDevelopment === undefined) {
-      throw {
-        statusCode: ERRORS.MALFORMED_PROJECT_STATUS.code,
-        message: ERRORS.MALFORMED_PROJECT_STATUS.message.error,
-      };
-    }
-
-    const status = {
-      isEnabled: isEnabled ?? true,
-      isDevelopment: isDevelopment ?? false,
-    };
-
-    await handleToggleProject(slug, status);
-
-    res.status(STATUS.OK).json({
-      success: true,
-      message: MESSAGES_TEXT.UPDATE_PROJECT_ACCESS,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
-export const updateProjectDomains = async (
-  req: Request<unknown, unknown, UpdateDomainsSchemaType>,
-  res: Response,
-  next: NextFunction,
-) => {
-  try {
-    const { allowedDomains, projectSlug } = req.body;
-
-    await handleUpdateDomains(projectSlug, allowedDomains);
-
-    res.status(STATUS.OK).json({
-      success: true,
-      message: MESSAGES_TEXT.UPDATE_ALLOWED_DOMAINS,
     });
   } catch (error) {
     next(error);
