@@ -9,6 +9,7 @@ import DeleteIcon from 'remixicon-react/DeleteBin7LineIcon';
 import ProjectListDataType from '@/interfaces/projectListDataType';
 import Select from 'react-select';
 import axios from 'axios';
+import Head from 'next/head';
 
 interface userListDataType {
   createdAt: string;
@@ -93,6 +94,9 @@ const ManageProject = ({
 
   return (
     <div>
+      <Head>
+        <title>{router.query.project?.toString().toUpperCase()}</title>
+      </Head>
       <Layout user={user}>
         <div className="w-full h-full flex flex-col gap-10">
           <div className="w-full h-fit flex flex-col md:flex md:flex-row md:justify-between gap-5">

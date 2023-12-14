@@ -6,10 +6,14 @@ import UserDataType from '@/interfaces/userDataType';
 import ProjectCard from '@/components/ProjectCard';
 import { GetServerSidePropsContext } from 'next';
 import ProjectListDataType from '@/interfaces/projectListDataType';
+import Head from 'next/head';
 
 export default function Home({ user, projectList }: { user: UserDataType; projectList: ProjectListDataType[] }) {
   return (
     <div className="w-full flex min-h-screen h-fit">
+      <Head>
+        <title>Dashboard</title>
+      </Head>
       <Layout user={user}>
         <div className="w-full h-full flex flex-col gap-10">
           <div className="w-full h-fit">

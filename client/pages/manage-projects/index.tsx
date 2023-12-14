@@ -8,6 +8,7 @@ import ProjectListDataType from '@/interfaces/projectListDataType';
 import ProjectCard from '@/components/ProjectCard';
 import axios from 'axios';
 import { useRouter } from 'next/router';
+import Head from 'next/head';
 
 const Index = ({ user, projectList }: { user: UserDataType; projectList: ProjectListDataType[] }) => {
   const [addProjectModal, setAddProjectModal] = useState<boolean>(false);
@@ -29,6 +30,9 @@ const Index = ({ user, projectList }: { user: UserDataType; projectList: Project
 
   return (
     <div className="w-full flex min-h-screen h-fit">
+      <Head>
+        <title>Manage Projects</title>
+      </Head>
       <Layout user={user}>
         <div className="w-full h-full flex flex-col gap-10">
           <div className="w-full h-fit flex flex-col gap-3 md:flex md:flex-row md:justify-between md:items-center">

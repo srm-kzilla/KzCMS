@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 import nookies from 'nookies';
 import Link from 'next/link';
 import { GetServerSidePropsContext } from 'next';
-
+import Head from 'next/head';
 
 const SignUp = () => {
   const [user, setUser] = useState({
@@ -35,6 +35,9 @@ const SignUp = () => {
 
   return (
     <div className="w-full min-h-screen bg-primary flex flex-col">
+      <Head>
+        <title>Signup</title>
+      </Head>
       <div className="w-full h-[90px] flex gap-5 p-6 items-center">
         <div>
           <Image src="/srmkzilla-gradient-logo.svg" alt="/" width={40} height={40} />

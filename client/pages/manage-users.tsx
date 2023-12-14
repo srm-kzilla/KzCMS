@@ -7,6 +7,7 @@ import { GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/router';
 import nookies from 'nookies';
 import React from 'react';
+import Head from 'next/head';
 
 const manageUsers = ({ user, userList }: { user: UserDataType; userList: UserDataType[] }) => {
   const router = useRouter();
@@ -39,6 +40,9 @@ const manageUsers = ({ user, userList }: { user: UserDataType; userList: UserDat
 
   return (
     <div className="w-full flex min-h-screen h-fit">
+      <Head>
+        <title>Manage Users</title>
+      </Head>
       <Layout user={user}>
         <div className="w-full h-full flex flex-col gap-10">
           <div className="w-full h-fit">
