@@ -308,41 +308,51 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     };
   }
 
-  const userResponse = await server.get('/api/users/user', {
-    headers: {
-      Authorization: `Bearer ${cookies.token}`,
-    },
-  });
+  try {
+    const userResponse = await server.get('/api/users/user', {
+      headers: {
+        Authorization: `Bearer ${cookies.token}`,
+      },
+    });
 
-  const projectListDataResponse = await server.get('/api/projects', {
-    headers: {
-      Authorization: `Bearer ${cookies.token}`,
-    },
-  });
+    const projectListDataResponse = await server.get('/api/projects', {
+      headers: {
+        Authorization: `Bearer ${cookies.token}`,
+      },
+    });
 
-  const allUserDataResponse = await server.get('/api/users', {
-    headers: {
-      Authorization: `Bearer ${cookies.token}`,
-    },
-  });
+    const allUserDataResponse = await server.get('/api/users', {
+      headers: {
+        Authorization: `Bearer ${cookies.token}`,
+      },
+    });
 
-  const projectList: ProjectListDataType[] = projectListDataResponse.data.data.filter(
-    (project: ProjectListDataType) => {
-      return project.projectSlug === ctx.query.project;
-    },
-  );
+    const projectList: ProjectListDataType[] = projectListDataResponse.data.data.filter(
+      (project: ProjectListDataType) => {
+        return project.projectSlug === ctx.query.project;
+      },
+    );
 
-  const filteredUserDataResponse: userListDataType[] = allUserDataResponse.data.data.filter(
-    (user: userListDataType) => {
-      return !projectList[0].userAccess?.includes(user.email);
-    },
-  );
+    const filteredUserDataResponse: userListDataType[] = allUserDataResponse.data.data.filter(
+      (user: userListDataType) => {
+        return !projectList[0].userAccess?.includes(user.email);
+      },
+    );
 
-  return {
-    props: {
-      user: userResponse.data.data as UserDataType,
-      projectData: projectList[0],
-      userList: filteredUserDataResponse,
-    },
-  };
+    return {
+      props: {
+        user: userResponse.data.data as UserDataType,
+        projectData: projectList[0],
+        userList: filteredUserDataResponse,
+      },
+    };
+  } catch (err) {
+    nookies.destroy(ctx, 'token');
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false,
+      },
+    };
+  }
 };
