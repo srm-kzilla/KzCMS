@@ -11,12 +11,28 @@ import MenuIcon from 'remixicon-react/MenuLineIcon';
 import Image from 'next/image';
 import { destroyCookie } from 'nookies';
 import UserDataType from '@/interfaces/userDataType';
+import axios from 'axios';
 
 const Navbar = ({ user }: { user: UserDataType }) => {
   const [options, setOptions] = useState(false);
   const [mobileNav, setMobileNav] = useState(false);
+  const [passwordModal, setPasswordModal] = useState<boolean>(false);
+  const [newPassword, setNewPassword] = useState<string>('');
 
   const router = useRouter();
+
+  const updateUserPassword = async (email: string, newPassword: string) => {
+    const response = await axios.post('/api/update-user-password', {
+      email,
+      password: newPassword,
+    });
+
+    if (response.status === 200) {
+      router.reload();
+    }
+  };
+
+  console.log(passwordModal);
 
   return (
     <div className="w-full h-full">
@@ -79,12 +95,17 @@ const Navbar = ({ user }: { user: UserDataType }) => {
           <div className="w-full flex flex-col gap-2">
             {options && (
               <div className="w-full bg-secondary flex flex-col rounded-md">
-                <div className="flex gap-2 items-center hover:bg-primary duration-300 cursor-pointer p-4">
+                <div
+                  className="flex gap-2 items-center hover:bg-primary duration-300 cursor-pointer p-4"
+                  onClick={() => {
+                    setPasswordModal(!passwordModal);
+                  }}
+                >
                   <div>
                     <SettingsIcon className="text-light" size={20} />
                   </div>
                   <div>
-                    <h1>Settings</h1>
+                    <h1>Change Password</h1>
                   </div>
                 </div>
                 <div
@@ -220,6 +241,53 @@ const Navbar = ({ user }: { user: UserDataType }) => {
           </div>
         )}
       </div>
+      {passwordModal && (
+        <div className="absolute top-0 bottom-0 right-0 left-0 bg-black/40 flex justify-center items-center p-6">
+          <div className="w-full lg:w-[500px] p-6 bg-secondary rounded-lg flex flex-col gap-5">
+            <div className="w-full flex flex-col justify-center items-center">
+              <h1 className="font-bold text-xl">Update password of </h1>
+              <h1 className="font-bold text-xl">{user.email}?</h1>
+            </div>
+            <form
+              className="w-full h-full flex flex-col gap-5"
+              onSubmit={e => {
+                e.preventDefault();
+                updateUserPassword(user.email, newPassword);
+              }}
+            >
+              <div>
+                <input
+                  className="w-full px-4 py-2 rounded-lg bg-primary outline-none text-sm lg:text-base"
+                  type="text"
+                  placeholder="New Password (At least 5 characters)"
+                  pattern=".{5,}"
+                  onChange={e => {
+                    setNewPassword(e.target.value);
+                  }}
+                />
+              </div>
+              <div>
+                <button
+                  type="submit"
+                  className="w-full flex items-center justify-center px-6 py-2 border-2 border-white rounded-lg"
+                >
+                  <h1 className="font-bold text-sm md:text-base text-white">Update Password</h1>
+                </button>
+              </div>
+              <div>
+                <button
+                  onClick={() => {
+                    setPasswordModal(!passwordModal);
+                  }}
+                  className="w-full flex items-center justify-center px-6 py-2 border-2 border-white rounded-lg"
+                >
+                  <h1 className="font-bold text-sm md:text-base">Cancel</h1>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
