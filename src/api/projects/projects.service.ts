@@ -125,7 +125,7 @@ export const handleGetProject = async (projectSlug: string, user: UserType) => {
   }
 
   if (!user.isAdmin && !project.userAccess.includes(user.email)) {
-    throw { errorCode: ERRORS.UNAUTHORIZED.code, message: ERRORS.UNAUTHORIZED.message.error };
+    throw { errorCode: ERRORS.FORBIDDEN_ACCESS_ERROR.code, message: ERRORS.FORBIDDEN_ACCESS_ERROR.message.error };
   }
 
   return project.data as unknown as ProjectDataType;

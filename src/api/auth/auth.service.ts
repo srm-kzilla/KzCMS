@@ -34,7 +34,7 @@ export async function handleExistingUser({ email, password }: UserSchemaType): P
 
   const res = await bcrypt.compare(password, data.password);
   if (!res) {
-    throw { statusCode: ERRORS.UNAUTHORIZED.code, message: ERRORS.UNAUTHORIZED.message.error };
+    throw { statusCode: ERRORS.INVALID_CREDENTIALS.code, message: ERRORS.INVALID_CREDENTIALS.message.error };
   }
   return generateToken(email);
 }

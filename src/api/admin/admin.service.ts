@@ -32,8 +32,8 @@ export const handleVerifyUser = async (email: string, verify: boolean): Promise<
 
   if (result.matchedCount !== 1 || result.modifiedCount !== 1) {
     throw {
-      statusCode: ERRORS.DATA_OPERATION_FAILURE.code,
-      message: ERRORS.DATA_OPERATION_FAILURE.message.error,
+      statusCode: ERRORS.FAILED_USER_VALIDATION.code,
+      message: ERRORS.FAILED_USER_VALIDATION.message.error,
     };
   }
 };
