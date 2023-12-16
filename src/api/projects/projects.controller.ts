@@ -3,6 +3,7 @@ import { ERRORS } from '@/shared/errors';
 import {
   CreateProjectType,
   ProjectDataType,
+  ProjectDataUpdateType,
   ProjectImageSlugType,
   ProjectMetadataType,
   ProjectSlugType,

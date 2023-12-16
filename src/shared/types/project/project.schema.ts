@@ -7,10 +7,12 @@ export const CreateProjectSchema = z.object({
 });
 
 export const ProjectSchema = z.object({
-  id: z.string(),
+  _id: z.custom(value => value instanceof ObjectId),
   projectSlug: z.string(),
+  projectName: z.string(),
   userAccess: z.array(z.string()),
   data: z.array(z.string()),
+  isDeleted: z.boolean().default(false),
 });
 
 export const ProjectDataSchema = z.object({
@@ -25,7 +27,19 @@ export const ProjectDataSchema = z.object({
   isDeleted: z.boolean().default(false),
 });
 
-export const ProjectIdSchema = ProjectSchema.pick({ id: true });
+export const ProjectDataUpdateSchema = ProjectDataSchema.pick({
+  title: true,
+  description: true,
+  link: true,
+  author: true,
+  subType: true,
+}).extend({
+  newTitle: z.string().optional(),
+});
+
+export const ProjectIdSchema = z.object({
+  id: z.string(),
+});
 
 export const ProjectSlugSchema = z.object({
   slug: z.string(),
@@ -53,3 +67,4 @@ export type ProjectSlugType = z.infer<typeof ProjectSlugSchema>;
 export type ProjectImageSlugType = z.infer<typeof ProjectImageSlugSchema>;
 export type ProjectTitleType = z.infer<typeof ProjectTitleSchema>;
 export type ProjectIdType = z.infer<typeof ProjectIdSchema>;
+export type ProjectDataUpdateType = z.infer<typeof ProjectDataUpdateSchema>;
