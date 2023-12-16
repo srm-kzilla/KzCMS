@@ -41,32 +41,34 @@ const manageUsers = ({ user, userList }: { user: UserDataType; userList: UserDat
   const filteredUserList = userList.filter(list => list.email !== user.email);
 
   return (
-    <div className="w-full flex min-h-screen h-fit">
+    <>
       <Head>
         <title>Manage Users</title>
       </Head>
-      <Layout user={user}>
-        <div className="w-full h-full flex flex-col gap-10">
-          <div className="w-full h-fit">
-            <h1 className="font-bold text-2xl lg:text-4xl">MANAGE USERS</h1>
+      <div className="w-full flex min-h-screen h-fit">
+        <Layout user={user}>
+          <div className="w-full h-full flex flex-col gap-10">
+            <div className="w-full h-fit">
+              <h1 className="font-bold text-2xl lg:text-4xl">MANAGE USERS</h1>
+            </div>
+            <div className="w-full flex flex-col md:flex md:flex-row md:flex-wrap gap-5">
+              {filteredUserList.map((user, key) => {
+                return (
+                  <div key={key}>
+                    <UserCard
+                      user={user}
+                      verifyUser={verifyUser}
+                      deleteUser={deleteUser}
+                      updateUserPassword={updateUserPassword}
+                    />
+                  </div>
+                );
+              })}
+            </div>
           </div>
-          <div className="w-full flex flex-col md:flex md:flex-row md:flex-wrap gap-5">
-            {filteredUserList.map((user, key) => {
-              return (
-                <div key={key}>
-                  <UserCard
-                    user={user}
-                    verifyUser={verifyUser}
-                    deleteUser={deleteUser}
-                    updateUserPassword={updateUserPassword}
-                  />
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </Layout>
-    </div>
+        </Layout>
+      </div>
+    </>
   );
 };
 

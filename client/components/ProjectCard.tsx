@@ -9,7 +9,7 @@ interface ProjectCardProps {
   data: ProjectDataType[];
 }
 
-const ProjectCard = ({ projectData, redirectUrl }: { projectData: ProjectCardProps; redirectUrl: string }) => {
+const ProjectCard = ({ projectData, redirectUrl }: { projectData: ProjectCardProps, redirectUrl: string }) => {
   const router = useRouter();
   return (
     <div

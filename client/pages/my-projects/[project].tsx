@@ -27,7 +27,7 @@ export default function Project({ user, projectData }: { user: UserDataType; pro
   };
 
   return (
-    <div>
+    <>
       <Head>
         <title>{router.query.project?.toString().toUpperCase()}</title>
       </Head>
@@ -61,7 +61,7 @@ export default function Project({ user, projectData }: { user: UserDataType; pro
           </div>
         </div>
       </Layout>
-    </div>
+    </>
   );
 }
 

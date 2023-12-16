@@ -93,7 +93,7 @@ const ManageProject = ({
   }, []);
 
   return (
-    <div>
+    <>
       <Head>
         <title>{router.query.project?.toString().toUpperCase()}</title>
       </Head>
@@ -294,7 +294,7 @@ const ManageProject = ({
           )}
         </div>
       </Layout>
-    </div>
+    </>
   );
 };
 
