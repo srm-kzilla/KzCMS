@@ -1,20 +1,26 @@
-import ImageCardList from '@/components/ImageCardList';
-import Layout from '@/components/Layout';
-import EditData from '@/components/EditData';
-import { useRouter } from 'next/router';
-import server from '@/utils/server';
-import nookies from 'nookies';
-import { useState } from 'react';
-import Head from 'next/head';
-import type { AxiosResponse } from 'axios';
-import AddCircleLineIcon from 'remixicon-react/AddCircleLineIcon';
-import CloseCircleLineIcon from 'remixicon-react/CloseCircleLineIcon';
-import ProjectDataType from '@/interfaces/projectDataType';
-import UserDataType from '@/interfaces/userDataType';
-import type { GetServerSidePropsContext } from 'next';
-import 'react-toastify/dist/ReactToastify.css';
+import ImageCardList from "@/components/ImageCardList";
+import Layout from "@/components/Layout";
+import EditData from "@/components/EditData";
+import { useRouter } from "next/router";
+import server from "@/utils/server";
+import nookies from "nookies";
+import { useState } from "react";
+import Head from "next/head";
+import type { AxiosResponse } from "axios";
+import AddCircleLineIcon from "remixicon-react/AddCircleLineIcon";
+import CloseCircleLineIcon from "remixicon-react/CloseCircleLineIcon";
+import ProjectDataType from "@/interfaces/projectDataType";
+import UserDataType from "@/interfaces/userDataType";
+import type { GetServerSidePropsContext } from "next";
+import "react-toastify/dist/ReactToastify.css";
 
-export default function Project({ user, projectData }: { user: UserDataType; projectData: ProjectDataType[] }) {
+export default function Project({
+  user,
+  projectData,
+}: {
+  user: UserDataType;
+  projectData: ProjectDataType[];
+}) {
   const router = useRouter();
   const [addAssetState, setAddAssetState] = useState(false);
 
@@ -32,14 +38,16 @@ export default function Project({ user, projectData }: { user: UserDataType; pro
         <title>{router.query.project?.toString().toUpperCase()}</title>
       </Head>
       <Layout user={user}>
-        <div className="w-full h-full flex flex-col gap-10">
-          <div className="w-full h-fit">
-            <h1 className="font-bold text-2xl lg:text-4xl">{router.query.project?.toString().toUpperCase()}</h1>
+        <div className="flex h-full w-full flex-col gap-10">
+          <div className="h-fit w-full">
+            <h1 className="text-2xl font-bold lg:text-4xl">
+              {router.query.project?.toString().toUpperCase()}
+            </h1>
             <div>
-              <div className="flex justify-end items-center">
+              <div className="flex items-center justify-end">
                 {!addAssetState ? (
                   <button
-                    className="flex justify-center items-center gap-2 bg-secondary py-3 px-5 rounded-lg"
+                    className="flex items-center justify-center gap-2 rounded-lg bg-secondary px-5 py-3"
                     onClick={handleAddAsset}
                   >
                     <AddCircleLineIcon />
@@ -47,7 +55,7 @@ export default function Project({ user, projectData }: { user: UserDataType; pro
                   </button>
                 ) : (
                   <button
-                    className="flex justify-center items-center gap-2 bg-secondary py-3 px-5 rounded-lg"
+                    className="flex items-center justify-center gap-2 rounded-lg bg-secondary px-5 py-3"
                     onClick={handleAddAsset}
                   >
                     <CloseCircleLineIcon />
@@ -55,7 +63,10 @@ export default function Project({ user, projectData }: { user: UserDataType; pro
                 )}
               </div>
 
-              <EditData addAssetState={addAssetState} setAddAssetState={setAddAssetState} />
+              <EditData
+                addAssetState={addAssetState}
+                setAddAssetState={setAddAssetState}
+              />
             </div>
             <ImageCardList dataList={projectData} />
           </div>
@@ -76,24 +87,27 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   if (!cookies.token) {
     return {
       redirect: {
-        destination: '/login',
+        destination: "/login",
         permanent: false,
       },
     };
   }
 
   try {
-    const userResponse = await server.get('/api/users/user', {
+    const userResponse = await server.get("/api/users/user", {
       headers: {
         Authorization: `Bearer ${cookies.token}`,
       },
     });
 
-    const projectDataResponse: projectDataResponseType = await server.get(`/api/projects/${project}`, {
-      headers: {
-        Authorization: `Bearer ${cookies.token}`,
+    const projectDataResponse: projectDataResponseType = await server.get(
+      `/api/projects/${project}`,
+      {
+        headers: {
+          Authorization: `Bearer ${cookies.token}`,
+        },
       },
-    });
+    );
 
     return {
       props: {
@@ -102,10 +116,10 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
       },
     };
   } catch (err) {
-    nookies.destroy(ctx, 'token');
+    nookies.destroy(ctx, "token");
     return {
       redirect: {
-        destination: '/login',
+        destination: "/login",
         permanent: false,
       },
     };

@@ -1,8 +1,8 @@
-import '@/styles/globals.css';
-import type { AppProps } from 'next/app';
-import { AnimatePresence, motion } from 'framer-motion';
-import { useRouter } from 'next/router';
-import { ToastContainer } from 'react-toastify';
+import "@/styles/globals.css";
+import type { AppProps } from "next/app";
+import { AnimatePresence, motion } from "framer-motion";
+import { useRouter } from "next/router";
+import { ToastContainer } from "react-toastify";
 
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();

@@ -1,11 +1,14 @@
-import server from '@/utils/server';
-import type { NextApiRequest, NextApiResponse } from 'next';
-import { parseCookies } from 'nookies';
+import server from "@/utils/server";
+import type { NextApiRequest, NextApiResponse } from "next";
+import { parseCookies } from "nookies";
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse,
+) {
   const parsedCookies = parseCookies({ req });
 
-  if (req.method === 'PATCH') {
+  if (req.method === "PATCH") {
     try {
       const { projectSlug, userAccess } = req.body;
       const { token } = parsedCookies;

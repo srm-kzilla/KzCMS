@@ -1,5 +1,5 @@
-import ProjectDataType from '@/interfaces/projectDataType';
-import { useRouter } from 'next/router';
+import ProjectDataType from "@/interfaces/projectDataType";
+import { useRouter } from "next/router";
 
 interface ProjectCardProps {
   _id: string;
@@ -8,17 +8,25 @@ interface ProjectCardProps {
   data: ProjectDataType[];
 }
 
-const ProjectCard = ({ projectData, redirectUrl }: { projectData: ProjectCardProps, redirectUrl: string }) => {
+const ProjectCard = ({
+  projectData,
+  redirectUrl,
+}: {
+  projectData: ProjectCardProps;
+  redirectUrl: string;
+}) => {
   const router = useRouter();
   return (
     <div
-      className="w-full lg:w-96 h-fit rounded-lg bg-secondary p-6 flex flex-col gap-10 hover:scale-105 duration-300 cursor-pointer"
+      className="flex h-fit w-full cursor-pointer flex-col gap-10 rounded-lg bg-secondary p-6 duration-300 hover:scale-105 lg:w-96"
       onClick={() => {
         router.push(`${redirectUrl}/${projectData.projectSlug}`);
       }}
     >
       <div className="w-full overflow-hidden">
-        <h1 className="font-bold text-2xl">{projectData.projectName.toUpperCase()}</h1>
+        <h1 className="text-2xl font-bold">
+          {projectData.projectName.toUpperCase()}
+        </h1>
       </div>
       <div>
         {/* <h1 className="font-semibold text-xl">{projectData.data.length}</h1> */}

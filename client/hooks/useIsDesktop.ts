@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
 const useIsDesktop = (): [boolean] => {
   const [isDesktop, setIsDesktop] = useState<boolean>(false);
@@ -6,9 +6,9 @@ const useIsDesktop = (): [boolean] => {
     const handleResize = () => {
       setIsDesktop(window.innerWidth > 768);
     };
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
     handleResize();
-    return () => window.removeEventListener('resize', handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
   return [isDesktop];
 };

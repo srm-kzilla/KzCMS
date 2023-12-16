@@ -1,17 +1,23 @@
-import Layout from '@/components/Layout';
-import UserCard from '@/components/UserCard';
-import server from '@/utils/server';
-import axios from 'axios';
-import { useRouter } from 'next/router';
-import nookies from 'nookies';
-import Head from 'next/head';
-import UserDataType from '@/interfaces/userDataType';
-import type { GetServerSidePropsContext } from 'next';
+import Layout from "@/components/Layout";
+import UserCard from "@/components/UserCard";
+import server from "@/utils/server";
+import axios from "axios";
+import { useRouter } from "next/router";
+import nookies from "nookies";
+import Head from "next/head";
+import UserDataType from "@/interfaces/userDataType";
+import type { GetServerSidePropsContext } from "next";
 
-const manageUsers = ({ user, userList }: { user: UserDataType; userList: UserDataType[] }) => {
+const manageUsers = ({
+  user,
+  userList,
+}: {
+  user: UserDataType;
+  userList: UserDataType[];
+}) => {
   const router = useRouter();
   const verifyUser = async (email: string) => {
-    const response = await axios.patch('/api/verify-user', {
+    const response = await axios.patch("/api/verify-user", {
       email,
     });
 
@@ -20,14 +26,14 @@ const manageUsers = ({ user, userList }: { user: UserDataType; userList: UserDat
     }
   };
   const deleteUser = async (email: string) => {
-    const response = await axios.post('/api/delete-user', { email });
+    const response = await axios.post("/api/delete-user", { email });
 
     if (response.status === 200) {
       router.reload();
     }
   };
   const updateUserPassword = async (email: string, newPassword: string) => {
-    const response = await axios.post('/api/update-user-password', {
+    const response = await axios.post("/api/update-user-password", {
       email,
       password: newPassword,
     });
@@ -37,20 +43,20 @@ const manageUsers = ({ user, userList }: { user: UserDataType; userList: UserDat
     }
   };
 
-  const filteredUserList = userList.filter(list => list.email !== user.email);
+  const filteredUserList = userList.filter((list) => list.email !== user.email);
 
   return (
     <>
       <Head>
         <title>Manage Users</title>
       </Head>
-      <div className="w-full flex min-h-screen h-fit">
+      <div className="flex h-fit min-h-screen w-full">
         <Layout user={user}>
-          <div className="w-full h-full flex flex-col gap-10">
-            <div className="w-full h-fit">
-              <h1 className="font-bold text-2xl lg:text-4xl">MANAGE USERS</h1>
+          <div className="flex h-full w-full flex-col gap-10">
+            <div className="h-fit w-full">
+              <h1 className="text-2xl font-bold lg:text-4xl">MANAGE USERS</h1>
             </div>
-            <div className="w-full flex flex-col md:flex md:flex-row md:flex-wrap gap-5">
+            <div className="flex w-full flex-col gap-5 md:flex md:flex-row md:flex-wrap">
               {filteredUserList.map((user, key) => {
                 return (
                   <div key={key}>
@@ -79,20 +85,20 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   if (!cookies.token) {
     return {
       redirect: {
-        destination: '/login',
+        destination: "/login",
         permanent: false,
       },
     };
   }
 
   try {
-    const userResponse = await server.get('/api/users/user', {
+    const userResponse = await server.get("/api/users/user", {
       headers: {
         Authorization: `Bearer ${cookies.token}`,
       },
     });
 
-    const userListResponse = await server.get('/api/users', {
+    const userListResponse = await server.get("/api/users", {
       headers: {
         Authorization: `Bearer ${cookies.token}`,
       },
@@ -105,10 +111,10 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
       },
     };
   } catch (err) {
-    nookies.destroy(ctx, 'token');
+    nookies.destroy(ctx, "token");
     return {
       redirect: {
-        destination: '/login',
+        destination: "/login",
         permanent: false,
       },
     };

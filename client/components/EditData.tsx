@@ -1,8 +1,8 @@
-import server from '@/utils/server';
-import { useRouter } from 'next/router';
-import { parseCookies } from 'nookies';
-import React, { useState } from 'react';
-import { toast } from 'react-toastify';
+import server from "@/utils/server";
+import { useRouter } from "next/router";
+import { parseCookies } from "nookies";
+import React, { useState } from "react";
+import { toast } from "react-toastify";
 
 export default function EditData({
   addAssetState,
@@ -13,9 +13,9 @@ export default function EditData({
 }) {
   const router = useRouter();
   const [data, setData] = useState({
-    image: '',
-    title: '',
-    link: '',
+    image: "",
+    title: "",
+    link: "",
   });
   const [error, setError] = useState(false);
 
@@ -25,23 +25,23 @@ export default function EditData({
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setData({
       ...data,
-      [e.target.name]: e.target.type === 'file' ? e.target.files![0] : e.target.value,
+      [e.target.name]:
+        e.target.type === "file" ? e.target.files![0] : e.target.value,
     });
-    
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const formData = new FormData();
-    formData.append('image', data.image);
-    formData.append('title', data.title);
-    formData.append('link', data.link);
+    formData.append("image", data.image);
+    formData.append("title", data.title);
+    formData.append("link", data.link);
 
     try {
       await server.post(`/api/projects/${router.query.project}`, formData, {
         headers: {
-          'Content-Type': 'multipart/form-data',
+          "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${token}`,
         },
       });
@@ -57,15 +57,15 @@ export default function EditData({
   return (
     <>
       {addAssetState ? (
-        <div className="absolute top-0 left-0 w-full h-full bg-black/70 backdrop-blur-sm z-10 flex justify-center items-center">
+        <div className="absolute left-0 top-0 z-10 flex h-full w-full items-center justify-center bg-black/70 backdrop-blur-sm">
           <form
-            className="flex flex-col justify-center items-center gap-2 p-7 bg-primary w-80 md:w-96 h-fit rounded-2xl"
+            className="flex h-fit w-80 flex-col items-center justify-center gap-2 rounded-2xl bg-primary p-7 md:w-96"
             onSubmit={handleSubmit}
           >
             <div className="text-xl font-bold">Add Asset</div>
-            <div className="w-full flex flex-col gap-3">
+            <div className="flex w-full flex-col gap-3">
               <input
-                className="w-full px-5 py-4 rounded-xl outline-none bg-secondary"
+                className="w-full rounded-xl bg-secondary px-5 py-4 outline-none"
                 type="text"
                 placeholder="Title"
                 name="title"
@@ -73,14 +73,14 @@ export default function EditData({
                 required
               />
               <input
-                className="w-full pr-5 file:py-4 rounded-xl text-gray-400 cursor-pointer focus:outline-none bg-secondary"
+                className="w-full cursor-pointer rounded-xl bg-secondary pr-5 text-gray-400 file:py-4 focus:outline-none"
                 type="file"
                 name="image"
                 onChange={handleChange}
                 required
               />
               <input
-                className="w-full px-5 py-4 rounded-xl outline-none bg-secondary"
+                className="w-full rounded-xl bg-secondary px-5 py-4 outline-none"
                 type="text"
                 placeholder="Project URL"
                 name="link"
@@ -88,11 +88,13 @@ export default function EditData({
                 required
               />
             </div>
-            {error ? <p className="text-red-500">Something went wrong!</p> : null}
+            {error ? (
+              <p className="text-red-500">Something went wrong!</p>
+            ) : null}
             <input
               type="submit"
               value="Submit"
-              className="bg-highlight text-primary font-semibold py-3 px-5 rounded-lg cursor-pointer hover:bg-highlight/80 transition-all mt-5"
+              className="mt-5 cursor-pointer rounded-lg bg-highlight px-5 py-3 font-semibold text-primary transition-all hover:bg-highlight/80"
             />
             <button
               onClick={() => {

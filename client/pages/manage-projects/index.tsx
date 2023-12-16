@@ -1,24 +1,30 @@
-import Layout from '@/components/Layout';
-import ProjectCard from '@/components/ProjectCard';
-import { useState } from 'react';
-import nookies from 'nookies';
-import server from '@/utils/server';
-import axios from 'axios';
-import { useRouter } from 'next/router';
-import Head from 'next/head';
-import UserDataType from '@/interfaces/userDataType';
-import ProjectListDataType from '@/interfaces/projectListDataType';
-import type { GetServerSidePropsContext } from 'next';
+import Layout from "@/components/Layout";
+import ProjectCard from "@/components/ProjectCard";
+import { useState } from "react";
+import nookies from "nookies";
+import server from "@/utils/server";
+import axios from "axios";
+import { useRouter } from "next/router";
+import Head from "next/head";
+import UserDataType from "@/interfaces/userDataType";
+import ProjectListDataType from "@/interfaces/projectListDataType";
+import type { GetServerSidePropsContext } from "next";
 
-const Index = ({ user, projectList }: { user: UserDataType; projectList: ProjectListDataType[] }) => {
+const Index = ({
+  user,
+  projectList,
+}: {
+  user: UserDataType;
+  projectList: ProjectListDataType[];
+}) => {
   const [addProjectModal, setAddProjectModal] = useState<boolean>(false);
-  const [projectName, setProjectName] = useState<string>('');
-  const [typeName, setTypeName] = useState<string>('');
+  const [projectName, setProjectName] = useState<string>("");
+  const [typeName, setTypeName] = useState<string>("");
   const router = useRouter();
 
   const handleCreateProject = async (e: React.FormEvent) => {
     e.preventDefault();
-    const response = await axios.post('/api/create-project', {
+    const response = await axios.post("/api/create-project", {
       projectName,
       typeName,
     });
@@ -33,72 +39,84 @@ const Index = ({ user, projectList }: { user: UserDataType; projectList: Project
       <Head>
         <title>Manage Projects</title>
       </Head>
-      <div className="w-full flex min-h-screen h-fit">
+      <div className="flex h-fit min-h-screen w-full">
         <Layout user={user}>
-          <div className="w-full h-full flex flex-col gap-10">
-            <div className="w-full h-fit flex flex-col gap-3 md:flex md:flex-row md:justify-between md:items-center">
+          <div className="flex h-full w-full flex-col gap-10">
+            <div className="flex h-fit w-full flex-col gap-3 md:flex md:flex-row md:items-center md:justify-between">
               <div>
-                <h1 className="font-bold text-2xl lg:text-4xl">MANAGE PROJECTS</h1>
+                <h1 className="text-2xl font-bold lg:text-4xl">
+                  MANAGE PROJECTS
+                </h1>
               </div>
               <div>
                 <button
                   onClick={() => {
                     setAddProjectModal(!addProjectModal);
                   }}
-                  className="px-6 py-2 border-2 border-white rounded-lg"
+                  className="rounded-lg border-2 border-white px-6 py-2"
                 >
-                  <h1 className="font-bold text-sm md:text-base">+ Create Project</h1>
+                  <h1 className="text-sm font-bold md:text-base">
+                    + Create Project
+                  </h1>
                 </button>
               </div>
             </div>
-            <div className="flex flex-col md:flex-wrap md:flex-row justify-center gap-5 md:justify-start h-fit w-full">
+            <div className="flex h-fit w-full flex-col justify-center gap-5 md:flex-row md:flex-wrap md:justify-start">
               {projectList.length !== 0 ? (
                 projectList.map((project, key) => {
                   return (
                     <div key={key}>
-                      <ProjectCard projectData={project} redirectUrl={'/manage-projects'} />
+                      <ProjectCard
+                        projectData={project}
+                        redirectUrl={"/manage-projects"}
+                      />
                     </div>
                   );
                 })
               ) : (
-                <div className="flex-1 flex flex-col gap-5 justify-center items-center">
+                <div className="flex flex-1 flex-col items-center justify-center gap-5">
                   <div>
                     <button
                       onClick={() => {
                         setAddProjectModal(!addProjectModal);
                       }}
-                      className="px-6 py-2 border-2 border-light border-dashed rounded-lg"
+                      className="rounded-lg border-2 border-dashed border-light px-6 py-2"
                     >
-                      <h1 className="font-bold text-sm md:text-base text-light">+ Create Project</h1>
+                      <h1 className="text-sm font-bold text-light md:text-base">
+                        + Create Project
+                      </h1>
                     </button>
                   </div>
                 </div>
               )}
             </div>
             {addProjectModal && (
-              <div className="absolute top-0 bottom-0 right-0 left-0 bg-black/40 flex justify-center items-center p-6">
-                <div className="w-full lg:w-[500px] p-6 bg-secondary rounded-lg flex flex-col gap-5">
-                  <div className="w-full flex justify-center">
-                    <h1 className="font-bold text-2xl">Create Project</h1>
+              <div className="absolute bottom-0 left-0 right-0 top-0 flex items-center justify-center bg-black/40 p-6">
+                <div className="flex w-full flex-col gap-5 rounded-lg bg-secondary p-6 lg:w-[500px]">
+                  <div className="flex w-full justify-center">
+                    <h1 className="text-2xl font-bold">Create Project</h1>
                   </div>
                   <div>
-                    <form className="w-full h-full flex flex-col gap-5" onSubmit={handleCreateProject}>
+                    <form
+                      className="flex h-full w-full flex-col gap-5"
+                      onSubmit={handleCreateProject}
+                    >
                       <div>
                         <input
-                          className="w-full px-4 py-2 rounded-lg bg-primary outline-none"
+                          className="w-full rounded-lg bg-primary px-4 py-2 outline-none"
                           type="text"
                           placeholder="Project Name"
-                          onChange={e => {
+                          onChange={(e) => {
                             setProjectName(e.target.value);
                           }}
                         />
                       </div>
                       <div>
                         <input
-                          className="w-full px-4 py-2 rounded-lg bg-primary outline-none"
+                          className="w-full rounded-lg bg-primary px-4 py-2 outline-none"
                           type="text"
                           placeholder="Type Name"
-                          onChange={e => {
+                          onChange={(e) => {
                             setTypeName(e.target.value);
                           }}
                         />
@@ -106,9 +124,11 @@ const Index = ({ user, projectList }: { user: UserDataType; projectList: Project
                       <div>
                         <button
                           type="submit"
-                          className="w-full flex items-center justify-center px-6 py-2 border-2 border-white rounded-lg"
+                          className="flex w-full items-center justify-center rounded-lg border-2 border-white px-6 py-2"
                         >
-                          <h1 className="font-bold text-sm md:text-base">Create Project</h1>
+                          <h1 className="text-sm font-bold md:text-base">
+                            Create Project
+                          </h1>
                         </button>
                       </div>
                       <div>
@@ -116,9 +136,11 @@ const Index = ({ user, projectList }: { user: UserDataType; projectList: Project
                           onClick={() => {
                             setAddProjectModal(!addProjectModal);
                           }}
-                          className="w-full flex items-center justify-center px-6 py-2 border-2 border-white rounded-lg"
+                          className="flex w-full items-center justify-center rounded-lg border-2 border-white px-6 py-2"
                         >
-                          <h1 className="font-bold text-sm md:text-base">Cancel</h1>
+                          <h1 className="text-sm font-bold md:text-base">
+                            Cancel
+                          </h1>
                         </button>
                       </div>
                     </form>
@@ -141,14 +163,14 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   if (!cookies.token) {
     return {
       redirect: {
-        destination: '/login',
+        destination: "/login",
         permanent: false,
       },
     };
   }
 
   try {
-    const userResponse = await server.get('/api/users/user', {
+    const userResponse = await server.get("/api/users/user", {
       headers: {
         Authorization: `Bearer ${cookies.token}`,
       },
@@ -156,17 +178,18 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 
     const user: UserDataType = userResponse.data.data;
 
-    const projectListDataResponse = await server.get('/api/projects', {
+    const projectListDataResponse = await server.get("/api/projects", {
       headers: {
         Authorization: `Bearer ${cookies.token}`,
       },
     });
 
-    const projectList: ProjectListDataType[] = projectListDataResponse.data.data.filter(
-      (project: { isDeleted: any }) => {
-        return !project.isDeleted;
-      },
-    );
+    const projectList: ProjectListDataType[] =
+      projectListDataResponse.data.data.filter(
+        (project: { isDeleted: any }) => {
+          return !project.isDeleted;
+        },
+      );
 
     return {
       props: {
@@ -175,10 +198,10 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
       },
     };
   } catch (err) {
-    nookies.destroy(ctx, 'token');
+    nookies.destroy(ctx, "token");
     return {
       redirect: {
-        destination: '/login',
+        destination: "/login",
         permanent: false,
       },
     };

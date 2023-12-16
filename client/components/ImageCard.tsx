@@ -1,9 +1,8 @@
-import Image from 'next/image';
-import LinkIcon from 'remixicon-react/LinkIcon';
-import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
-import ProjectDataType from '@/interfaces/ProjectDataType';
-
+import Image from "next/image";
+import LinkIcon from "remixicon-react/LinkIcon";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import ProjectDataType from "@/interfaces/ProjectDataType";
 
 const ImageCard = (data: ProjectDataType) => {
   const { imageURL, title, link, description, author } = data;
@@ -18,9 +17,9 @@ const ImageCard = (data: ProjectDataType) => {
 
   return (
     <article>
-      <div className="group h-[300px] w-[320px] md:w-[400px] [perspective:1000px] rounded-xl overflow-hidden">
-        <div className="relative h-full w-full shadow-xl transition-all duration-500 [transform-style:preserve-3d] group-focus:[transform:rotateY(180deg)] group-hover:[transform:rotateY(180deg)]">
-          <div className="absolute inset-0 bg-slate-100 flex">
+      <div className="group h-[300px] w-[320px] overflow-hidden rounded-xl [perspective:1000px] md:w-[400px]">
+        <div className="relative h-full w-full shadow-xl transition-all duration-500 [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)] group-focus:[transform:rotateY(180deg)]">
+          <div className="absolute inset-0 flex bg-slate-100">
             <Image
               src={imageURL}
               alt="Project data image"
@@ -29,20 +28,28 @@ const ImageCard = (data: ProjectDataType) => {
               unoptimized
             ></Image>
           </div>
-          <div className="absolute inset-0 h-full w-full bg-black/80 text-center text-slate-200 [transform:rotateY(180deg)] [backface-visibility:hidden] flex flex-col items-center justify-center gap-3 py-5 px-3">
+          <div className="absolute inset-0 flex h-full w-full flex-col items-center justify-center gap-3 bg-black/80 px-3 py-5 text-center text-slate-200 [backface-visibility:hidden] [transform:rotateY(180deg)]">
             <div className="text-4xl font-bold">{title}</div>
             <div className="flex">
               <LinkIcon />
-              <a href={link} target="_blank" className=" font-semibold ml-2">
+              <a href={link} target="_blank" className=" ml-2 font-semibold">
                 {link}
               </a>
             </div>
-            <div className="text-card-gray font-semibold mb-2">{description}</div>
-            <div className="flex gap-2">
-              <button className="p-1 rounded-xl w-20 border-2 font-bold">Edit</button>
-              <button className="p-1 rounded-xl w-20 border-2 border-card-red text-card-red font-bold">Delete</button>
+            <div className="mb-2 font-semibold text-card-gray">
+              {description}
             </div>
-            {author ? <div className=" text-[#797979]">Last edited by : {author}</div> : null}
+            <div className="flex gap-2">
+              <button className="w-20 rounded-xl border-2 p-1 font-bold">
+                Edit
+              </button>
+              <button className="w-20 rounded-xl border-2 border-card-red p-1 font-bold text-card-red">
+                Delete
+              </button>
+            </div>
+            {author ? (
+              <div className=" text-[#797979]">Last edited by : {author}</div>
+            ) : null}
           </div>
         </div>
       </div>
