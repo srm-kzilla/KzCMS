@@ -1,12 +1,11 @@
-import React, { useState } from "react";
-import server from "@/utils/server";
-import Image from "next/image";
-import { setCookie } from "nookies";
-import { useRouter } from "next/router";
-import Link from "next/link";
-import nookies from "nookies";
-import { GetServerSidePropsContext } from "next";
 import Head from "next/head";
+import Image from "next/image";
+import Link from "next/link";
+import server from "@/utils/server";
+import nookies, { setCookie } from "nookies";
+import { useRouter } from "next/router";
+import { type ChangeEvent, useState } from "react";
+import type { GetServerSidePropsContext } from "next";
 
 const Login = () => {
   const [user, setUser] = useState({
@@ -16,7 +15,7 @@ const Login = () => {
   const [error, setError] = useState<boolean>(false);
   const router = useRouter();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setUser({
       ...user,
       [e.target.name]: e.target.value,

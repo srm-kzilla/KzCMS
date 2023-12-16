@@ -1,5 +1,5 @@
 import ImageCard from "@/components/ImageCard";
-import { ProjectItem } from "@/types";
+import type { ProjectItem } from "@/types";
 
 interface DataCardListProps {
   dataList: ProjectItem[];

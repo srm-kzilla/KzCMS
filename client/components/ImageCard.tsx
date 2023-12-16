@@ -1,8 +1,8 @@
 import Image from "next/image";
-import LinkIcon from "remixicon-react/LinkIcon";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { ProjectItem } from "@/types";
+import LinkIcon from "remixicon-react/LinkIcon";
+import type { ProjectItem } from "@/types";
 
 const ImageCard = (data: ProjectItem) => {
   const { imageURL, title, link, description, author } = data;

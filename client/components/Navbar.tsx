@@ -1,17 +1,17 @@
-import React, { useState } from "react";
+import Image from "next/image";
+import axios from "axios";
+import { useRouter } from "next/router";
+import { destroyCookie } from "nookies";
+import { useState } from "react";
 import ArrowDownIcon from "remixicon-react/ArrowDownSFillIcon";
 import ArrowUpIcon from "remixicon-react/ArrowUpSFillIcon";
 import MyProjectsIcon from "remixicon-react/DashboardLineIcon";
 import ManageProjectIcon from "remixicon-react/Layout2LineIcon";
-import SettingsIcon from "remixicon-react/Settings4LineIcon";
 import LogoutIcon from "remixicon-react/LogoutBoxRLineIcon";
-import { useRouter } from "next/router";
-import UserIcon from "remixicon-react/UserLineIcon";
 import MenuIcon from "remixicon-react/MenuLineIcon";
-import Image from "next/image";
-import { destroyCookie } from "nookies";
+import SettingsIcon from "remixicon-react/Settings4LineIcon";
+import UserIcon from "remixicon-react/UserLineIcon";
 import type { User } from "@/types";
-import axios from "axios";
 
 const Navbar = ({ user }: { user: User }) => {
   const [options, setOptions] = useState(false);

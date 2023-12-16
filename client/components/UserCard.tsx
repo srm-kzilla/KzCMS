@@ -1,5 +1,5 @@
+import { useState } from "react";
 import type { User } from "@/types";
-import React, { useState } from "react";
 
 interface UserCardProps {
   user: User;

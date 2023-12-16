@@ -1,18 +1,17 @@
+import EditData from "@/components/EditData";
 import ImageCardList from "@/components/ImageCardList";
 import Layout from "@/components/Layout";
-import EditData from "@/components/EditData";
-import { useRouter } from "next/router";
+import Head from "next/head";
 import server from "@/utils/server";
 import nookies from "nookies";
+import { useRouter } from "next/router";
 import { useState } from "react";
-import Head from "next/head";
-import type { AxiosResponse } from "axios";
+import "react-toastify/dist/ReactToastify.css";
 import AddCircleLineIcon from "remixicon-react/AddCircleLineIcon";
 import CloseCircleLineIcon from "remixicon-react/CloseCircleLineIcon";
-import type { ProjectItem } from "@/types";
-import type { User } from "@/types";
+import type { AxiosResponse } from "axios";
+import type { ProjectItem, User } from "@/types";
 import type { GetServerSidePropsContext } from "next";
-import "react-toastify/dist/ReactToastify.css";
 
 export default function Project({
   user,

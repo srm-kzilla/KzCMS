@@ -1,10 +1,9 @@
 import Layout from "@/components/Layout";
 import ProjectCard from "@/components/ProjectCard";
-import nookies from "nookies";
-import server from "@/utils/server";
 import Head from "next/head";
-import type { User} from "@/types";
-import type { Project } from "@/types";
+import server from "@/utils/server";
+import nookies from "nookies";
+import type { Project, User } from "@/types";
 import type { GetServerSidePropsContext } from "next";
 
 export default function Home({

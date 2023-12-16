@@ -1,20 +1,14 @@
 import Layout from "@/components/Layout";
 import UserCard from "@/components/UserCard";
+import Head from "next/head";
 import server from "@/utils/server";
 import axios from "axios";
-import { useRouter } from "next/router";
 import nookies from "nookies";
-import Head from "next/head";
-import { User } from "@/types";
+import { useRouter } from "next/router";
+import type { User } from "@/types";
 import type { GetServerSidePropsContext } from "next";
 
-const manageUsers = ({
-  user,
-  userList,
-}: {
-  user: User;
-  userList: User[];
-}) => {
+const manageUsers = ({ user, userList }: { user: User; userList: User[] }) => {
   const router = useRouter();
   const verifyUser = async (email: string) => {
     const response = await axios.patch("/api/verify-user", {

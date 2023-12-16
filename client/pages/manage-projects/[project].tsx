@@ -1,14 +1,13 @@
 import Layout from "@/components/Layout";
+import Head from "next/head";
+import Select from "react-select";
+import server from "@/utils/server";
+import axios from "axios";
+import nookies from "nookies";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
-import nookies from "nookies";
-import server from "@/utils/server";
 import DeleteIcon from "remixicon-react/DeleteBin7LineIcon";
-import { Project } from "@/types";
-import Select from "react-select";
-import axios from "axios";
-import Head from "next/head";
-import type { User } from "@/types";
+import type { Project, User } from "@/types";
 import type { GetServerSidePropsContext } from "next";
 
 interface userListDataType {
@@ -357,12 +356,11 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
       },
     });
 
-    const projectList: Project[] =
-      projectListDataResponse.data.data.filter(
-        (project: Project) => {
-          return project.projectSlug === ctx.query.project;
-        },
-      );
+    const projectList: Project[] = projectListDataResponse.data.data.filter(
+      (project: Project) => {
+        return project.projectSlug === ctx.query.project;
+      },
+    );
 
     const filteredUserDataResponse: userListDataType[] =
       allUserDataResponse.data.data.filter((user: userListDataType) => {

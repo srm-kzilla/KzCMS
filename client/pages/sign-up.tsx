@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import Head from "next/head";
+import Link from "next/link";
 import server from "@/utils/server";
 import Image from "next/image";
-import { useRouter } from "next/router";
 import nookies from "nookies";
-import Link from "next/link";
-import { GetServerSidePropsContext } from "next";
-import Head from "next/head";
+import { useRouter } from "next/router";
+import { type ChangeEvent, useState } from "react";
+import type { GetServerSidePropsContext } from "next";
 
 const SignUp = () => {
   const [user, setUser] = useState({
@@ -15,7 +15,7 @@ const SignUp = () => {
   const [error, setError] = useState<boolean>(false);
   const router = useRouter();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setUser({
       ...user,
       [e.target.name]: e.target.value,

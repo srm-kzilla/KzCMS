@@ -4,7 +4,7 @@ export type ProjectItem = {
   imageURL: string;
   link: string;
   title: string;
-}
+};
 
 export type Project = {
   id: string;
@@ -14,7 +14,7 @@ export type Project = {
   userAccess: string[];
   isDeleted: boolean;
   isEnabled: boolean;
-}
+};
 
 export type User = {
   id: string;
@@ -23,4 +23,4 @@ export type User = {
   isVerified: boolean;
   isDeleted: boolean;
   projects: string[];
-}
+};

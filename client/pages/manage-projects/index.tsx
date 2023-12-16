@@ -1,13 +1,12 @@
 import Layout from "@/components/Layout";
 import ProjectCard from "@/components/ProjectCard";
-import { useState } from "react";
-import nookies from "nookies";
+import Head from "next/head";
 import server from "@/utils/server";
 import axios from "axios";
+import nookies from "nookies";
 import { useRouter } from "next/router";
-import Head from "next/head";
-import type { User } from "@/types";
-import type { Project } from "@/types";
+import { useState } from "react";
+import type { Project, User } from "@/types";
 import type { GetServerSidePropsContext } from "next";
 
 const Index = ({
@@ -184,12 +183,11 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
       },
     });
 
-    const projectList: Project[] =
-      projectListDataResponse.data.data.filter(
-        (project: { isDeleted: any }) => {
-          return !project.isDeleted;
-        },
-      );
+    const projectList: Project[] = projectListDataResponse.data.data.filter(
+      (project: { isDeleted: any }) => {
+        return !project.isDeleted;
+      },
+    );
 
     return {
       props: {
