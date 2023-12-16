@@ -32,8 +32,6 @@ const Navbar = ({ user }: { user: UserDataType }) => {
     }
   };
 
-  console.log(passwordModal);
-
   return (
     <div className="w-full h-full">
       <div className="w-full h-full border-r-2 border-r-secondary p-6 hidden lg:block">
