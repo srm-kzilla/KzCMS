@@ -3,7 +3,7 @@ import { upload } from '@/shared/middlewares/multer';
 import { validateRequest } from '@/shared/middlewares/validator';
 import {
   CreateProjectSchema,
-  ProjectDataSchema,
+  ProjectDataCreateSchema,
   ProjectDataUpdateSchema,
   ProjectMetadataSchema,
   ProjectSlugSchema,
@@ -48,8 +48,8 @@ export default (): Router => {
     '/:slug',
     authenticateToken(),
     validateRequest('params', ProjectSlugSchema),
-    validateRequest('body', ProjectDataSchema),
     upload.single('image'),
+    validateRequest('body', ProjectDataCreateSchema),
     createProjectData,
   );
 

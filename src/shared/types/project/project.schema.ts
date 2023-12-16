@@ -27,6 +27,13 @@ export const ProjectDataSchema = z.object({
   isDeleted: z.boolean().default(false),
 });
 
+export const ProjectDataCreateSchema = ProjectDataSchema.pick({
+  title: true,
+  description: true,
+  link: true,
+  subType: true,
+});
+
 export const ProjectDataUpdateSchema = ProjectDataSchema.pick({
   title: true,
   description: true,
@@ -68,3 +75,4 @@ export type ProjectImageSlugType = z.infer<typeof ProjectImageSlugSchema>;
 export type ProjectTitleType = z.infer<typeof ProjectTitleSchema>;
 export type ProjectIdType = z.infer<typeof ProjectIdSchema>;
 export type ProjectDataUpdateType = z.infer<typeof ProjectDataUpdateSchema>;
+export type ProjectDataCreateType = z.infer<typeof ProjectDataCreateSchema>;
