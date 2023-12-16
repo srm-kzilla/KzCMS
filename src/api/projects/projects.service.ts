@@ -2,7 +2,14 @@ import config from '@/config';
 import db from '@/loaders/database';
 import { LINK_REGEX_PATTERN } from '@/shared/constants';
 import { ERRORS } from '@/shared/errors';
-import { CreateProjectType, ProjectDataType, ProjectImageSlugType, ProjectType, UserType } from '@/shared/types';
+import {
+  CreateProjectType,
+  ProjectDataType,
+  ProjectDataUpdateType,
+  ProjectImageSlugType,
+  ProjectType,
+  UserType,
+} from '@/shared/types';
 import { DeleteObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import fs from 'fs';
 import { ObjectId, UpdateFilter } from 'mongodb';
@@ -61,7 +68,7 @@ export const handleCreateProject = async ({ projectName, typeName }: CreateProje
   return slug;
 };
 
-export const handleUpdateProjectData = async (slug: string, data: Omit<ProjectDataType, 'image'>) => {
+export const handleUpdateProjectData = async (slug: string, data: ProjectDataUpdateType) => {
   const projectsCollection = (await db()).collection('projects');
   const project = await projectsCollection.findOne({ projectSlug: slug, 'data.title': data.title });
   if (!project) {

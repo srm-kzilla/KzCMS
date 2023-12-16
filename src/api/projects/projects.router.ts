@@ -1,7 +1,13 @@
 import authenticateToken from '@/shared/middlewares/authentication';
 import { upload } from '@/shared/middlewares/multer';
 import { validateRequest } from '@/shared/middlewares/validator';
-import { ProjectMetadataSchema, ProjectSlugSchema } from '@/shared/types';
+import {
+  CreateProjectSchema,
+  ProjectDataSchema,
+  ProjectDataUpdateSchema,
+  ProjectMetadataSchema,
+  ProjectSlugSchema,
+} from '@/shared/types';
 import { Router } from 'express';
 import {
   createProject,
@@ -22,19 +28,27 @@ export default (): Router => {
   app.patch(
     '/:slug',
     authenticateToken({ verifyAdmin: true }),
+    validateRequest('params', ProjectSlugSchema),
     validateRequest('body', ProjectMetadataSchema),
     updateProjectMetadata,
   );
 
-  app.get('/:slug', authenticateToken(), getProject);
+  app.get('/:slug', authenticateToken(), validateRequest('params', ProjectSlugSchema), getProject);
 
-  app.patch('/:slug/data', authenticateToken(), updateProjectData);
+  app.patch(
+    '/:slug/data',
+    authenticateToken(),
+    validateRequest('params', ProjectSlugSchema),
+    validateRequest('body', ProjectDataUpdateSchema),
+    updateProjectData,
+  );
   app.patch('/:slug/:title/image', authenticateToken(), upload.single('image'), updateProjectImage);
-  app.post('/', authenticateToken({ verifyAdmin: true }), createProject);
+  app.post('/', authenticateToken({ verifyAdmin: true }), validateRequest('body', CreateProjectSchema), createProject);
   app.post(
     '/:slug',
     authenticateToken(),
     validateRequest('params', ProjectSlugSchema),
+    validateRequest('body', ProjectDataSchema),
     upload.single('image'),
     createProjectData,
   );

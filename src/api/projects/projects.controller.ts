@@ -66,7 +66,7 @@ export const createProject = async (
 };
 
 export const updateProjectData = async (
-  req: Request<ProjectSlugType, unknown, ProjectDataType>,
+  req: Request<ProjectSlugType, unknown, ProjectDataUpdateType>,
   res: Response,
   next: NextFunction,
 ): Promise<void> => {

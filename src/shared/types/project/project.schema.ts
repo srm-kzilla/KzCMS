@@ -1,3 +1,4 @@
+import { ObjectId } from 'mongodb';
 import { z } from 'zod';
 
 export const CreateProjectSchema = z.object({
@@ -9,24 +10,19 @@ export const ProjectSchema = z.object({
   id: z.string(),
   projectSlug: z.string(),
   userAccess: z.array(z.string()),
-  data: z.array(
-    z.object({
-      title: z.string(),
-      description: z.string().optional(),
-      imageURL: z.string().url(),
-      link: z.string().url().optional(),
-      author: z.string().optional(),
-    }),
-  ),
+  data: z.array(z.string()),
 });
 
 export const ProjectDataSchema = z.object({
+  _id: z.custom(value => value instanceof ObjectId),
+  projectSlug: z.string(),
   title: z.string(),
-  newTitle: z.string().optional(),
+  subType: z.string().optional(),
   description: z.string().optional(),
-  image: z.any().optional(),
+  imageURL: z.string().url().optional(),
   link: z.string().url().optional(),
   author: z.string().optional(),
+  isDeleted: z.boolean().default(false),
 });
 
 export const ProjectIdSchema = ProjectSchema.pick({ id: true });
