@@ -4,11 +4,11 @@ import { useEffect, useRef, useState } from "react";
 import nookies from "nookies";
 import server from "@/utils/server";
 import DeleteIcon from "remixicon-react/DeleteBin7LineIcon";
-import ProjectListDataType from "@/interfaces/projectListDataType";
+import { Project } from "@/types";
 import Select from "react-select";
 import axios from "axios";
 import Head from "next/head";
-import UserDataType from "@/interfaces/userDataType";
+import type { User } from "@/types";
 import type { GetServerSidePropsContext } from "next";
 
 interface userListDataType {
@@ -30,8 +30,8 @@ const ManageProject = ({
   projectData,
   userList,
 }: {
-  user: UserDataType;
-  projectData: ProjectListDataType;
+  user: User;
+  projectData: Project;
   userList: userListDataType[];
 }) => {
   const router = useRouter();
@@ -357,9 +357,9 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
       },
     });
 
-    const projectList: ProjectListDataType[] =
+    const projectList: Project[] =
       projectListDataResponse.data.data.filter(
-        (project: ProjectListDataType) => {
+        (project: Project) => {
           return project.projectSlug === ctx.query.project;
         },
       );
@@ -371,7 +371,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 
     return {
       props: {
-        user: userResponse.data.data as UserDataType,
+        user: userResponse.data.data as User,
         projectData: projectList[0],
         userList: filteredUserDataResponse,
       },

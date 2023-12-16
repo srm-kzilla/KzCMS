@@ -3,16 +3,16 @@ import ProjectCard from "@/components/ProjectCard";
 import nookies from "nookies";
 import server from "@/utils/server";
 import Head from "next/head";
-import UserDataType from "@/interfaces/userDataType";
-import ProjectListDataType from "@/interfaces/projectListDataType";
+import type { User} from "@/types";
+import type { Project } from "@/types";
 import type { GetServerSidePropsContext } from "next";
 
 export default function Home({
   user,
   projectList,
 }: {
-  user: UserDataType;
-  projectList: ProjectListDataType[];
+  user: User;
+  projectList: Project[];
 }) {
   return (
     <>
@@ -63,7 +63,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
       },
     });
 
-    const user: UserDataType = userResponse.data.data;
+    const user: User = userResponse.data.data;
 
     const projectListDataResponse = await server.get(
       "/api/users/user/projects",

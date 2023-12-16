@@ -1,11 +1,11 @@
-import ProjectDataType from "@/interfaces/projectDataType";
 import { useRouter } from "next/router";
+import type { ProjectItem } from "@/types";
 
 interface ProjectCardProps {
-  _id: string;
+  id: string;
   projectSlug: string;
   projectName: string;
-  data: ProjectDataType[];
+  data: ProjectItem[];
 }
 
 const ProjectCard = ({

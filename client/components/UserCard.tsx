@@ -1,8 +1,8 @@
-import UserDataType from "@/interfaces/userDataType";
+import type { User } from "@/types";
 import React, { useState } from "react";
 
 interface UserCardProps {
-  user: UserDataType;
+  user: User;
   verifyUser: (email: string) => void;
   deleteUser: (email: string) => void;
   updateUserPassword: (email: string, newPassword: string) => void;

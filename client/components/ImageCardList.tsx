@@ -1,8 +1,8 @@
 import ImageCard from "@/components/ImageCard";
-import ProjectDataType from "@/interfaces/ProjectDataType";
+import { ProjectItem } from "@/types";
 
 interface DataCardListProps {
-  dataList: ProjectDataType[];
+  dataList: ProjectItem[];
 }
 
 const ImageCardList = ({ dataList }: DataCardListProps) => {

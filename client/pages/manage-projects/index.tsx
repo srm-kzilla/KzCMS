@@ -6,16 +6,16 @@ import server from "@/utils/server";
 import axios from "axios";
 import { useRouter } from "next/router";
 import Head from "next/head";
-import UserDataType from "@/interfaces/userDataType";
-import ProjectListDataType from "@/interfaces/projectListDataType";
+import type { User } from "@/types";
+import type { Project } from "@/types";
 import type { GetServerSidePropsContext } from "next";
 
 const Index = ({
   user,
   projectList,
 }: {
-  user: UserDataType;
-  projectList: ProjectListDataType[];
+  user: User;
+  projectList: Project[];
 }) => {
   const [addProjectModal, setAddProjectModal] = useState<boolean>(false);
   const [projectName, setProjectName] = useState<string>("");
@@ -176,7 +176,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
       },
     });
 
-    const user: UserDataType = userResponse.data.data;
+    const user: User = userResponse.data.data;
 
     const projectListDataResponse = await server.get("/api/projects", {
       headers: {
@@ -184,7 +184,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
       },
     });
 
-    const projectList: ProjectListDataType[] =
+    const projectList: Project[] =
       projectListDataResponse.data.data.filter(
         (project: { isDeleted: any }) => {
           return !project.isDeleted;

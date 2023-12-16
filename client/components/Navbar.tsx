@@ -10,10 +10,10 @@ import UserIcon from "remixicon-react/UserLineIcon";
 import MenuIcon from "remixicon-react/MenuLineIcon";
 import Image from "next/image";
 import { destroyCookie } from "nookies";
-import UserDataType from "@/interfaces/userDataType";
+import type { User } from "@/types";
 import axios from "axios";
 
-const Navbar = ({ user }: { user: UserDataType }) => {
+const Navbar = ({ user }: { user: User }) => {
   const [options, setOptions] = useState(false);
   const [mobileNav, setMobileNav] = useState(false);
   const [passwordModal, setPasswordModal] = useState<boolean>(false);

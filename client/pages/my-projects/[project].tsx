@@ -9,8 +9,8 @@ import Head from "next/head";
 import type { AxiosResponse } from "axios";
 import AddCircleLineIcon from "remixicon-react/AddCircleLineIcon";
 import CloseCircleLineIcon from "remixicon-react/CloseCircleLineIcon";
-import ProjectDataType from "@/interfaces/projectDataType";
-import UserDataType from "@/interfaces/userDataType";
+import type { ProjectItem } from "@/types";
+import type { User } from "@/types";
 import type { GetServerSidePropsContext } from "next";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -18,8 +18,8 @@ export default function Project({
   user,
   projectData,
 }: {
-  user: UserDataType;
-  projectData: ProjectDataType[];
+  user: User;
+  projectData: ProjectItem[];
 }) {
   const router = useRouter();
   const [addAssetState, setAddAssetState] = useState(false);
@@ -77,7 +77,7 @@ export default function Project({
 }
 
 interface projectDataResponseType {
-  data: AxiosResponse<ProjectDataType[]>;
+  data: AxiosResponse<ProjectItem[]>;
 }
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
@@ -111,8 +111,8 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 
     return {
       props: {
-        user: userResponse.data.data as UserDataType,
-        projectData: projectDataResponse.data.data as ProjectDataType[],
+        user: userResponse.data.data as User,
+        projectData: projectDataResponse.data.data as ProjectItem[],
       },
     };
   } catch (err) {

@@ -1,12 +1,12 @@
 import React from "react";
 import Navbar from "./Navbar";
-import UserDataType from "@/interfaces/userDataType";
+import type { User } from "@/types";
 
 const Layout = ({
   user,
   children,
 }: {
-  user: UserDataType;
+  user: User;
   children: React.ReactNode;
 }) => {
   return (

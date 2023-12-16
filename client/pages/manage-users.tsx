@@ -5,15 +5,15 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import nookies from "nookies";
 import Head from "next/head";
-import UserDataType from "@/interfaces/userDataType";
+import { User } from "@/types";
 import type { GetServerSidePropsContext } from "next";
 
 const manageUsers = ({
   user,
   userList,
 }: {
-  user: UserDataType;
-  userList: UserDataType[];
+  user: User;
+  userList: User[];
 }) => {
   const router = useRouter();
   const verifyUser = async (email: string) => {
@@ -106,8 +106,8 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 
     return {
       props: {
-        user: userResponse.data.data as UserDataType,
-        userList: userListResponse.data.data as UserDataType[],
+        user: userResponse.data.data as User,
+        userList: userListResponse.data.data as User[],
       },
     };
   } catch (err) {
