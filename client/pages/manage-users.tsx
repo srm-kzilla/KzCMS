@@ -8,7 +8,7 @@ import { useRouter } from "next/router";
 import type { User } from "@/types";
 import type { GetServerSidePropsContext } from "next";
 
-const manageUsers = ({ user, userList }: { user: User; userList: User[] }) => {
+const ManageUsers = ({ user, userList }: { user: User; userList: User[] }) => {
   const router = useRouter();
   const verifyUser = async (email: string) => {
     const response = await axios.patch("/api/verify-user", {
@@ -71,7 +71,7 @@ const manageUsers = ({ user, userList }: { user: User; userList: User[] }) => {
   );
 };
 
-export default manageUsers;
+export default ManageUsers;
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   const cookies = nookies.get(ctx);

@@ -5,7 +5,7 @@ import server from "@/utils/server";
 import axios from "axios";
 import nookies from "nookies";
 import { useRouter } from "next/router";
-import { useEffect, useRef, useState } from "react";
+import { type FormEvent, useEffect, useRef, useState } from "react";
 import DeleteIcon from "remixicon-react/DeleteBin7LineIcon";
 import type { Project, User } from "@/types";
 import type { GetServerSidePropsContext } from "next";
@@ -36,11 +36,11 @@ const ManageProject = ({
   const router = useRouter();
   const [addUserModal, setAddUserModal] = useState<boolean>(false);
   const [selectOptions, setSelectOptions] = useState<selectOptionType[]>([]);
-  const [userAccessArray, setuserAccessArray] = useState<string[]>([]);
+  const [userAccessArray, setUserAccessArray] = useState<string[]>([]);
   const [deleteProjectModal, setDeleteProjectModal] = useState<boolean>(false);
   const userAccessList = useRef<string[]>([]);
 
-  const handleAddUserAccess = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleAddUserAccess = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const response = await axios.patch("/api/update-user-access", {
@@ -66,14 +66,14 @@ const ManageProject = ({
     }
   };
 
-  const handleDeleteProject = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleDeleteProject = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const response = await axios.post("/api/delete-project", {
       projectSlug: router.query.project,
     });
 
     if (response.status === 200) {
-      router.push("/manage-projects");
+      await router.push("/manage-projects");
     }
   };
 
@@ -88,8 +88,8 @@ const ManageProject = ({
     );
 
     userAccessList.current = projectData.userAccess;
-    setuserAccessArray(projectData.userAccess);
-  }, []);
+    setUserAccessArray(projectData.userAccess);
+  }, [projectData.userAccess, userList]);
 
   return (
     <>
@@ -229,9 +229,9 @@ const ManageProject = ({
                         options={selectOptions}
                         isMulti
                         closeMenuOnSelect={false}
-                        onChange={(e: any) => {
+                        onChange={(e) => {
                           e.map((user: selectOptionType) => {
-                            setuserAccessArray((current) => [
+                            setUserAccessArray((current) => [
                               ...current,
                               user.value,
                             ]);
@@ -245,7 +245,7 @@ const ManageProject = ({
                             fontWeight: "bold",
                             backgroundColor: "#1E1E1E",
                           }),
-                          option: (provided, state) => ({
+                          option: (provided) => ({
                             ...provided,
                             color: "white",
                             backgroundColor: "#1E1E1E",

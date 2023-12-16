@@ -26,7 +26,7 @@ export default function EditData({
     setData({
       ...data,
       [e.target.name]:
-        e.target.type === "file" ? e.target.files![0] : e.target.value,
+        e.target.type === "file" ? e.target.files?.[0] : e.target.value,
     });
   };
 

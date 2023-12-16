@@ -26,9 +26,9 @@ const SignUp = () => {
     e.preventDefault();
 
     try {
-      const response = await server.post("/api/auth/signup", user);
-      router.push("/login");
-    } catch (err: any) {
+      await server.post("/api/auth/signup", user);
+      await router.push("/login");
+    } catch (err) {
       setError(!error);
     }
   };

@@ -13,7 +13,7 @@ const ImageCard = (data: ProjectItem) => {
     if (router.isReady) {
       setProjectName(router.query.project as string);
     }
-  }, [router.isReady]);
+  }, [router.isReady, router.query.project]);
 
   return (
     <article>

@@ -5,7 +5,7 @@ import server from "@/utils/server";
 import axios from "axios";
 import nookies from "nookies";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { type FormEvent, useState } from "react";
 import type { Project, User } from "@/types";
 import type { GetServerSidePropsContext } from "next";
 
@@ -21,7 +21,7 @@ const Index = ({
   const [typeName, setTypeName] = useState<string>("");
   const router = useRouter();
 
-  const handleCreateProject = async (e: React.FormEvent) => {
+  const handleCreateProject = async (e: FormEvent) => {
     e.preventDefault();
     const response = await axios.post("/api/create-project", {
       projectName,
@@ -184,7 +184,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     });
 
     const projectList: Project[] = projectListDataResponse.data.data.filter(
-      (project: { isDeleted: any }) => {
+      (project: { isDeleted: boolean }) => {
         return !project.isDeleted;
       },
     );

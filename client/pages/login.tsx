@@ -22,19 +22,19 @@ const Login = () => {
     });
   };
 
-  const handleSUbmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     try {
-      const response = await server.post("/api/auth/login", user);
+      const res = await server.post("/api/auth/login", user);
 
-      setCookie(null, "token", response.data.token, {
+      setCookie(null, "token", res.data.token, {
         maxAge: 30 * 24 * 60 * 60,
         path: "/",
       });
 
-      router.push("/");
-    } catch (err: any) {
+      await router.push("/");
+    } catch (err) {
       setError(!error);
     }
   };
@@ -60,7 +60,7 @@ const Login = () => {
         </div>
         <div className="flex flex-1 items-center justify-center">
           <form
-            onSubmit={handleSUbmit}
+            onSubmit={handleSubmit}
             className="flex w-full flex-col items-center gap-5 p-6 lg:w-96"
           >
             <div>
