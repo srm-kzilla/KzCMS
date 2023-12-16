@@ -148,7 +148,7 @@ export const handleCreateProjectData = async (
   slug: string,
   data: ProjectDataType,
   file: Express.Multer.File,
-  user: UserType,
+  userEmail: string,
 ) => {
   const projectsCollection = (await db()).collection('projects');
   const project = await projectsCollection.findOne({ projectSlug: slug });
@@ -192,7 +192,7 @@ export const handleCreateProjectData = async (
           description: data.description,
           link: data.link,
           imageURL: `${S3_BASE_URL}/${file.filename}`,
-          author: user.email,
+          author: userEmail,
         },
       },
     },
