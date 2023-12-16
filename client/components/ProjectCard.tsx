@@ -22,7 +22,7 @@ const ProjectCard = ({ projectData, redirectUrl }: { projectData: ProjectCardPro
         <h1 className="font-bold text-2xl">{projectData.projectName.toUpperCase()}</h1>
       </div>
       <div>
-        <h1 className="font-semibold text-xl">{projectData.data.length}</h1>
+        {/* <h1 className="font-semibold text-xl">{projectData.data.length}</h1> */}
         <h1 className="text-highlight">IMAGE(S)</h1>
       </div>
     </div>

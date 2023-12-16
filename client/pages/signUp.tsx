@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 import nookies from 'nookies';
 import Link from 'next/link';
 import { GetServerSidePropsContext } from 'next';
-
+import Head from 'next/head';
 
 const SignUp = () => {
   const [user, setUser] = useState({
@@ -34,61 +34,66 @@ const SignUp = () => {
   };
 
   return (
-    <div className="w-full min-h-screen bg-primary flex flex-col">
-      <div className="w-full h-[90px] flex gap-5 p-6 items-center">
-        <div>
-          <Image src="/srmkzilla-gradient-logo.svg" alt="/" width={40} height={40} />
-        </div>
-        <div>
-          <h1 className="font-bold text-2xl">KzCMS</h1>
-        </div>
-      </div>
-      <div className="flex-1 flex justify-center items-center">
-        <form onSubmit={handleSUbmit} className="flex w-full lg:w-96 flex-col p-6 gap-5 items-center">
+    <>
+      <Head>
+        <title>Signup</title>
+      </Head>
+      <div className="w-full min-h-screen bg-primary flex flex-col">
+        <div className="w-full h-[90px] flex gap-5 p-6 items-center">
           <div>
-            <h1 className="font-bold text-2xl text-highlight">SignUp</h1>
+            <Image src="/srmkzilla-gradient-logo.svg" alt="/" width={40} height={40} />
           </div>
-          <div className="w-full flex flex-col gap-2">
+          <div>
+            <h1 className="font-bold text-2xl">KzCMS</h1>
+          </div>
+        </div>
+        <div className="flex-1 flex justify-center items-center">
+          <form onSubmit={handleSUbmit} className="flex w-full lg:w-96 flex-col p-6 gap-5 items-center">
             <div>
-              <input
-                className="w-full px-4 py-4 rounded-xl outline-none bg-secondary"
-                type="email"
-                placeholder="user@gmail.com"
-                name="email"
-                onChange={handleChange}
-              />
+              <h1 className="font-bold text-2xl text-highlight">SignUp</h1>
             </div>
-            <div>
-              <input
-                className="w-full px-4 py-4 rounded-xl outline-none bg-secondary"
-                type="password"
-                placeholder="password"
-                name="password"
-                onChange={handleChange}
-              />
-            </div>
-            <div>
-              <button type="submit" className="rounded-lg bg-highlight text-xl font-medium w-full p-2">
-                SignUp
-              </button>
-            </div>
-            <div className="w-full flex justify-center">
-              <h1 className="text-card-gray">
-                Already a user?{' '}
-                <Link className="text-highlight" href={'/login'}>
-                  Login
-                </Link>
-              </h1>
-            </div>
-            {error && (
-              <div className="w-full flex justify-center">
-                <h1 className="text-red-500">Something went wrong</h1>
+            <div className="w-full flex flex-col gap-2">
+              <div>
+                <input
+                  className="w-full px-4 py-4 rounded-xl outline-none bg-secondary"
+                  type="email"
+                  placeholder="user@gmail.com"
+                  name="email"
+                  onChange={handleChange}
+                />
               </div>
-            )}
-          </div>
-        </form>
+              <div>
+                <input
+                  className="w-full px-4 py-4 rounded-xl outline-none bg-secondary"
+                  type="password"
+                  placeholder="password"
+                  name="password"
+                  onChange={handleChange}
+                />
+              </div>
+              <div>
+                <button type="submit" className="rounded-lg bg-highlight text-xl font-medium w-full p-2">
+                  SignUp
+                </button>
+              </div>
+              <div className="w-full flex justify-center">
+                <h1 className="text-card-gray">
+                  Already a user?{' '}
+                  <Link className="text-highlight" href={'/login'}>
+                    Login
+                  </Link>
+                </h1>
+              </div>
+              {error && (
+                <div className="w-full flex justify-center">
+                  <h1 className="text-red-500">Something went wrong</h1>
+                </div>
+              )}
+            </div>
+          </form>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

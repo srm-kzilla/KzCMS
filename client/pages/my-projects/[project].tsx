@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import nookies from 'nookies';
 import UserDataType from '@/interfaces/userDataType';
 import server from '@/utils/server';
-import ProjectDataType from '@/interfaces/ProjectDataType';
+import ProjectDataType from '@/interfaces/projectDataType';
 import { AxiosResponse } from 'axios';
 import { GetServerSidePropsContext } from 'next';
 import { useState } from 'react';
@@ -12,6 +12,7 @@ import AddCircleLineIcon from 'remixicon-react/AddCircleLineIcon';
 import CloseCircleLineIcon from 'remixicon-react/CloseCircleLineIcon';
 import 'react-toastify/dist/ReactToastify.css';
 import EditData from '@/components/EditData';
+import Head from 'next/head';
 
 export default function Project({ user, projectData }: { user: UserDataType; projectData: ProjectDataType[] }) {
   const router = useRouter();
@@ -26,7 +27,10 @@ export default function Project({ user, projectData }: { user: UserDataType; pro
   };
 
   return (
-    <div>
+    <>
+      <Head>
+        <title>{router.query.project?.toString().toUpperCase()}</title>
+      </Head>
       <Layout user={user}>
         <div className="w-full h-full flex flex-col gap-10">
           <div className="w-full h-fit">
@@ -57,7 +61,7 @@ export default function Project({ user, projectData }: { user: UserDataType; pro
           </div>
         </div>
       </Layout>
-    </div>
+    </>
   );
 }
 
