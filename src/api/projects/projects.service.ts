@@ -30,7 +30,7 @@ const S3_BASE_URL = `https://${config.AWS.bucketName}.s3.${config.AWS.region}.am
 const removeFileAfterUse = async (path: fs.PathLike) => {
   try {
     const unlinkFile = promisify(fs.unlink);
-    await unlinkFile(path);
+    await unlinkFile(`./tmp/uploads/${path}`);
   } catch {
     throw {
       statusCode: ERRORS.SERVER_ERROR.code,
@@ -160,7 +160,9 @@ export const handleCreateProjectData = async (slug: string, data: ProjectDataCre
 
   const projectDataCollection = (await db()).collection<ProjectDataType>('project_data');
   const projectData = await projectDataCollection.findOne({
-    slug,
+    projectSlug: slug,
+    title: data.title,
+    isDeleted: false,
   });
 
   if (projectData && projectData.title === data.title) {
@@ -243,34 +245,31 @@ export const handleDeleteProjectData = async (slug: string, title: string) => {
 
 export const handleUpdateProjectImage = async (data: ProjectImageSlugType, file: Express.Multer.File) => {
   try {
-    const projectsCollection = (await db()).collection('projects');
-    const project = await projectsCollection.findOne({ projectSlug: data.slug });
+    const projectDataCollection = (await db()).collection<ProjectDataType>('project_data');
 
-    if (!project) {
-      throw { statusCode: ERRORS.RESOURCE_NOT_FOUND.code, message: ERRORS.RESOURCE_NOT_FOUND.message.error };
-    }
-
-    const projectData = project.data.find((d: { title: string }) => d.title === data.title);
+    const projectData = await projectDataCollection.findOne({ projectSlug: data.slug, title: data.title });
 
     if (!projectData) {
       throw { statusCode: ERRORS.RESOURCE_NOT_FOUND.code, message: ERRORS.RESOURCE_NOT_FOUND.message.error };
     }
 
-    const key = projectData.imageURL.match(LINK_REGEX_PATTERN);
+    if (projectData.imageURL) {
+      const key = projectData.imageURL.match(LINK_REGEX_PATTERN);
 
-    if (!key) {
-      throw {
-        statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
-        message: ERRORS.RESOURCE_NOT_FOUND.message.error,
-      };
+      if (!key) {
+        throw {
+          statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
+          message: ERRORS.RESOURCE_NOT_FOUND.message.error,
+        };
+      }
+
+      await s3Client.send(
+        new DeleteObjectCommand({
+          Bucket: config.AWS.bucketName,
+          Key: key[1],
+        }),
+      );
     }
-
-    await s3Client.send(
-      new DeleteObjectCommand({
-        Bucket: config.AWS.bucketName,
-        Key: key[1],
-      }),
-    );
 
     const uploadResult = await s3Client.send(
       new PutObjectCommand({
@@ -286,14 +285,21 @@ export const handleUpdateProjectImage = async (data: ProjectImageSlugType, file:
       throw { statusCode: ERRORS.MALFORMED_BODY.code, message: ERRORS.MALFORMED_BODY.message.error };
     }
 
-    const filter = { 'data.title': data.title };
-    const update = {
-      $set: {
-        'data.$.imageURL': `${S3_BASE_URL}/${file.filename}`,
+    const result = await projectDataCollection.updateOne(
+      { projectSlug: data.slug, title: data.title },
+      {
+        $set: {
+          imageURL: `${S3_BASE_URL}/${file.filename}`,
+        },
       },
-    };
+    );
 
-    await projectsCollection.updateOne(filter, update);
+    if (result.matchedCount === 0 || result.modifiedCount === 0) {
+      throw {
+        statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
+        message: ERRORS.RESOURCE_NOT_FOUND.message.error,
+      };
+    }
   } finally {
     await removeFileAfterUse(file.filename);
   }

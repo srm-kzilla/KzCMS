@@ -5,6 +5,7 @@ import {
   CreateProjectSchema,
   ProjectDataCreateSchema,
   ProjectDataUpdateSchema,
+  ProjectImageSlugSchema,
   ProjectMetadataSchema,
   ProjectSlugSchema,
 } from '@/shared/types';
@@ -42,7 +43,13 @@ export default (): Router => {
     validateRequest('body', ProjectDataUpdateSchema),
     updateProjectData,
   );
-  app.patch('/:slug/:title/image', authenticateToken(), upload.single('image'), updateProjectImage);
+  app.patch(
+    '/:slug/:title/image',
+    validateRequest('params', ProjectImageSlugSchema),
+    authenticateToken(),
+    upload.single('image'),
+    updateProjectImage,
+  );
   app.post('/', authenticateToken({ verifyAdmin: true }), validateRequest('body', CreateProjectSchema), createProject);
   app.post(
     '/:slug',
