@@ -1,13 +1,12 @@
 import Layout from '@/components/Layout';
 import UserCard from '@/components/UserCard';
-import UserDataType from '@/interfaces/userDataType';
 import server from '@/utils/server';
 import axios from 'axios';
-import { GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/router';
 import nookies from 'nookies';
-import React from 'react';
 import Head from 'next/head';
+import UserDataType from '@/interfaces/userDataType';
+import type { GetServerSidePropsContext } from 'next';
 
 const manageUsers = ({ user, userList }: { user: UserDataType; userList: UserDataType[] }) => {
   const router = useRouter();

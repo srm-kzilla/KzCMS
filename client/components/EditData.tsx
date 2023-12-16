@@ -1,8 +1,8 @@
 import server from '@/utils/server';
 import { useRouter } from 'next/router';
 import { parseCookies } from 'nookies';
-import { useState } from 'react';
-import { ToastContainer, toast } from 'react-toastify';
+import React, { useState } from 'react';
+import { toast } from 'react-toastify';
 
 export default function EditData({
   addAssetState,
@@ -39,7 +39,7 @@ export default function EditData({
     formData.append('link', data.link);
 
     try {
-      const response = await server.post(`/api/projects/${router.query.project}`, formData, {
+      await server.post(`/api/projects/${router.query.project}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           Authorization: `Bearer ${token}`,
@@ -48,7 +48,7 @@ export default function EditData({
 
       setAddAssetState(false);
       toast.success("Data Uploaded Successfully!");
-    } catch (err: any) {
+    } catch (err) {
       setError(true);
       console.log(err);
     }

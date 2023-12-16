@@ -86,7 +86,7 @@ const Login = () => {
               <div className="w-full flex justify-center">
                 <h1 className="text-card-gray">
                   Not a user?{' '}
-                  <Link className="text-highlight" href={'/signUp'}>
+                  <Link className="text-highlight" href='/sign-up'>
                     Sign Up
                   </Link>
                 </h1>

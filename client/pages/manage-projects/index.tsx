@@ -1,14 +1,14 @@
 import Layout from '@/components/Layout';
-import React, { useState } from 'react';
-import nookies from 'nookies';
-import UserDataType from '@/interfaces/userDataType';
-import server from '@/utils/server';
-import { GetServerSidePropsContext } from 'next';
-import ProjectListDataType from '@/interfaces/projectListDataType';
 import ProjectCard from '@/components/ProjectCard';
+import { useState } from 'react';
+import nookies from 'nookies';
+import server from '@/utils/server';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
+import UserDataType from '@/interfaces/userDataType';
+import ProjectListDataType from '@/interfaces/projectListDataType';
+import type { GetServerSidePropsContext } from 'next';
 
 const Index = ({ user, projectList }: { user: UserDataType; projectList: ProjectListDataType[] }) => {
   const [addProjectModal, setAddProjectModal] = useState<boolean>(false);

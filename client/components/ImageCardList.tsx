@@ -1,4 +1,3 @@
-import React from 'react';
 import ImageCard from '@/components/ImageCard';
 import ProjectDataType from '@/interfaces/ProjectDataType';
 

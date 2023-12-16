@@ -1,12 +1,11 @@
 import Layout from '@/components/Layout';
-import React from 'react';
+import ProjectCard from '@/components/ProjectCard';
 import nookies from 'nookies';
 import server from '@/utils/server';
-import UserDataType from '@/interfaces/userDataType';
-import ProjectCard from '@/components/ProjectCard';
-import { GetServerSidePropsContext } from 'next';
-import ProjectListDataType from '@/interfaces/projectListDataType';
 import Head from 'next/head';
+import UserDataType from '@/interfaces/userDataType';
+import ProjectListDataType from '@/interfaces/projectListDataType';
+import type { GetServerSidePropsContext } from 'next';
 
 export default function Home({ user, projectList }: { user: UserDataType; projectList: ProjectListDataType[] }) {
   return (

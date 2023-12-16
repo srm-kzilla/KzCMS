@@ -1,6 +1,5 @@
 import ProjectDataType from '@/interfaces/projectDataType';
 import { useRouter } from 'next/router';
-import React from 'react';
 
 interface ProjectCardProps {
   _id: string;

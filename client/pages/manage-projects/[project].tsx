@@ -1,8 +1,6 @@
 import Layout from '@/components/Layout';
-import UserDataType from '@/interfaces/userDataType';
-import { GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/router';
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import nookies from 'nookies';
 import server from '@/utils/server';
 import DeleteIcon from 'remixicon-react/DeleteBin7LineIcon';
@@ -10,6 +8,8 @@ import ProjectListDataType from '@/interfaces/projectListDataType';
 import Select from 'react-select';
 import axios from 'axios';
 import Head from 'next/head';
+import UserDataType from '@/interfaces/userDataType';
+import type { GetServerSidePropsContext } from 'next';
 
 interface userListDataType {
   createdAt: string;

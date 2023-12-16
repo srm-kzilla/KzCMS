@@ -1,27 +1,27 @@
 import ImageCardList from '@/components/ImageCardList';
 import Layout from '@/components/Layout';
+import EditData from '@/components/EditData';
 import { useRouter } from 'next/router';
-import nookies from 'nookies';
-import UserDataType from '@/interfaces/userDataType';
 import server from '@/utils/server';
-import ProjectDataType from '@/interfaces/projectDataType';
-import { AxiosResponse } from 'axios';
-import { GetServerSidePropsContext } from 'next';
+import nookies from 'nookies';
 import { useState } from 'react';
+import Head from 'next/head';
+import type { AxiosResponse } from 'axios';
 import AddCircleLineIcon from 'remixicon-react/AddCircleLineIcon';
 import CloseCircleLineIcon from 'remixicon-react/CloseCircleLineIcon';
+import ProjectDataType from '@/interfaces/projectDataType';
+import UserDataType from '@/interfaces/userDataType';
+import type { GetServerSidePropsContext } from 'next';
 import 'react-toastify/dist/ReactToastify.css';
-import EditData from '@/components/EditData';
-import Head from 'next/head';
 
 export default function Project({ user, projectData }: { user: UserDataType; projectData: ProjectDataType[] }) {
   const router = useRouter();
   const [addAssetState, setAddAssetState] = useState(false);
 
   const handleAddAsset = () => {
-    if (addAssetState === false) {
+    if (!addAssetState) {
       setAddAssetState(true);
-    } else if (addAssetState === true) {
+    } else if (addAssetState) {
       setAddAssetState(false);
     }
   };
