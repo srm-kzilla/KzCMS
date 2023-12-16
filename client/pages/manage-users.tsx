@@ -38,6 +38,8 @@ const manageUsers = ({ user, userList }: { user: UserDataType; userList: UserDat
     }
   };
 
+  const filteredUserList = userList.filter(list => list.email !== user.email);
+
   return (
     <div className="w-full flex min-h-screen h-fit">
       <Head>
@@ -49,7 +51,7 @@ const manageUsers = ({ user, userList }: { user: UserDataType; userList: UserDat
             <h1 className="font-bold text-2xl lg:text-4xl">MANAGE USERS</h1>
           </div>
           <div className="w-full flex flex-col md:flex md:flex-row md:flex-wrap gap-5">
-            {userList.map((user, key) => {
+            {filteredUserList.map((user, key) => {
               return (
                 <div key={key}>
                   <UserCard
@@ -82,22 +84,32 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     };
   }
 
-  const userResponse = await server.get('/api/users/user', {
-    headers: {
-      Authorization: `Bearer ${cookies.token}`,
-    },
-  });
+  try {
+    const userResponse = await server.get('/api/users/user', {
+      headers: {
+        Authorization: `Bearer ${cookies.token}`,
+      },
+    });
 
-  const userListResponse = await server.get('/api/users', {
-    headers: {
-      Authorization: `Bearer ${cookies.token}`,
-    },
-  });
+    const userListResponse = await server.get('/api/users', {
+      headers: {
+        Authorization: `Bearer ${cookies.token}`,
+      },
+    });
 
-  return {
-    props: {
-      user: userResponse.data.data as UserDataType,
-      userList: userListResponse.data.data as UserDataType[],
-    },
-  };
+    return {
+      props: {
+        user: userResponse.data.data as UserDataType,
+        userList: userListResponse.data.data as UserDataType[],
+      },
+    };
+  } catch (err) {
+    nookies.destroy(ctx, 'token');
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false,
+      },
+    };
+  }
 };

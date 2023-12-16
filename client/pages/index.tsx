@@ -46,24 +46,34 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     };
   }
 
-  const userResponse = await server.get('/api/users/user', {
-    headers: {
-      Authorization: `Bearer ${cookies.token}`,
-    },
-  });
+  try {
+    const userResponse = await server.get('/api/users/user', {
+      headers: {
+        Authorization: `Bearer ${cookies.token}`,
+      },
+    });
 
-  const user: UserDataType = userResponse.data.data;
+    const user: UserDataType = userResponse.data.data;
 
-  const projectListDataResponse = await server.get('/api/users/user/projects', {
-    headers: {
-      Authorization: `Bearer ${cookies.token}`,
-    },
-  });
+    const projectListDataResponse = await server.get('/api/users/user/projects', {
+      headers: {
+        Authorization: `Bearer ${cookies.token}`,
+      },
+    });
 
-  return {
-    props: {
-      user,
-      projectList: projectListDataResponse.data.projects,
-    },
-  };
+    return {
+      props: {
+        user,
+        projectList: projectListDataResponse.data.projects,
+      },
+    };
+  } catch (err) {
+    nookies.destroy(ctx, 'token');
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false,
+      },
+    };
+  }
 };
