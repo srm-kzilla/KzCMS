@@ -72,8 +72,11 @@ export const updateProjectData = async (
   next: NextFunction,
 ): Promise<void> => {
   try {
-    const data = await handleUpdateProjectData(req.params.slug, req.body);
-    res.status(STATUS.OK).json(data);
+    await handleUpdateProjectData(req.params.slug, req.body);
+    res.status(STATUS.OK).json({
+      success: true,
+      message: MESSAGES_TEXT.UPDATED_PROJECT_DATA,
+    });
   } catch (error) {
     next(error);
   }

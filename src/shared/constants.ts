@@ -23,6 +23,7 @@ export const MESSAGES_TEXT = {
   UPDATE_PROJECT_METADATA: 'Project Updated Successfully',
   DELETE_PROJECT: 'Project Deleted Successfully',
   DELETE_PROJECT_DATA: 'Project Data Deleted Successfully',
+  UPDATED_PROJECT_DATA: 'Project Data Updated Successfully',
   GET_TOKENS: 'Tokens Fetched Successfully',
   CREATE_TOKEN: 'Token Created Successfully',
   TOKEN_WITH_SAME_NAME_EXISTS: 'Token with same name already exists',

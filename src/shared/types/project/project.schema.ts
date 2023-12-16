@@ -38,7 +38,6 @@ export const ProjectDataUpdateSchema = ProjectDataSchema.pick({
   title: true,
   description: true,
   link: true,
-  author: true,
   subType: true,
 }).extend({
   newTitle: z.string().optional(),

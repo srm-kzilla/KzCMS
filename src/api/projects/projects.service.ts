@@ -67,35 +67,42 @@ export const handleCreateProject = async ({ projectName, typeName }: CreateProje
 };
 
 export const handleUpdateProjectData = async (slug: string, data: ProjectDataUpdateType) => {
-  const projectsCollection = (await db()).collection('projects');
-  const project = await projectsCollection.findOne({ projectSlug: slug, 'data.title': data.title });
-  if (!project) {
+  const projectDataCollection = (await db()).collection<ProjectDataType>('project_data');
+  const projectData = await projectDataCollection.findOne({ projectSlug: slug, title: data.title });
+
+  if (!projectData) {
     throw {
       statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
       message: ERRORS.RESOURCE_NOT_FOUND.message.error,
       data,
     };
   }
-  const filter = { _id: new ObjectId(project._id), 'data.title': data.title };
 
   if (!data.newTitle) {
     data.newTitle = data.title;
   }
-  const update = {
-    $set: {
-      'data.$.title': data.newTitle,
-      'data.$.description': data.description,
-      'data.$.link': data.link,
-      'data.$.author': data.author,
+
+  const updatedProject = await projectDataCollection.updateOne(
+    {
+      projectSlug: slug,
+      title: data.title,
     },
-  };
+    {
+      $set: {
+        title: data.newTitle,
+        description: data.description,
+        link: data.link,
+        subType: data.subType,
+      },
+    },
+  );
 
-  const updatedProject = await projectsCollection.findOneAndUpdate(filter, update, {
-    returnDocument: 'after',
-    projection: { _id: 0 },
-  });
-
-  return { updatedProject: updatedProject.value } as unknown as ProjectDataType;
+  if (updatedProject.matchedCount === 0 || updatedProject.modifiedCount === 0) {
+    throw {
+      statusCode: ERRORS.DATA_OPERATION_FAILURE.code,
+      message: ERRORS.DATA_OPERATION_FAILURE.message.error,
+    };
+  }
 };
 
 export const handleUpdateProjectMetadata = async (slug: string, newName: string, newSlug: string) => {
