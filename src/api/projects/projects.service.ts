@@ -13,7 +13,6 @@ import {
 } from '@/shared/types';
 import { DeleteObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import fs from 'fs';
-import { ObjectId } from 'mongodb';
 import slugify from 'slugify';
 import { promisify } from 'util';
 
@@ -126,26 +125,58 @@ export const handleUpdateProjectMetadata = async (slug: string, newName: string,
 };
 
 export const handleGetAllProjects = async () => {
-  const projects = await (await db()).collection('projects').find().toArray();
-  const modifiedProjects = projects.map(project => {
-    const { _id, ...rest } = project;
-    return { id: _id, ...rest };
-  });
-  return modifiedProjects as unknown as ProjectDataType[];
+  const dbInstance = await db();
+  const projectsCollection = dbInstance.collection<ProjectType>('projects');
+
+  const projects = await projectsCollection
+    .aggregate([
+      { $match: { isDeleted: false } },
+      {
+        $lookup: {
+          from: 'project_data',
+          localField: 'projectSlug',
+          foreignField: 'projectSlug',
+          as: 'data',
+        },
+      },
+      {
+        $addFields: {
+          data: {
+            $filter: {
+              input: '$data',
+              as: 'item',
+              cond: { $eq: ['$$item.isDeleted', false] },
+            },
+          },
+        },
+      },
+      { $project: { isDeleted: 0, data: { isDeleted: 0 } } },
+    ])
+    .toArray();
+
+  return projects;
 };
 
 export const handleGetProject = async (projectSlug: string, user: UserType) => {
-  const projectsCollection = (await db()).collection('projects');
-  const project = (await projectsCollection.findOne({ projectSlug })) as unknown as ProjectType | null;
+  const dbInstance = await db();
+  const projectsCollection = dbInstance.collection<ProjectType>('projects');
+  const projectsDataCollection = dbInstance.collection<ProjectDataType>('project_data');
+
+  const project = await projectsCollection.findOne({ projectSlug, isDeleted: false });
+
   if (!project) {
-    throw { errorCode: ERRORS.RESOURCE_NOT_FOUND.code, message: ERRORS.RESOURCE_NOT_FOUND.message.error };
+    throw { statusCode: ERRORS.RESOURCE_NOT_FOUND.code, message: ERRORS.RESOURCE_NOT_FOUND.message.error };
   }
 
-  if (!user.isAdmin && !project.userAccess.includes(user.email)) {
-    throw { errorCode: ERRORS.UNAUTHORIZED.code, message: ERRORS.UNAUTHORIZED.message.error };
+  if (project.userAccess.length > 0 && !project.userAccess.includes(user.email)) {
+    throw { statusCode: ERRORS.UNAUTHORIZED.code, message: ERRORS.UNAUTHORIZED.message.error };
   }
 
-  return project.data as unknown as ProjectDataType;
+  const projectData = await projectsDataCollection
+    .find({ projectSlug, isDeleted: false }, { projection: { isDeleted: 0 } })
+    .toArray();
+
+  return projectData;
 };
 
 export const handleDeleteProject = async (slug: string) => {
@@ -201,10 +232,7 @@ export const handleCreateProjectData = async (slug: string, data: ProjectDataCre
     throw { statusCode: ERRORS.MALFORMED_BODY.code, message: ERRORS.MALFORMED_BODY.message.error };
   }
 
-  const _id = new ObjectId();
-
-  await projectDataCollection.insertOne({
-    _id,
+  const result = await projectDataCollection.insertOne({
     projectSlug: slug,
     title: data.title,
     description: data.description,
@@ -214,16 +242,7 @@ export const handleCreateProjectData = async (slug: string, data: ProjectDataCre
     isDeleted: false,
   });
 
-  const result = await projectCollection.updateOne(
-    { projectSlug: slug },
-    {
-      $push: {
-        data: _id.toString(),
-      },
-    },
-  );
-
-  if (result.matchedCount !== 1 || result.modifiedCount !== 1) {
+  if (result.acknowledged !== true) {
     throw {
       statusCode: ERRORS.DATA_OPERATION_FAILURE.code,
       message: ERRORS.DATA_OPERATION_FAILURE.message.error,
