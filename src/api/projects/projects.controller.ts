@@ -5,7 +5,6 @@ import {
   ProjectDataType,
   ProjectDataUpdateType,
   ProjectImageSlugType,
-  ProjectMetadataType,
   ProjectSlugType,
   ProjectTitleType,
 } from '@/shared/types';
@@ -19,7 +18,6 @@ import {
   handleGetProject,
   handleUpdateProjectData,
   handleUpdateProjectImage,
-  handleUpdateProjectMetadata,
 } from './projects.service';
 
 export const getAllProjects = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -98,22 +96,6 @@ export const updateProjectImage = async (
     res.status(STATUS.OK).json({
       success: true,
       message: MESSAGES_TEXT.IMAGE_UPDATED,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
-export const updateProjectMetadata = async (
-  req: Request<ProjectSlugType, unknown, ProjectMetadataType>,
-  res: Response,
-  next: NextFunction,
-): Promise<void> => {
-  try {
-    await handleUpdateProjectMetadata(req.params.slug, req.body.newName, req.body.newSlug);
-    res.status(STATUS.OK).json({
-      success: true,
-      message: MESSAGES_TEXT.UPDATE_PROJECT_METADATA,
     });
   } catch (error) {
     next(error);

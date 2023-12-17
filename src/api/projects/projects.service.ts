@@ -103,26 +103,6 @@ export const handleUpdateProjectData = async (slug: string, data: ProjectDataUpd
   }
 };
 
-export const handleUpdateProjectMetadata = async (slug: string, newName: string, newSlug: string) => {
-  const projectsCollection = (await db()).collection<ProjectType>('projects');
-  const project = await projectsCollection.findOne({ projectSlug: slug, isDeleted: false });
-
-  if (!project) {
-    throw { errorCode: ERRORS.RESOURCE_NOT_FOUND.code, message: ERRORS.RESOURCE_NOT_FOUND.message.error };
-  }
-
-  if (!newSlug) {
-    newSlug = project.projectSlug;
-  }
-
-  const slugfiedSlug = slugify(`${newSlug}`, { lower: true, replacement: '-', trim: true });
-
-  await projectsCollection.updateOne(
-    { projectSlug: slug },
-    { $set: { projectName: newName, projectSlug: slugfiedSlug } },
-  );
-};
-
 export const handleGetAllProjects = async () => {
   const dbInstance = await db();
   const projectsCollection = dbInstance.collection<ProjectType>('projects');
