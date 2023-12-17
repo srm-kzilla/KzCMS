@@ -7,12 +7,12 @@ import {
   ProjectDataCreateType,
   ProjectDataType,
   ProjectDataUpdateType,
-  ProjectImageSlugType,
   ProjectType,
   UserType,
 } from '@/shared/types';
 import { DeleteObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import fs from 'fs';
+import { ObjectId } from 'mongodb';
 import slugify from 'slugify';
 import { promisify } from 'util';
 
@@ -64,9 +64,10 @@ export const handleCreateProject = async ({ projectName, typeName }: CreateProje
   return slug;
 };
 
-export const handleUpdateProjectData = async (slug: string, data: ProjectDataUpdateType) => {
+export const handleUpdateProjectData = async (id: string, data: ProjectDataUpdateType) => {
   const projectDataCollection = (await db()).collection<ProjectDataType>('project_data');
-  const projectData = await projectDataCollection.findOne({ projectSlug: slug, title: data.title, isDeleted: false });
+  const projectDataId = new ObjectId(id);
+  const projectData = await projectDataCollection.findOne({ _id: projectDataId, isDeleted: false });
 
   if (!projectData) {
     throw {
@@ -76,18 +77,13 @@ export const handleUpdateProjectData = async (slug: string, data: ProjectDataUpd
     };
   }
 
-  if (!data.newTitle) {
-    data.newTitle = data.title;
-  }
-
   const updatedProject = await projectDataCollection.updateOne(
     {
-      projectSlug: slug,
-      title: data.title,
+      _id: projectDataId,
     },
     {
       $set: {
-        title: data.newTitle,
+        title: data.title,
         description: data.description,
         link: data.link,
         subType: data.subType,
@@ -95,7 +91,7 @@ export const handleUpdateProjectData = async (slug: string, data: ProjectDataUpd
     },
   );
 
-  if (updatedProject.matchedCount === 0 || updatedProject.modifiedCount === 0) {
+  if (updatedProject.matchedCount !== 1 || updatedProject.modifiedCount !== 1) {
     throw {
       statusCode: ERRORS.DATA_OPERATION_FAILURE.code,
       message: ERRORS.DATA_OPERATION_FAILURE.message.error,
@@ -263,13 +259,14 @@ export const handleDeleteProjectData = async (slug: string, title: string) => {
   }
 };
 
-export const handleUpdateProjectImage = async (data: ProjectImageSlugType, file: Express.Multer.File) => {
+export const handleUpdateProjectImage = async (id: string, file: Express.Multer.File) => {
   try {
     const projectDataCollection = (await db()).collection<ProjectDataType>('project_data');
 
+    const projectDataId = new ObjectId(id);
+
     const projectData = await projectDataCollection.findOne({
-      projectSlug: data.slug,
-      title: data.title,
+      _id: projectDataId,
       isDeleted: false,
     });
 
@@ -310,7 +307,7 @@ export const handleUpdateProjectImage = async (data: ProjectImageSlugType, file:
     }
 
     const result = await projectDataCollection.updateOne(
-      { projectSlug: data.slug, title: data.title },
+      { _id: projectDataId, isDeleted: false },
       {
         $set: {
           imageURL: `${S3_BASE_URL}/${file.filename}`,

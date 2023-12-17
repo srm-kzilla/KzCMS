@@ -4,9 +4,8 @@ import { validateRequest } from '@/shared/middlewares/validator';
 import {
   CreateProjectSchema,
   ProjectDataCreateSchema,
+  ProjectDataIdSchema,
   ProjectDataUpdateSchema,
-  ProjectImageSlugSchema,
-  ProjectMetadataSchema,
   ProjectSlugSchema,
 } from '@/shared/types';
 import { Router } from 'express';
@@ -19,7 +18,6 @@ import {
   getProject,
   updateProjectData,
   updateProjectImage,
-  updateProjectMetadata,
 } from './projects.controller';
 
 export default (): Router => {
@@ -29,15 +27,15 @@ export default (): Router => {
   app.get('/:slug', authenticateToken(), validateRequest('params', ProjectSlugSchema), getProject);
 
   app.patch(
-    '/:slug/data',
+    '/:projectDataId/data',
     authenticateToken(),
-    validateRequest('params', ProjectSlugSchema),
+    validateRequest('params', ProjectDataIdSchema),
     validateRequest('body', ProjectDataUpdateSchema),
     updateProjectData,
   );
   app.patch(
-    '/:slug/:title/image',
-    validateRequest('params', ProjectImageSlugSchema),
+    '/:projectDataId/image',
+    validateRequest('params', ProjectDataIdSchema),
     authenticateToken(),
     upload.single('image'),
     updateProjectImage,

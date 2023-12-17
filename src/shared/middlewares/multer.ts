@@ -15,10 +15,10 @@ export const upload = multer({
     },
     filename: function (req, _file, cb) {
       const uniqueSuffix = Date.now() + '-' + Math.round(Math.random());
-      if (!req.params.slug) {
-        cb(new Error('No Slug found'), `NoSlugFound-${uniqueSuffix}`);
+      if (!req.params.projectDataId) {
+        cb(new Error('No Id found'), `NoIdFound-${uniqueSuffix}`);
       }
-      const fileName = `${req.params.slug.toLowerCase()}-${uniqueSuffix.toLowerCase()}`;
+      const fileName = `${req.params.projectDataId.toLowerCase()}-${uniqueSuffix.toLowerCase()}`;
       cb(null, fileName);
     },
   }),

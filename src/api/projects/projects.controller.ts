@@ -2,9 +2,9 @@ import { MESSAGES_TEXT, STATUS } from '@/shared/constants';
 import { ERRORS } from '@/shared/errors';
 import {
   CreateProjectType,
+  ProjectDataIdType,
   ProjectDataType,
   ProjectDataUpdateType,
-  ProjectImageSlugType,
   ProjectSlugType,
   ProjectTitleType,
 } from '@/shared/types';
@@ -65,12 +65,12 @@ export const createProject = async (
 };
 
 export const updateProjectData = async (
-  req: Request<ProjectSlugType, unknown, ProjectDataUpdateType>,
+  req: Request<ProjectDataIdType, unknown, ProjectDataUpdateType>,
   res: Response,
   next: NextFunction,
 ): Promise<void> => {
   try {
-    await handleUpdateProjectData(req.params.slug, req.body);
+    await handleUpdateProjectData(req.params.projectDataId, req.body);
     res.status(STATUS.OK).json({
       success: true,
       message: MESSAGES_TEXT.UPDATED_PROJECT_DATA,
@@ -81,7 +81,7 @@ export const updateProjectData = async (
 };
 
 export const updateProjectImage = async (
-  req: Request<ProjectImageSlugType, unknown, ProjectDataType> & {
+  req: Request<ProjectDataIdType, unknown, ProjectDataType> & {
     file: Express.Multer.File;
   },
   res: Response,
@@ -92,7 +92,7 @@ export const updateProjectImage = async (
       throw { statusCode: ERRORS.MALFORMED_BODY.code, message: ERRORS.MALFORMED_BODY.message.error };
     }
 
-    await handleUpdateProjectImage(req.params, req.file);
+    await handleUpdateProjectImage(req.params.projectDataId, req.file);
     res.status(STATUS.OK).json({
       success: true,
       message: MESSAGES_TEXT.IMAGE_UPDATED,

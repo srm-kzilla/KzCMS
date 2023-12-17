@@ -38,26 +38,18 @@ export const ProjectDataUpdateSchema = ProjectDataSchema.pick({
   description: true,
   link: true,
   subType: true,
-}).extend({
-  newTitle: z.string().optional(),
 });
 
 export const ProjectIdSchema = z.object({
-  id: z.string(),
+  projectId: z.string(),
 });
 
 export const ProjectSlugSchema = z.object({
   slug: z.string(),
 });
 
-export const ProjectImageSlugSchema = z.object({
-  slug: z.string(),
-  title: z.string(),
-});
-
-export const ProjectMetadataSchema = z.object({
-  newName: z.string(),
-  newSlug: z.string(),
+export const ProjectDataIdSchema = z.object({
+  projectDataId: z.string(),
 });
 
 export const ProjectTitleSchema = z.object({
@@ -67,10 +59,9 @@ export const ProjectTitleSchema = z.object({
 export type CreateProjectType = z.infer<typeof CreateProjectSchema>;
 export type ProjectType = z.infer<typeof ProjectSchema>;
 export type ProjectDataType = z.infer<typeof ProjectDataSchema>;
-export type ProjectMetadataType = z.infer<typeof ProjectMetadataSchema>;
 export type ProjectSlugType = z.infer<typeof ProjectSlugSchema>;
-export type ProjectImageSlugType = z.infer<typeof ProjectImageSlugSchema>;
 export type ProjectTitleType = z.infer<typeof ProjectTitleSchema>;
 export type ProjectIdType = z.infer<typeof ProjectIdSchema>;
 export type ProjectDataUpdateType = z.infer<typeof ProjectDataUpdateSchema>;
 export type ProjectDataCreateType = z.infer<typeof ProjectDataCreateSchema>;
+export type ProjectDataIdType = z.infer<typeof ProjectDataIdSchema>;
