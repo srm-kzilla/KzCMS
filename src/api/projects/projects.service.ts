@@ -144,7 +144,12 @@ export const handleDeleteProject = async (slug: string) => {
   }
 };
 
-export const handleCreateProjectData = async (slug: string, data: ProjectDataType, file: Express.Multer.File) => {
+export const handleCreateProjectData = async (
+  slug: string,
+  data: ProjectDataType,
+  file: Express.Multer.File,
+  userEmail: string,
+) => {
   const projectsCollection = (await db()).collection('projects');
   const project = await projectsCollection.findOne({ projectSlug: slug });
 
@@ -187,7 +192,7 @@ export const handleCreateProjectData = async (slug: string, data: ProjectDataTyp
           description: data.description,
           link: data.link,
           imageURL: `${S3_BASE_URL}/${file.filename}`,
-          author: data.author,
+          author: userEmail,
         },
       },
     },
