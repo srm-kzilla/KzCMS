@@ -46,6 +46,13 @@ export default function EditData({
       return;
     }
 
+    // @ts-ignore - this is to ignore the type error for name
+    if (!data.image.name.match(/\.(jpg|jpeg|png|gif)$/)) {
+      setError(true);
+      toast.error("Invalid Image!");
+      return;
+    }
+
     const formData = new FormData();
     formData.append("title", data.title);
     formData.append("description", data.description);
