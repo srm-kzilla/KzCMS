@@ -73,6 +73,14 @@ export default function EditData({
                 required
               />
               <input
+                className="h-20 w-full rounded-xl bg-secondary px-5 py-4 outline-none"
+                type="text"
+                placeholder="Description"
+                name="description"
+                onChange={handleChange}
+                required
+              />
+              <input
                 className="w-full cursor-pointer rounded-xl bg-secondary pr-5 text-gray-400 file:py-4 focus:outline-none"
                 type="file"
                 name="image"
