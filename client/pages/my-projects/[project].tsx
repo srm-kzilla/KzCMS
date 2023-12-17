@@ -6,7 +6,6 @@ import server from "@/utils/server";
 import nookies from "nookies";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import "react-toastify/dist/ReactToastify.css";
 import AddCircleLineIcon from "remixicon-react/AddCircleLineIcon";
 import CloseCircleLineIcon from "remixicon-react/CloseCircleLineIcon";
 import type { AxiosResponse } from "axios";
