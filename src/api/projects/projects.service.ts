@@ -246,26 +246,9 @@ export const handleCreateProjectData = async (
     isDeleted: false,
     author: userEmail,
   });
-};
-
-export const handleDeleteProjectData = async (slug: string, title: string) => {
-  const projectsCollection = (await db()).collection('projects');
-  const project = await projectsCollection.findOne<ProjectType>({ projectSlug: slug });
-
-  if (!project) {
-    throw {
-      statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
-      message: ERRORS.RESOURCE_NOT_FOUND.message.error,
-    };
-  }
-
-  const data = project.data.find(item => item.title === title);
 
   if (result.acknowledged !== true) {
-    throw {
-      statusCode: ERRORS.DATA_OPERATION_FAILURE.code,
-      message: ERRORS.DATA_OPERATION_FAILURE.message.error,
-    };
+    throw { statusCode: ERRORS.DATA_OPERATION_FAILURE.code, message: ERRORS.DATA_OPERATION_FAILURE.message.error };
   }
 };
 
