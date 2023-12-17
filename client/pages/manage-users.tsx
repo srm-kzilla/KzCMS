@@ -10,9 +10,10 @@ import type { GetServerSidePropsContext } from "next";
 
 const ManageUsers = ({ user, userList }: { user: User; userList: User[] }) => {
   const router = useRouter();
-  const verifyUser = async (email: string) => {
+  const verifyUser = async (email: string, verify: boolean) => {
     const response = await axios.patch("/api/verify-user", {
       email,
+      verify,
     });
 
     if (response.status === 200) {
