@@ -29,7 +29,7 @@ const S3_BASE_URL = `https://${config.AWS.bucketName}.s3.${config.AWS.region}.am
 const removeFileAfterUse = async (path: fs.PathLike) => {
   try {
     const unlinkFile = promisify(fs.unlink);
-    await unlinkFile(`./tmp/uploads/${path}`);
+    await unlinkFile(path);
   } catch {
     throw {
       statusCode: ERRORS.SERVER_ERROR.code,
