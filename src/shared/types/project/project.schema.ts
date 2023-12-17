@@ -11,7 +11,6 @@ export const ProjectSchema = z.object({
   projectSlug: z.string(),
   projectName: z.string(),
   userAccess: z.array(z.string()),
-  data: z.array(z.string()),
   isDeleted: z.boolean().default(false),
 });
 
