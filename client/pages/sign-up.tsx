@@ -28,8 +28,12 @@ const SignUp = () => {
 
     try {
       await server.post("/api/auth/signup", user);
-      await router.push("/login");
       toast.success("Account created successfully");
+      toast.info("Ask Admin to verify your account before login");
+
+      setTimeout(async () => {
+        await router.push("/login");
+      }, 5000);
     } catch (err) {
       setError(!error);
     }
