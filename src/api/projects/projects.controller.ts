@@ -6,7 +6,6 @@ import {
   ProjectDataType,
   ProjectDataUpdateType,
   ProjectSlugType,
-  ProjectTitleType,
 } from '@/shared/types';
 import { NextFunction, Request, Response } from 'express';
 import {
@@ -140,12 +139,12 @@ export const createProjectData = async (
 };
 
 export const deleteProjectData = async (
-  req: Request<ProjectSlugType, unknown, ProjectTitleType>,
+  req: Request<ProjectDataIdType, unknown>,
   res: Response,
   next: NextFunction,
 ): Promise<void> => {
   try {
-    await handleDeleteProjectData(req.params.slug, req.body.title);
+    await handleDeleteProjectData(req.params.projectDataId);
 
     res.status(STATUS.OK).json({
       success: true,

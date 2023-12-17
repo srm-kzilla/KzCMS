@@ -228,9 +228,11 @@ export const handleCreateProjectData = async (
   }
 };
 
-export const handleDeleteProjectData = async (slug: string, title: string) => {
+export const handleDeleteProjectData = async (id: string) => {
   const projectDataCollection = (await db()).collection<ProjectDataType>('project_data');
-  const projectData = await projectDataCollection.findOne({ projectSlug: slug, title, isDeleted: false });
+
+  const projectDataId = new ObjectId(id);
+  const projectData = await projectDataCollection.findOne({ _id: projectDataId, isDeleted: false });
 
   if (!projectData) {
     throw {
@@ -240,10 +242,7 @@ export const handleDeleteProjectData = async (slug: string, title: string) => {
   }
 
   const result = await projectDataCollection.updateOne(
-    {
-      projectSlug: slug,
-      title,
-    },
+    { _id: projectDataId, isDeleted: false },
     {
       $set: {
         isDeleted: true,

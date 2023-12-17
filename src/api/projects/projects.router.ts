@@ -57,7 +57,12 @@ export default (): Router => {
     deleteProject,
   );
 
-  app.delete('/:slug/data', authenticateToken(), validateRequest('params', ProjectSlugSchema), deleteProjectData);
+  app.delete(
+    '/:projectDataId/data',
+    authenticateToken(),
+    validateRequest('params', ProjectDataIdSchema),
+    deleteProjectData,
+  );
 
   return app;
 };
