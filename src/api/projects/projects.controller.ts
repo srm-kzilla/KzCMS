@@ -147,8 +147,7 @@ export const createProjectData = async (
     if (!req.file) {
       throw { statusCode: ERRORS.MALFORMED_BODY.code, message: ERRORS.MALFORMED_BODY.message.error };
     }
-
-    await handleCreateProjectData(req.params.slug, req.body, req.file);
+    await handleCreateProjectData(req.params.slug, req.body, req.file, res.locals.user.email);
     res.status(STATUS.OK).json({
       success: true,
       message: MESSAGES_TEXT.CREATE_PROJECT_DATA,

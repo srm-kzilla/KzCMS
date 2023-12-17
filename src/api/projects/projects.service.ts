@@ -191,7 +191,12 @@ export const handleDeleteProject = async (slug: string) => {
   }
 };
 
-export const handleCreateProjectData = async (slug: string, data: ProjectDataCreateType, file: Express.Multer.File) => {
+export const handleCreateProjectData = async (
+  slug: string,
+  data: ProjectDataCreateType,
+  file: Express.Multer.File,
+  userEmail: string,
+) => {
   const projectCollection = (await db()).collection<ProjectType>('projects');
   const project = await projectCollection.findOne({ projectSlug: slug, isDeleted: false });
 
@@ -239,7 +244,22 @@ export const handleCreateProjectData = async (slug: string, data: ProjectDataCre
     imageURL: `${S3_BASE_URL}/${file.filename}`,
     subType: data.subType,
     isDeleted: false,
+    author: userEmail,
   });
+};
+
+export const handleDeleteProjectData = async (slug: string, title: string) => {
+  const projectsCollection = (await db()).collection('projects');
+  const project = await projectsCollection.findOne<ProjectType>({ projectSlug: slug });
+
+  if (!project) {
+    throw {
+      statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
+      message: ERRORS.RESOURCE_NOT_FOUND.message.error,
+    };
+  }
+
+  const data = project.data.find(item => item.title === title);
 
   if (result.acknowledged !== true) {
     throw {
