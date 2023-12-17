@@ -84,6 +84,7 @@ export default function EditData({
                 className="w-full cursor-pointer rounded-xl bg-secondary pr-5 text-gray-400 file:py-4 focus:outline-none"
                 type="file"
                 name="image"
+                accept="image/*"
                 onChange={handleChange}
                 required
               />
