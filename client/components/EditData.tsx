@@ -38,6 +38,14 @@ export default function EditData({
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    const projectUrlRegex = /^https?:\/\/[\w.-]+\.[a-zA-Z]{2,}$/i;
+
+    if (!projectUrlRegex.test(data.link)) {
+      setError(true);
+      toast.error("Invalid Project URL!");
+      return;
+    }
+
     const formData = new FormData();
     formData.append("title", data.title);
     formData.append("description", data.description);
