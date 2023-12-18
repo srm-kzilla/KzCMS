@@ -69,7 +69,7 @@ export default function EditData({
 
       setAddAssetState(false);
       toast.success("Data Uploaded Successfully!");
-      window.location.reload();
+      router.reload();
     } catch (err) {
       setError(true);
       console.log(err);
