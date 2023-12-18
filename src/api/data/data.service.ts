@@ -9,7 +9,11 @@ export const handleGetProject = async (id: string) => {
   })) as unknown as ProjectType | null;
 
   if (!project) {
-    throw { errorCode: ERRORS.RESOURCE_NOT_FOUND.code, message: ERRORS.RESOURCE_NOT_FOUND.message.error };
+    throw {
+      statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
+      message: ERRORS.RESOURCE_NOT_FOUND.message.error,
+      description: ERRORS.RESOURCE_NOT_FOUND.message.error_description,
+    };
   }
 
   return project.data as unknown as ProjectDataType;

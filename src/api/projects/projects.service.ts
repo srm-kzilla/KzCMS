@@ -27,13 +27,18 @@ const removeFileAfterUse = async (path: fs.PathLike) => {
     throw {
       statusCode: ERRORS.SERVER_ERROR.code,
       message: `${ERRORS.SERVER_ERROR.message.error} | File Unlink Error`,
+      description: ERRORS.SERVER_ERROR.message.error_description,
     };
   }
 };
 
 export const handleCreateProject = async ({ projectName, typeName }: CreateProjectType): Promise<string> => {
   if (!projectName || !typeName) {
-    throw { statusCode: ERRORS.MALFORMED_BODY.code, message: ERRORS.MALFORMED_BODY.message.error };
+    throw {
+      statusCode: ERRORS.MALFORMED_BODY.code,
+      message: ERRORS.MALFORMED_BODY.message.error,
+      description: ERRORS.MALFORMED_BODY.message.error_description,
+    };
   }
   const projectsCollection = (await db()).collection('projects');
   const slug = slugify(`${projectName} ${typeName}`, { lower: true, replacement: '-', trim: true });
@@ -43,6 +48,7 @@ export const handleCreateProject = async ({ projectName, typeName }: CreateProje
     throw {
       statusCode: ERRORS.RESOURCE_CONFLICT.code,
       message: ERRORS.RESOURCE_CONFLICT.message.error,
+      description: ERRORS.RESOURCE_CONFLICT.message.error_description,
       data: { projectName, typeName },
     };
   }
@@ -68,6 +74,7 @@ export const handleUpdateProjectData = async (slug: string, data: Omit<ProjectDa
     throw {
       statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
       message: ERRORS.RESOURCE_NOT_FOUND.message.error,
+      description: ERRORS.RESOURCE_NOT_FOUND.message.error_description,
       data,
     };
   }
@@ -97,7 +104,11 @@ export const handleUpdateProjectMetadata = async (slug: string, newName: string,
   const projectsCollection = (await db()).collection('projects');
   const project = await projectsCollection.findOne({ projectSlug: slug });
   if (!project) {
-    throw { errorCode: ERRORS.RESOURCE_NOT_FOUND.code, message: ERRORS.RESOURCE_NOT_FOUND.message.error };
+    throw {
+      statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
+      message: ERRORS.RESOURCE_NOT_FOUND.message.error,
+      description: ERRORS.RESOURCE_NOT_FOUND.message.error_description,
+    };
   }
   if (!newSlug) {
     newSlug = project.projectSlug;
@@ -121,11 +132,19 @@ export const handleGetProject = async (projectSlug: string, user: UserType) => {
   const projectsCollection = (await db()).collection('projects');
   const project = (await projectsCollection.findOne({ projectSlug })) as unknown as ProjectType | null;
   if (!project) {
-    throw { errorCode: ERRORS.RESOURCE_NOT_FOUND.code, message: ERRORS.RESOURCE_NOT_FOUND.message.error };
+    throw {
+      statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
+      message: ERRORS.RESOURCE_NOT_FOUND.message.error,
+      description: ERRORS.RESOURCE_NOT_FOUND.message.error_description,
+    };
   }
 
   if (!user.isAdmin && !project.userAccess.includes(user.email)) {
-    throw { errorCode: ERRORS.FORBIDDEN_ACCESS_ERROR.code, message: ERRORS.FORBIDDEN_ACCESS_ERROR.message.error };
+    throw {
+      statusCode: ERRORS.FORBIDDEN_ACCESS_ERROR.code,
+      message: ERRORS.FORBIDDEN_ACCESS_ERROR.message.error,
+      description: ERRORS.FORBIDDEN_ACCESS_ERROR.message.error_description,
+    };
   }
 
   return project.data as unknown as ProjectDataType;
@@ -140,6 +159,7 @@ export const handleDeleteProject = async (slug: string) => {
     throw {
       statusCode: ERRORS.DATA_OPERATION_FAILURE.code,
       message: ERRORS.DATA_OPERATION_FAILURE.message.error,
+      description: ERRORS.DATA_OPERATION_FAILURE.message.error_description,
     };
   }
 };
@@ -150,14 +170,19 @@ export const handleCreateProjectData = async (slug: string, data: ProjectDataTyp
 
   if (!project) {
     await removeFileAfterUse(file.path);
-    throw { statusCode: ERRORS.RESOURCE_NOT_FOUND.code, message: ERRORS.RESOURCE_NOT_FOUND.message.error };
+    throw {
+      statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
+      message: ERRORS.RESOURCE_NOT_FOUND.message.error,
+      description: ERRORS.RESOURCE_NOT_FOUND.message.error_description,
+    };
   }
 
   if (project.data.find((d: { title: string }) => d.title === data.title)) {
     await removeFileAfterUse(file.path);
     throw {
       statusCode: ERRORS.RESOURCE_CONFLICT.code,
-      message: ERRORS.RESOURCE_CONFLICT.message.error_description,
+      message: ERRORS.RESOURCE_CONFLICT.message,
+      description: ERRORS.RESOURCE_CONFLICT.message.error_description,
     };
   }
 
@@ -173,7 +198,11 @@ export const handleCreateProjectData = async (slug: string, data: ProjectDataTyp
   await removeFileAfterUse(file.path);
 
   if (!uploadResult) {
-    throw { statusCode: ERRORS.MALFORMED_BODY.code, message: ERRORS.MALFORMED_BODY.message.error };
+    throw {
+      statusCode: ERRORS.MALFORMED_BODY.code,
+      message: ERRORS.MALFORMED_BODY.message.error,
+      description: ERRORS.MALFORMED_BODY.message.error_description,
+    };
   }
 
   await projectsCollection.updateOne(
@@ -202,6 +231,7 @@ export const handleDeleteProjectData = async (slug: string, title: string) => {
     throw {
       statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
       message: ERRORS.RESOURCE_NOT_FOUND.message.error,
+      description: ERRORS.RESOURCE_NOT_FOUND.message.error_description,
     };
   }
 
@@ -211,6 +241,7 @@ export const handleDeleteProjectData = async (slug: string, title: string) => {
     throw {
       statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
       message: ERRORS.RESOURCE_NOT_FOUND.message.error,
+      description: ERRORS.RESOURCE_NOT_FOUND.message.error_description,
     };
   }
 
@@ -220,6 +251,7 @@ export const handleDeleteProjectData = async (slug: string, title: string) => {
     throw {
       statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
       message: ERRORS.RESOURCE_NOT_FOUND.message.error,
+      description: ERRORS.RESOURCE_NOT_FOUND.message.error_description,
     };
   }
 
@@ -234,6 +266,7 @@ export const handleDeleteProjectData = async (slug: string, title: string) => {
     throw {
       statusCode: ERRORS.DATA_OPERATION_FAILURE.code,
       message: ERRORS.DATA_OPERATION_FAILURE.message.error,
+      description: ERRORS.DATA_OPERATION_FAILURE.message.error_description,
     };
   }
 
@@ -257,6 +290,7 @@ export const handleDeleteProjectData = async (slug: string, title: string) => {
     throw {
       statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
       message: ERRORS.RESOURCE_NOT_FOUND.message.error,
+      description: ERRORS.RESOURCE_NOT_FOUND.message.error_description,
     };
   }
 };
@@ -267,13 +301,21 @@ export const handleUpdateProjectImage = async (data: ProjectImageSlugType, file:
     const project = await projectsCollection.findOne({ projectSlug: data.slug });
 
     if (!project) {
-      throw { statusCode: ERRORS.RESOURCE_NOT_FOUND.code, message: ERRORS.RESOURCE_NOT_FOUND.message.error };
+      throw {
+        statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
+        message: ERRORS.RESOURCE_NOT_FOUND.message.error,
+        description: ERRORS.RESOURCE_NOT_FOUND.message.error_description,
+      };
     }
 
     const projectData = project.data.find((d: { title: string }) => d.title === data.title);
 
     if (!projectData) {
-      throw { statusCode: ERRORS.RESOURCE_NOT_FOUND.code, message: ERRORS.RESOURCE_NOT_FOUND.message.error };
+      throw {
+        statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
+        message: ERRORS.RESOURCE_NOT_FOUND.message.error,
+        description: ERRORS.RESOURCE_NOT_FOUND.message.error_description,
+      };
     }
 
     const key = projectData.imageURL.match(LINK_REGEX_PATTERN);
@@ -282,6 +324,7 @@ export const handleUpdateProjectImage = async (data: ProjectImageSlugType, file:
       throw {
         statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
         message: ERRORS.RESOURCE_NOT_FOUND.message.error,
+        description: ERRORS.RESOURCE_NOT_FOUND.message.error_description,
       };
     }
 
@@ -303,7 +346,11 @@ export const handleUpdateProjectImage = async (data: ProjectImageSlugType, file:
     );
 
     if (!uploadResult) {
-      throw { statusCode: ERRORS.MALFORMED_BODY.code, message: ERRORS.MALFORMED_BODY.message.error };
+      throw {
+        statusCode: ERRORS.MALFORMED_BODY.code,
+        message: ERRORS.MALFORMED_BODY.message.error,
+        description: ERRORS.MALFORMED_BODY.message.error_description,
+      };
     }
 
     const filter = { 'data.title': data.title };
