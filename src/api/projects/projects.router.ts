@@ -1,7 +1,13 @@
 import authenticateToken from '@/shared/middlewares/authentication';
 import { upload } from '@/shared/middlewares/multer';
 import { validateRequest } from '@/shared/middlewares/validator';
-import { ProjectMetadataSchema, ProjectSlugSchema } from '@/shared/types';
+import {
+  CreateProjectSchema,
+  ProjectDataCreateSchema,
+  ProjectDataIdSchema,
+  ProjectDataUpdateSchema,
+  ProjectSlugSchema,
+} from '@/shared/types';
 import { Router } from 'express';
 import {
   createProject,
@@ -12,30 +18,35 @@ import {
   getProject,
   updateProjectData,
   updateProjectImage,
-  updateProjectMetadata,
 } from './projects.controller';
 
 export default (): Router => {
   const app = Router();
 
   app.get('/', authenticateToken({ verifyAdmin: true }), getAllProjects);
+  app.get('/:slug', authenticateToken(), validateRequest('params', ProjectSlugSchema), getProject);
+
   app.patch(
-    '/:slug',
-    authenticateToken({ verifyAdmin: true }),
-    validateRequest('body', ProjectMetadataSchema),
-    updateProjectMetadata,
+    '/:projectDataId/data',
+    authenticateToken(),
+    validateRequest('params', ProjectDataIdSchema),
+    validateRequest('body', ProjectDataUpdateSchema),
+    updateProjectData,
   );
-
-  app.get('/:slug', authenticateToken(), getProject);
-
-  app.patch('/:slug/data', authenticateToken(), updateProjectData);
-  app.patch('/:slug/:title/image', authenticateToken(), upload.single('image'), updateProjectImage);
-  app.post('/', authenticateToken({ verifyAdmin: true }), createProject);
+  app.patch(
+    '/:projectDataId/image',
+    validateRequest('params', ProjectDataIdSchema),
+    authenticateToken(),
+    upload.single('image'),
+    updateProjectImage,
+  );
+  app.post('/', authenticateToken({ verifyAdmin: true }), validateRequest('body', CreateProjectSchema), createProject);
   app.post(
     '/:slug',
     authenticateToken(),
     validateRequest('params', ProjectSlugSchema),
     upload.single('image'),
+    validateRequest('body', ProjectDataCreateSchema),
     createProjectData,
   );
 
@@ -46,7 +57,12 @@ export default (): Router => {
     deleteProject,
   );
 
-  app.delete('/:slug/data', authenticateToken(), validateRequest('params', ProjectSlugSchema), deleteProjectData);
+  app.delete(
+    '/:projectDataId/data',
+    authenticateToken(),
+    validateRequest('params', ProjectDataIdSchema),
+    deleteProjectData,
+  );
 
   return app;
 };

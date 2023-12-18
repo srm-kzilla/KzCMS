@@ -137,7 +137,7 @@ export async function handleCreateToken(projectId: string, tokenName: string): P
     },
   );
 
-  if (result.matchedCount !== 1 || result.modifiedCount !== 1) {
+  if (!(result.matchedCount === 1 && result.modifiedCount === 1) && result.upsertedCount !== 1) {
     throw {
       statusCode: ERRORS.DATA_OPERATION_FAILURE.code,
       message: ERRORS.DATA_OPERATION_FAILURE.message.error,
