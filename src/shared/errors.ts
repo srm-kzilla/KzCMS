@@ -38,14 +38,14 @@ export const ERRORS = {
     code: 401,
     message: {
       error: 'Authorization Failure',
-      error_description: "User authorization failed",
+      error_description: 'User authorization failed',
     },
   },
   INVALID_CREDENTIALS: {
     code: 401,
     message: {
       error: 'Password Invalid',
-      error_description: "Invalid password enetered by the user",
+      error_description: 'Invalid password entered by the user',
     },
   },
   FORBIDDEN_ACCESS_ERROR: {
@@ -102,7 +102,7 @@ export const ERRORS = {
     code: 422,
     message: {
       error: 'Verification Failure',
-      error_description: 'User verification failed'
+      error_description: 'User verification failed',
     },
   },
 };
