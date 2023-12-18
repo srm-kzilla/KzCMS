@@ -6,6 +6,7 @@ import nookies from "nookies";
 import { useRouter } from "next/router";
 import { type ChangeEvent, useState } from "react";
 import type { GetServerSidePropsContext } from "next";
+import { toast } from "react-toastify";
 
 const SignUp = () => {
   const [user, setUser] = useState({
@@ -22,12 +23,17 @@ const SignUp = () => {
     });
   };
 
-  const handleSUbmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     try {
       await server.post("/api/auth/signup", user);
-      await router.push("/login");
+      toast.success("Account created successfully");
+      toast.info("Ask Admin to verify your account before login");
+
+      setTimeout(async () => {
+        await router.push("/login");
+      }, 5000);
     } catch (err) {
       setError(!error);
     }
@@ -54,7 +60,7 @@ const SignUp = () => {
         </div>
         <div className="flex flex-1 items-center justify-center">
           <form
-            onSubmit={handleSUbmit}
+            onSubmit={handleSubmit}
             className="flex w-full flex-col items-center gap-5 p-6 lg:w-96"
           >
             <div>
