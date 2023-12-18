@@ -15,7 +15,7 @@ export default function EditData({
   const [data, setData] = useState({
     title: "",
     description: "",
-    image: "",
+    image: new Blob(),
     link: "",
   });
   const [error, setError] = useState(false);
@@ -46,7 +46,6 @@ export default function EditData({
       return;
     }
 
-    // @ts-ignore - this is to ignore the type error for name
     if (!data.image.name.match(/\.(jpg|jpeg|png|gif)$/)) {
       setError(true);
       toast.error("Invalid Image!");
