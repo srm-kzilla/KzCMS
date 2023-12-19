@@ -108,6 +108,7 @@ const Index = ({
                           onChange={(e) => {
                             setProjectName(e.target.value);
                           }}
+                          required={true}
                         />
                       </div>
                       <div>
@@ -118,6 +119,7 @@ const Index = ({
                           onChange={(e) => {
                             setTypeName(e.target.value);
                           }}
+                          required={true}
                         />
                       </div>
                       <div>

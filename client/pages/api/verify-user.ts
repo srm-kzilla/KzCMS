@@ -10,13 +10,13 @@ export default async function handler(
 
   if (req.method === "PATCH") {
     try {
-      const { email } = req.body;
+      const { email, verify } = req.body;
       const { token } = parsedCookies;
       await server.patch(
         `/api/admin/verify`,
         {
           email,
-          verify: true,
+          verify,
         },
         {
           headers: {
@@ -26,7 +26,9 @@ export default async function handler(
       );
 
       return res.status(200).json({
-        message: "User Verified Successfully",
+        message: verify
+          ? "User verified successfully"
+          : "User unverified successfully",
       });
     } catch (e) {
       return res.status(500).json({ error: e });

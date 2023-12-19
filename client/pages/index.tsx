@@ -25,16 +25,22 @@ export default function Home({
               <h1 className="text-2xl font-bold lg:text-4xl">MY PROJECTS</h1>
             </div>
             <div className="flex h-fit w-full flex-col justify-center gap-5 md:flex-row md:flex-wrap md:justify-start">
-              {projectList.map((project, key) => {
-                return (
-                  <div key={key}>
-                    <ProjectCard
-                      projectData={project}
-                      redirectUrl={"/my-projects"}
-                    />
-                  </div>
-                );
-              })}
+              {projectList.length === 0 ? (
+                <h1 className="text-sm font-bold text-light md:text-base">
+                  You Don't Have Access To Any Projects.
+                </h1>
+              ) : (
+                projectList.map((project, key) => {
+                  return (
+                    <div key={key}>
+                      <ProjectCard
+                        projectData={project}
+                        redirectUrl={"/my-projects"}
+                      />
+                    </div>
+                  );
+                })
+              )}
             </div>
           </div>
         </Layout>

@@ -13,8 +13,9 @@ export default function EditData({
 }) {
   const router = useRouter();
   const [data, setData] = useState({
-    image: "",
     title: "",
+    description: "",
+    image: new Blob(),
     link: "",
   });
   const [error, setError] = useState(false);
@@ -22,20 +23,39 @@ export default function EditData({
   const cookies = parseCookies();
   const { token } = cookies;
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     setData({
       ...data,
       [e.target.name]:
-        e.target.type === "file" ? e.target.files?.[0] : e.target.value,
+        (e.target as HTMLInputElement).type === "file"
+          ? (e.target as HTMLInputElement).files?.[0]
+          : e.target.value,
     });
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    const projectUrlRegex = /^https?:\/\/[\w.-]+\.[a-zA-Z]{2,}$/i;
+
+    if (!projectUrlRegex.test(data.link)) {
+      setError(true);
+      toast.error("Invalid Project URL!");
+      return;
+    }
+
+    if (!data.image.name.match(/\.(jpg|jpeg|png|gif)$/)) {
+      setError(true);
+      toast.error("Invalid Image!");
+      return;
+    }
+
     const formData = new FormData();
-    formData.append("image", data.image);
     formData.append("title", data.title);
+    formData.append("description", data.description);
+    formData.append("image", data.image);
     formData.append("link", data.link);
 
     try {
@@ -48,6 +68,7 @@ export default function EditData({
 
       setAddAssetState(false);
       toast.success("Data Uploaded Successfully!");
+      router.reload();
     } catch (err) {
       setError(true);
       console.log(err);
@@ -72,10 +93,18 @@ export default function EditData({
                 onChange={handleChange}
                 required
               />
+              <textarea
+                className="w-full rounded-xl bg-secondary px-5 py-4 outline-none"
+                placeholder="Description"
+                name="description"
+                onChange={handleChange}
+                required
+              />
               <input
                 className="w-full cursor-pointer rounded-xl bg-secondary pr-5 text-gray-400 file:py-4 focus:outline-none"
                 type="file"
                 name="image"
+                accept="image/*"
                 onChange={handleChange}
                 required
               />
