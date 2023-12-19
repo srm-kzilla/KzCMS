@@ -5,6 +5,7 @@ import { ERRORS } from '../errors';
 export interface ApiError extends Error {
   message: string;
   statusCode?: number;
+  description: string;
 }
 
 export const errorHandler = (error: ApiError, _req: Request, res: Response, next: NextFunction) => {
@@ -12,6 +13,6 @@ export const errorHandler = (error: ApiError, _req: Request, res: Response, next
   res.status(error.statusCode ?? ERRORS.SERVER_ERROR.code).json({
     success: false,
     message: error.message ?? ERRORS.SERVER_ERROR.message.error,
-    description: ERRORS.SERVER_ERROR.message.error_description,
+    description: error.description ?? ERRORS.SERVER_ERROR.message.error_description,
   });
 };
