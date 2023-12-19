@@ -8,7 +8,7 @@ export default (): Router => {
   const app = Router();
 
   app.get(
-    '/project/:id',
+    '/project/:projectId',
     validateRequest('params', ProjectIdSchema),
     validateToken({
       idFrom: 'params',

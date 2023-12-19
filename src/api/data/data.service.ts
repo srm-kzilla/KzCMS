@@ -4,9 +4,11 @@ import { ProjectDataType, ProjectType } from '@/shared/types';
 import { ObjectId } from 'mongodb';
 
 export const handleGetProject = async (id: string) => {
-  const project = (await (await db()).collection('projects').findOne({
-    _id: new ObjectId(id),
-  })) as unknown as ProjectType | null;
+  const dbInstance = await db();
+  const projectsCollection = dbInstance.collection<ProjectType>('projects');
+  const projectsDataCollection = dbInstance.collection<ProjectDataType>('project_data');
+
+  const project = await projectsCollection.findOne({ _id: new ObjectId(id), isDeleted: false });
 
   if (!project) {
     throw {
@@ -16,5 +18,9 @@ export const handleGetProject = async (id: string) => {
     };
   }
 
-  return project.data as unknown as ProjectDataType;
+  const projectData = await projectsDataCollection
+    .find({ projectSlug: project.projectSlug, isDeleted: false }, { projection: { isDeleted: 0 } })
+    .toArray();
+
+  return projectData;
 };

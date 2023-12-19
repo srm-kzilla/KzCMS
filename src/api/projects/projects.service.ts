@@ -2,10 +2,17 @@ import config from '@/config';
 import db from '@/loaders/database';
 import { LINK_REGEX_PATTERN } from '@/shared/constants';
 import { ERRORS } from '@/shared/errors';
-import { CreateProjectType, ProjectDataType, ProjectImageSlugType, ProjectType, UserType } from '@/shared/types';
+import {
+  CreateProjectType,
+  ProjectDataCreateType,
+  ProjectDataType,
+  ProjectDataUpdateType,
+  ProjectType,
+  UserType,
+} from '@/shared/types';
 import { DeleteObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import fs from 'fs';
-import { ObjectId, UpdateFilter } from 'mongodb';
+import { ObjectId } from 'mongodb';
 import slugify from 'slugify';
 import { promisify } from 'util';
 
@@ -22,7 +29,7 @@ const S3_BASE_URL = `https://${config.AWS.bucketName}.s3.${config.AWS.region}.am
 const removeFileAfterUse = async (path: fs.PathLike) => {
   try {
     const unlinkFile = promisify(fs.unlink);
-    await unlinkFile(path);
+    await unlinkFile(`./tmp/uploads/${path}`);
   } catch {
     throw {
       statusCode: ERRORS.SERVER_ERROR.code,
@@ -40,9 +47,9 @@ export const handleCreateProject = async ({ projectName, typeName }: CreateProje
       description: ERRORS.MALFORMED_BODY.message.error_description,
     };
   }
-  const projectsCollection = (await db()).collection('projects');
+  const projectsCollection = (await db()).collection<ProjectType>('projects');
   const slug = slugify(`${projectName} ${typeName}`, { lower: true, replacement: '-', trim: true });
-  const project = await projectsCollection.findOne({ projectSlug: slug });
+  const project = await projectsCollection.findOne({ projectSlug: slug, isDeleted: false });
 
   if (project) {
     throw {
@@ -55,22 +62,20 @@ export const handleCreateProject = async ({ projectName, typeName }: CreateProje
 
   await projectsCollection.insertOne({
     projectSlug: slug,
-    projectName: `${projectName} | ${typeName}`,
-    data: [],
+    projectName,
     userAccess: [],
-    isEnabled: true,
     isDeleted: false,
-    isDevelopment: false,
-    allowedDomains: [],
   });
 
   return slug;
 };
 
-export const handleUpdateProjectData = async (slug: string, data: Omit<ProjectDataType, 'image'>) => {
-  const projectsCollection = (await db()).collection('projects');
-  const project = await projectsCollection.findOne({ projectSlug: slug, 'data.title': data.title });
-  if (!project) {
+export const handleUpdateProjectData = async (id: string, data: ProjectDataUpdateType) => {
+  const projectDataCollection = (await db()).collection<ProjectDataType>('project_data');
+  const projectDataId = new ObjectId(id);
+  const projectData = await projectDataCollection.findOne({ _id: projectDataId, isDeleted: false });
+
+  if (!projectData) {
     throw {
       statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
       message: ERRORS.RESOURCE_NOT_FOUND.message.error,
@@ -78,27 +83,20 @@ export const handleUpdateProjectData = async (slug: string, data: Omit<ProjectDa
       data,
     };
   }
-  const filter = { _id: new ObjectId(project._id), 'data.title': data.title };
 
-  if (!data.newTitle) {
-    data.newTitle = data.title;
-  }
-  const update = {
-    $set: {
-      'data.$.title': data.newTitle,
-      'data.$.description': data.description,
-      'data.$.link': data.link,
-      'data.$.author': data.author,
+  const updatedProject = await projectDataCollection.updateOne(
+    {
+      _id: projectDataId,
     },
-  };
-
-  const updatedProject = await projectsCollection.findOneAndUpdate(filter, update, {
-    returnDocument: 'after',
-    projection: { _id: 0 },
-  });
-
-  return { updatedProject: updatedProject.value } as unknown as ProjectDataType;
-};
+    {
+      $set: {
+        title: data.title,
+        description: data.description,
+        link: data.link,
+        subType: data.subType,
+      },
+    },
+  );
 
 export const handleUpdateProjectMetadata = async (slug: string, newName: string, newSlug: string) => {
   const projectsCollection = (await db()).collection('projects');
@@ -113,24 +111,48 @@ export const handleUpdateProjectMetadata = async (slug: string, newName: string,
   if (!newSlug) {
     newSlug = project.projectSlug;
   }
-
-  const SLUG = slugify(`${newSlug}`, { lower: true, replacement: '-', trim: true });
-
-  await projectsCollection.updateOne({ projectSlug: slug }, { $set: { projectName: newName, projectSlug: SLUG } });
 };
 
 export const handleGetAllProjects = async () => {
-  const projects = await (await db()).collection('projects').find().toArray();
-  const modifiedProjects = projects.map(project => {
-    const { _id, ...rest } = project;
-    return { id: _id, ...rest };
-  });
-  return modifiedProjects as unknown as ProjectDataType[];
+  const dbInstance = await db();
+  const projectsCollection = dbInstance.collection<ProjectType>('projects');
+
+  const projects = await projectsCollection
+    .aggregate([
+      { $match: { isDeleted: false } },
+      {
+        $lookup: {
+          from: 'project_data',
+          localField: 'projectSlug',
+          foreignField: 'projectSlug',
+          as: 'data',
+        },
+      },
+      {
+        $addFields: {
+          data: {
+            $filter: {
+              input: '$data',
+              as: 'item',
+              cond: { $eq: ['$$item.isDeleted', false] },
+            },
+          },
+        },
+      },
+      { $project: { isDeleted: 0, data: { isDeleted: 0 } } },
+    ])
+    .toArray();
+
+  return projects;
 };
 
 export const handleGetProject = async (projectSlug: string, user: UserType) => {
-  const projectsCollection = (await db()).collection('projects');
-  const project = (await projectsCollection.findOne({ projectSlug })) as unknown as ProjectType | null;
+  const dbInstance = await db();
+  const projectsCollection = dbInstance.collection<ProjectType>('projects');
+  const projectsDataCollection = dbInstance.collection<ProjectDataType>('project_data');
+
+  const project = await projectsCollection.findOne({ projectSlug, isDeleted: false });
+
   if (!project) {
     throw {
       statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
@@ -147,13 +169,17 @@ export const handleGetProject = async (projectSlug: string, user: UserType) => {
     };
   }
 
-  return project.data as unknown as ProjectDataType;
+  const projectData = await projectsDataCollection
+    .find({ projectSlug, isDeleted: false }, { projection: { isDeleted: 0 } })
+    .toArray();
+
+  return projectData;
 };
 
 export const handleDeleteProject = async (slug: string) => {
   const result = await (await db())
-    .collection('projects')
-    .updateOne({ projectSlug: slug }, { $set: { isDeleted: true } });
+    .collection<ProjectType>('projects')
+    .updateOne({ projectSlug: slug, isDeleted: false }, { $set: { isDeleted: true } });
 
   if (result.matchedCount !== 1 || result.modifiedCount !== 1) {
     throw {
@@ -164,9 +190,14 @@ export const handleDeleteProject = async (slug: string) => {
   }
 };
 
-export const handleCreateProjectData = async (slug: string, data: ProjectDataType, file: Express.Multer.File) => {
-  const projectsCollection = (await db()).collection('projects');
-  const project = await projectsCollection.findOne({ projectSlug: slug });
+export const handleCreateProjectData = async (
+  slug: string,
+  data: ProjectDataCreateType,
+  file: Express.Multer.File,
+  userEmail: string,
+) => {
+  const projectCollection = (await db()).collection<ProjectType>('projects');
+  const project = await projectCollection.findOne({ projectSlug: slug, isDeleted: false });
 
   if (!project) {
     await removeFileAfterUse(file.path);
@@ -177,7 +208,14 @@ export const handleCreateProjectData = async (slug: string, data: ProjectDataTyp
     };
   }
 
-  if (project.data.find((d: { title: string }) => d.title === data.title)) {
+  const projectDataCollection = (await db()).collection<ProjectDataType>('project_data');
+  const projectData = await projectDataCollection.findOne({
+    projectSlug: slug,
+    title: data.title,
+    isDeleted: false,
+  });
+
+  if (projectData && projectData.title === data.title) {
     await removeFileAfterUse(file.path);
     throw {
       statusCode: ERRORS.RESOURCE_CONFLICT.code,
@@ -195,6 +233,7 @@ export const handleCreateProjectData = async (slug: string, data: ProjectDataTyp
       ACL: 'public-read',
     }),
   );
+
   await removeFileAfterUse(file.path);
 
   if (!uploadResult) {
@@ -205,27 +244,16 @@ export const handleCreateProjectData = async (slug: string, data: ProjectDataTyp
     };
   }
 
-  await projectsCollection.updateOne(
-    {
-      projectSlug: slug,
-    },
-    {
-      $push: {
-        data: {
-          title: data.title,
-          description: data.description,
-          link: data.link,
-          imageURL: `${S3_BASE_URL}/${file.filename}`,
-          author: data.author,
-        },
-      },
-    },
-  );
-};
-
-export const handleDeleteProjectData = async (slug: string, title: string) => {
-  const projectsCollection = (await db()).collection('projects');
-  const project = await projectsCollection.findOne<ProjectType>({ projectSlug: slug });
+  const result = await projectDataCollection.insertOne({
+    projectSlug: slug,
+    title: data.title,
+    description: data.description,
+    link: data.link,
+    imageURL: `${S3_BASE_URL}/${file.filename}`,
+    subType: data.subType,
+    isDeleted: false,
+    author: userEmail,
+  });
 
   if (!project) {
     throw {
@@ -234,8 +262,10 @@ export const handleDeleteProjectData = async (slug: string, title: string) => {
       description: ERRORS.RESOURCE_NOT_FOUND.message.error_description,
     };
   }
+};
 
-  const data = project.data.find(item => item.title === title);
+export const handleDeleteProjectData = async (id: string) => {
+  const projectDataCollection = (await db()).collection<ProjectDataType>('project_data');
 
   if (!data || !data.imageURL) {
     throw {
@@ -245,9 +275,7 @@ export const handleDeleteProjectData = async (slug: string, title: string) => {
     };
   }
 
-  const KEY = data.imageURL.match(LINK_REGEX_PATTERN);
-
-  if (!KEY) {
+  if (!projectData) {
     throw {
       statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
       message: ERRORS.RESOURCE_NOT_FOUND.message.error,
@@ -282,11 +310,13 @@ export const handleDeleteProjectData = async (slug: string, title: string) => {
       } as UpdateFilter<ProjectDataType>,
     },
     {
-      returnDocument: 'after',
+      $set: {
+        isDeleted: true,
+      },
     },
   );
 
-  if (!result.value) {
+  if (result.matchedCount !== 1 || result.modifiedCount !== 1) {
     throw {
       statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
       message: ERRORS.RESOURCE_NOT_FOUND.message.error,
@@ -295,10 +325,9 @@ export const handleDeleteProjectData = async (slug: string, title: string) => {
   }
 };
 
-export const handleUpdateProjectImage = async (data: ProjectImageSlugType, file: Express.Multer.File) => {
+export const handleUpdateProjectImage = async (id: string, file: Express.Multer.File) => {
   try {
-    const projectsCollection = (await db()).collection('projects');
-    const project = await projectsCollection.findOne({ projectSlug: data.slug });
+    const projectDataCollection = (await db()).collection<ProjectDataType>('project_data');
 
     if (!project) {
       throw {
@@ -308,7 +337,10 @@ export const handleUpdateProjectImage = async (data: ProjectImageSlugType, file:
       };
     }
 
-    const projectData = project.data.find((d: { title: string }) => d.title === data.title);
+    const projectData = await projectDataCollection.findOne({
+      _id: projectDataId,
+      isDeleted: false,
+    });
 
     if (!projectData) {
       throw {
@@ -326,14 +358,14 @@ export const handleUpdateProjectImage = async (data: ProjectImageSlugType, file:
         message: ERRORS.RESOURCE_NOT_FOUND.message.error,
         description: ERRORS.RESOURCE_NOT_FOUND.message.error_description,
       };
-    }
 
-    await s3Client.send(
-      new DeleteObjectCommand({
-        Bucket: config.AWS.bucketName,
-        Key: key[1],
-      }),
-    );
+      await s3Client.send(
+        new DeleteObjectCommand({
+          Bucket: config.AWS.bucketName,
+          Key: key[1],
+        }),
+      );
+    }
 
     const uploadResult = await s3Client.send(
       new PutObjectCommand({
@@ -353,14 +385,21 @@ export const handleUpdateProjectImage = async (data: ProjectImageSlugType, file:
       };
     }
 
-    const filter = { 'data.title': data.title };
-    const update = {
-      $set: {
-        'data.$.imageURL': `${S3_BASE_URL}/${file.filename}`,
+    const result = await projectDataCollection.updateOne(
+      { _id: projectDataId, isDeleted: false },
+      {
+        $set: {
+          imageURL: `${S3_BASE_URL}/${file.filename}`,
+        },
       },
-    };
+    );
 
-    await projectsCollection.updateOne(filter, update);
+    if (result.matchedCount !== 1 || result.modifiedCount !== 1) {
+      throw {
+        statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
+        message: ERRORS.RESOURCE_NOT_FOUND.message.error,
+      };
+    }
   } finally {
     await removeFileAfterUse(file.filename);
   }

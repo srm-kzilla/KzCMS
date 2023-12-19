@@ -13,14 +13,6 @@ export const upload = multer({
       fs.mkdirSync(path, { recursive: true });
       return cb(null, path);
     },
-    filename: function (req, _file, cb) {
-      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random());
-      if (!req.params.slug) {
-        cb(new Error('No Slug found'), `NoSlugFound-${uniqueSuffix}`);
-      }
-      const fileName = `${req.params.slug.toLowerCase()}-${uniqueSuffix.toLowerCase()}`;
-      cb(null, fileName);
-    },
   }),
 });
 

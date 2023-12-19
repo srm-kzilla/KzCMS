@@ -3,7 +3,7 @@ import LoggerInstance from '@/loaders/logger';
 import { NextFunction, Request, Response } from 'express';
 import { MESSAGES_TEXT } from '../constants';
 import { ERRORS } from '../errors';
-import { Token } from '../types';
+import { ProjectIdType, Token } from '../types';
 
 type RequestLocation = 'body' | 'params' | 'query';
 
@@ -20,10 +20,10 @@ export const validateToken = ({ idFrom }: { idFrom: RequestLocation }) => {
         };
       }
 
-      const { id } = req[idFrom] as { id: string };
+      const { projectId } = req[idFrom] as ProjectIdType;
 
       const tokens = (await (await db()).collection('tokens').findOne({
-        projectId: id,
+        projectId,
       })) as unknown as {
         tokens: Token[];
       } | null;

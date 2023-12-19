@@ -2,11 +2,10 @@ import { MESSAGES_TEXT, STATUS } from '@/shared/constants';
 import { ERRORS } from '@/shared/errors';
 import {
   CreateProjectType,
+  ProjectDataIdType,
   ProjectDataType,
-  ProjectImageSlugType,
-  ProjectMetadataType,
+  ProjectDataUpdateType,
   ProjectSlugType,
-  ProjectTitleType,
 } from '@/shared/types';
 import { NextFunction, Request, Response } from 'express';
 import {
@@ -18,7 +17,6 @@ import {
   handleGetProject,
   handleUpdateProjectData,
   handleUpdateProjectImage,
-  handleUpdateProjectMetadata,
 } from './projects.service';
 
 export const getAllProjects = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -66,20 +64,23 @@ export const createProject = async (
 };
 
 export const updateProjectData = async (
-  req: Request<ProjectSlugType, unknown, ProjectDataType>,
+  req: Request<ProjectDataIdType, unknown, ProjectDataUpdateType>,
   res: Response,
   next: NextFunction,
 ): Promise<void> => {
   try {
-    const data = await handleUpdateProjectData(req.params.slug, req.body);
-    res.status(STATUS.OK).json(data);
+    await handleUpdateProjectData(req.params.projectDataId, req.body);
+    res.status(STATUS.OK).json({
+      success: true,
+      message: MESSAGES_TEXT.UPDATED_PROJECT_DATA,
+    });
   } catch (error) {
     next(error);
   }
 };
 
 export const updateProjectImage = async (
-  req: Request<ProjectImageSlugType, unknown, ProjectDataType> & {
+  req: Request<ProjectDataIdType, unknown, ProjectDataType> & {
     file: Express.Multer.File;
   },
   res: Response,
@@ -94,26 +95,10 @@ export const updateProjectImage = async (
       };
     }
 
-    await handleUpdateProjectImage(req.params, req.file);
+    await handleUpdateProjectImage(req.params.projectDataId, req.file);
     res.status(STATUS.OK).json({
       success: true,
       message: MESSAGES_TEXT.IMAGE_UPDATED,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
-export const updateProjectMetadata = async (
-  req: Request<ProjectSlugType, unknown, ProjectMetadataType>,
-  res: Response,
-  next: NextFunction,
-): Promise<void> => {
-  try {
-    await handleUpdateProjectMetadata(req.params.slug, req.body.newName, req.body.newSlug);
-    res.status(STATUS.OK).json({
-      success: true,
-      message: MESSAGES_TEXT.UPDATE_PROJECT_METADATA,
     });
   } catch (error) {
     next(error);
@@ -151,8 +136,7 @@ export const createProjectData = async (
         description: ERRORS.MALFORMED_BODY.message.error_description,
       };
     }
-
-    await handleCreateProjectData(req.params.slug, req.body, req.file);
+    await handleCreateProjectData(req.params.slug, req.body, req.file, res.locals.user.email);
     res.status(STATUS.OK).json({
       success: true,
       message: MESSAGES_TEXT.CREATE_PROJECT_DATA,
@@ -163,12 +147,12 @@ export const createProjectData = async (
 };
 
 export const deleteProjectData = async (
-  req: Request<ProjectSlugType, unknown, ProjectTitleType>,
+  req: Request<ProjectDataIdType, unknown>,
   res: Response,
   next: NextFunction,
 ): Promise<void> => {
   try {
-    await handleDeleteProjectData(req.params.slug, req.body.title);
+    await handleDeleteProjectData(req.params.projectDataId);
 
     res.status(STATUS.OK).json({
       success: true,

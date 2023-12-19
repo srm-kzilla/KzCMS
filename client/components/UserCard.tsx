@@ -3,7 +3,7 @@ import type { User } from "@/types";
 
 interface UserCardProps {
   user: User;
-  verifyUser: (email: string) => void;
+  verifyUser: (email: string, verify: boolean) => void;
   deleteUser: (email: string) => void;
   updateUserPassword: (email: string, newPassword: string) => void;
 }
@@ -140,20 +140,18 @@ const UserCard = ({
               </h1>
             </button>
           </div>
-          {!isVerified && (
-            <div className="w-full">
-              <button
-                onClick={() => {
-                  verifyUser(email);
-                }}
-                className="flex w-full items-center justify-center rounded-lg border-2 border-blue-500 px-6 py-2"
-              >
-                <h1 className="text-sm font-bold text-blue-500 md:text-base">
-                  Verify User
-                </h1>
-              </button>
-            </div>
-          )}
+          <div className="w-full">
+            <button
+              onClick={() => {
+                verifyUser(email, !isVerified);
+              }}
+              className="flex w-full items-center justify-center rounded-lg border-2 border-blue-500 px-6 py-2"
+            >
+              <h1 className="text-sm font-bold text-blue-500 md:text-base">
+                {isVerified ? "Unverify User" : "Verify User"}
+              </h1>
+            </button>
+          </div>
         </div>
         <div>
           <div className="w-full">
