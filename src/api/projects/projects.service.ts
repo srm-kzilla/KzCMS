@@ -34,13 +34,18 @@ const removeFileAfterUse = async (path: fs.PathLike) => {
     throw {
       statusCode: ERRORS.SERVER_ERROR.code,
       message: `${ERRORS.SERVER_ERROR.message.error} | File Unlink Error`,
+      description: ERRORS.SERVER_ERROR.message.error_description,
     };
   }
 };
 
 export const handleCreateProject = async ({ projectName, typeName }: CreateProjectType): Promise<string> => {
   if (!projectName || !typeName) {
-    throw { statusCode: ERRORS.MALFORMED_BODY.code, message: ERRORS.MALFORMED_BODY.message.error };
+    throw {
+      statusCode: ERRORS.MALFORMED_BODY.code,
+      message: ERRORS.MALFORMED_BODY.message.error,
+      description: ERRORS.MALFORMED_BODY.message.error_description,
+    };
   }
   const projectsCollection = (await db()).collection<ProjectType>('projects');
   const slug = slugify(`${projectName} ${typeName}`, { lower: true, replacement: '-', trim: true });
@@ -50,6 +55,7 @@ export const handleCreateProject = async ({ projectName, typeName }: CreateProje
     throw {
       statusCode: ERRORS.RESOURCE_CONFLICT.code,
       message: ERRORS.RESOURCE_CONFLICT.message.error,
+      description: ERRORS.RESOURCE_CONFLICT.message.error_description,
       data: { projectName, typeName },
     };
   }
@@ -73,6 +79,7 @@ export const handleUpdateProjectData = async (id: string, data: ProjectDataUpdat
     throw {
       statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
       message: ERRORS.RESOURCE_NOT_FOUND.message.error,
+      description: ERRORS.RESOURCE_NOT_FOUND.message.error_description,
       data,
     };
   }
@@ -91,11 +98,18 @@ export const handleUpdateProjectData = async (id: string, data: ProjectDataUpdat
     },
   );
 
-  if (updatedProject.matchedCount !== 1 || updatedProject.modifiedCount !== 1) {
+export const handleUpdateProjectMetadata = async (slug: string, newName: string, newSlug: string) => {
+  const projectsCollection = (await db()).collection('projects');
+  const project = await projectsCollection.findOne({ projectSlug: slug });
+  if (!project) {
     throw {
-      statusCode: ERRORS.DATA_OPERATION_FAILURE.code,
-      message: ERRORS.DATA_OPERATION_FAILURE.message.error,
+      statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
+      message: ERRORS.RESOURCE_NOT_FOUND.message.error,
+      description: ERRORS.RESOURCE_NOT_FOUND.message.error_description,
     };
+  }
+  if (!newSlug) {
+    newSlug = project.projectSlug;
   }
 };
 
@@ -140,11 +154,19 @@ export const handleGetProject = async (projectSlug: string, user: UserType) => {
   const project = await projectsCollection.findOne({ projectSlug, isDeleted: false });
 
   if (!project) {
-    throw { statusCode: ERRORS.RESOURCE_NOT_FOUND.code, message: ERRORS.RESOURCE_NOT_FOUND.message.error };
+    throw {
+      statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
+      message: ERRORS.RESOURCE_NOT_FOUND.message.error,
+      description: ERRORS.RESOURCE_NOT_FOUND.message.error_description,
+    };
   }
 
-  if (project.userAccess.length > 0 && !project.userAccess.includes(user.email)) {
-    throw { statusCode: ERRORS.UNAUTHORIZED.code, message: ERRORS.UNAUTHORIZED.message.error };
+  if (!user.isAdmin && !project.userAccess.includes(user.email)) {
+    throw {
+      statusCode: ERRORS.FORBIDDEN_ACCESS_ERROR.code,
+      message: ERRORS.FORBIDDEN_ACCESS_ERROR.message.error,
+      description: ERRORS.FORBIDDEN_ACCESS_ERROR.message.error_description,
+    };
   }
 
   const projectData = await projectsDataCollection
@@ -163,6 +185,7 @@ export const handleDeleteProject = async (slug: string) => {
     throw {
       statusCode: ERRORS.DATA_OPERATION_FAILURE.code,
       message: ERRORS.DATA_OPERATION_FAILURE.message.error,
+      description: ERRORS.DATA_OPERATION_FAILURE.message.error_description,
     };
   }
 };
@@ -178,7 +201,11 @@ export const handleCreateProjectData = async (
 
   if (!project) {
     await removeFileAfterUse(file.path);
-    throw { statusCode: ERRORS.RESOURCE_NOT_FOUND.code, message: ERRORS.RESOURCE_NOT_FOUND.message.error };
+    throw {
+      statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
+      message: ERRORS.RESOURCE_NOT_FOUND.message.error,
+      description: ERRORS.RESOURCE_NOT_FOUND.message.error_description,
+    };
   }
 
   const projectDataCollection = (await db()).collection<ProjectDataType>('project_data');
@@ -192,7 +219,8 @@ export const handleCreateProjectData = async (
     await removeFileAfterUse(file.path);
     throw {
       statusCode: ERRORS.RESOURCE_CONFLICT.code,
-      message: ERRORS.RESOURCE_CONFLICT.message.error_description,
+      message: ERRORS.RESOURCE_CONFLICT.message,
+      description: ERRORS.RESOURCE_CONFLICT.message.error_description,
     };
   }
 
@@ -209,7 +237,11 @@ export const handleCreateProjectData = async (
   await removeFileAfterUse(file.path);
 
   if (!uploadResult) {
-    throw { statusCode: ERRORS.MALFORMED_BODY.code, message: ERRORS.MALFORMED_BODY.message.error };
+    throw {
+      statusCode: ERRORS.MALFORMED_BODY.code,
+      message: ERRORS.MALFORMED_BODY.message.error,
+      description: ERRORS.MALFORMED_BODY.message.error_description,
+    };
   }
 
   const result = await projectDataCollection.insertOne({
@@ -223,26 +255,60 @@ export const handleCreateProjectData = async (
     author: userEmail,
   });
 
-  if (result.acknowledged !== true) {
-    throw { statusCode: ERRORS.DATA_OPERATION_FAILURE.code, message: ERRORS.DATA_OPERATION_FAILURE.message.error };
+  if (!project) {
+    throw {
+      statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
+      message: ERRORS.RESOURCE_NOT_FOUND.message.error,
+      description: ERRORS.RESOURCE_NOT_FOUND.message.error_description,
+    };
   }
 };
 
 export const handleDeleteProjectData = async (id: string) => {
   const projectDataCollection = (await db()).collection<ProjectDataType>('project_data');
 
-  const projectDataId = new ObjectId(id);
-  const projectData = await projectDataCollection.findOne({ _id: projectDataId, isDeleted: false });
+  if (!data || !data.imageURL) {
+    throw {
+      statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
+      message: ERRORS.RESOURCE_NOT_FOUND.message.error,
+      description: ERRORS.RESOURCE_NOT_FOUND.message.error_description,
+    };
+  }
 
   if (!projectData) {
     throw {
       statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
       message: ERRORS.RESOURCE_NOT_FOUND.message.error,
+      description: ERRORS.RESOURCE_NOT_FOUND.message.error_description,
     };
   }
 
-  const result = await projectDataCollection.updateOne(
-    { _id: projectDataId, isDeleted: false },
+  try {
+    await s3Client.send(
+      new DeleteObjectCommand({
+        Bucket: config.AWS.bucketName,
+        Key: KEY[1],
+      }),
+    );
+  } catch (e) {
+    throw {
+      statusCode: ERRORS.DATA_OPERATION_FAILURE.code,
+      message: ERRORS.DATA_OPERATION_FAILURE.message.error,
+      description: ERRORS.DATA_OPERATION_FAILURE.message.error_description,
+    };
+  }
+
+  const result = await projectsCollection.findOneAndUpdate(
+    {
+      projectSlug: slug,
+    },
+    {
+      $pull: {
+        data: {
+          title,
+        },
+      } as UpdateFilter<ProjectDataType>,
+    },
     {
       $set: {
         isDeleted: true,
@@ -254,6 +320,7 @@ export const handleDeleteProjectData = async (id: string) => {
     throw {
       statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
       message: ERRORS.RESOURCE_NOT_FOUND.message.error,
+      description: ERRORS.RESOURCE_NOT_FOUND.message.error_description,
     };
   }
 };
@@ -262,7 +329,13 @@ export const handleUpdateProjectImage = async (id: string, file: Express.Multer.
   try {
     const projectDataCollection = (await db()).collection<ProjectDataType>('project_data');
 
-    const projectDataId = new ObjectId(id);
+    if (!project) {
+      throw {
+        statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
+        message: ERRORS.RESOURCE_NOT_FOUND.message.error,
+        description: ERRORS.RESOURCE_NOT_FOUND.message.error_description,
+      };
+    }
 
     const projectData = await projectDataCollection.findOne({
       _id: projectDataId,
@@ -270,18 +343,21 @@ export const handleUpdateProjectImage = async (id: string, file: Express.Multer.
     });
 
     if (!projectData) {
-      throw { statusCode: ERRORS.RESOURCE_NOT_FOUND.code, message: ERRORS.RESOURCE_NOT_FOUND.message.error };
+      throw {
+        statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
+        message: ERRORS.RESOURCE_NOT_FOUND.message.error,
+        description: ERRORS.RESOURCE_NOT_FOUND.message.error_description,
+      };
     }
 
-    if (projectData.imageURL) {
-      const key = projectData.imageURL.match(LINK_REGEX_PATTERN);
+    const key = projectData.imageURL.match(LINK_REGEX_PATTERN);
 
-      if (!key) {
-        throw {
-          statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
-          message: ERRORS.RESOURCE_NOT_FOUND.message.error,
-        };
-      }
+    if (!key) {
+      throw {
+        statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
+        message: ERRORS.RESOURCE_NOT_FOUND.message.error,
+        description: ERRORS.RESOURCE_NOT_FOUND.message.error_description,
+      };
 
       await s3Client.send(
         new DeleteObjectCommand({
@@ -302,7 +378,11 @@ export const handleUpdateProjectImage = async (id: string, file: Express.Multer.
     );
 
     if (!uploadResult) {
-      throw { statusCode: ERRORS.MALFORMED_BODY.code, message: ERRORS.MALFORMED_BODY.message.error };
+      throw {
+        statusCode: ERRORS.MALFORMED_BODY.code,
+        message: ERRORS.MALFORMED_BODY.message.error,
+        description: ERRORS.MALFORMED_BODY.message.error_description,
+      };
     }
 
     const result = await projectDataCollection.updateOne(

@@ -30,28 +30,35 @@ export const ERRORS = {
   MISSING_ACCESS_TOKEN: {
     code: 401,
     message: {
-      error: 'Unauthorized',
-      error_description: 'Authorization token is required',
+      error: 'Access Token Not Found',
+      error_description: 'Access token is required for authorization',
     },
   },
   UNAUTHORIZED: {
     code: 401,
     message: {
-      error: 'Unauthorized',
-      error_description: "You don't have permission to access this resource",
+      error: 'Authorization Failure',
+      error_description: 'User authorization failed',
+    },
+  },
+  INVALID_CREDENTIALS: {
+    code: 401,
+    message: {
+      error: 'Password Invalid',
+      error_description: 'Invalid password entered by the user',
     },
   },
   FORBIDDEN_ACCESS_ERROR: {
     code: 403,
     message: {
-      error: 'Access Forbidden',
+      error: 'Resource Access Forbidden',
       error_description: "You don't have authorization to access this resource",
     },
   },
   RESOURCE_NOT_FOUND: {
     code: 404,
     message: {
-      error: 'Not Found',
+      error: 'Resource Not Found',
       error_description: 'Resource was not found',
     },
   },
@@ -60,7 +67,7 @@ export const ERRORS = {
     code: 404,
     message: {
       error: 'User Not Found',
-      error_description: 'User does not exists',
+      error_description: 'User does not exist',
     },
   },
   ENDPOINT_NOT_FOUND: {
@@ -81,7 +88,7 @@ export const ERRORS = {
     code: 409,
     message: {
       error: 'User Already Deleted',
-      error_description: 'User already deleted',
+      error_description: 'User has been already deleted',
     },
   },
   INVARIANT_PROJECT_STATUS: {
@@ -89,6 +96,13 @@ export const ERRORS = {
     message: {
       error: 'Project Status Unchanged',
       error_description: 'Project status matches the current status',
+    },
+  },
+  FAILED_USER_VALIDATION: {
+    code: 422,
+    message: {
+      error: 'Verification Failure',
+      error_description: 'User verification failed',
     },
   },
 };

@@ -11,7 +11,11 @@ export const handleGetProject = async (id: string) => {
   const project = await projectsCollection.findOne({ _id: new ObjectId(id), isDeleted: false });
 
   if (!project) {
-    throw { statusCode: ERRORS.RESOURCE_NOT_FOUND.code, message: ERRORS.RESOURCE_NOT_FOUND.message.error };
+    throw {
+      statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
+      message: ERRORS.RESOURCE_NOT_FOUND.message.error,
+      description: ERRORS.RESOURCE_NOT_FOUND.message.error_description,
+    };
   }
 
   const projectData = await projectsDataCollection

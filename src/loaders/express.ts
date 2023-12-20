@@ -8,9 +8,7 @@ import config from '@/config';
 import { errorHandler } from '@/shared/middlewares/errorHandler';
 import { ERRORS } from '@/shared/errors';
 
-export default ({ app }: {
-  app: express.Application
-}): void => {
+export default ({ app }: { app: express.Application }): void => {
   /**
    * Health Check endpoints
    */
@@ -54,7 +52,11 @@ export default ({ app }: {
   app.use(config.API.PREFIX, routes());
 
   app.all('*', () => {
-    throw { statusCode: ERRORS.ENDPOINT_NOT_FOUND.code, message: ERRORS.ENDPOINT_NOT_FOUND.message.error };
+    throw {
+      statusCode: ERRORS.ENDPOINT_NOT_FOUND.code,
+      message: ERRORS.ENDPOINT_NOT_FOUND.message.error,
+      description: ERRORS.ENDPOINT_NOT_FOUND.message.error_description,
+    };
   });
 
   app.use(errorHandler);

@@ -9,7 +9,11 @@ import { AnyBulkWriteOperation, Document } from 'mongodb';
 export const handleUpdateUser = async (email: string, password: string): Promise<void> => {
   const data = await (await db()).collection('users').findOne({ email: email });
   if (!data) {
-    throw { statusCode: ERRORS.USER_NOT_FOUND.code, message: ERRORS.USER_NOT_FOUND.message.error };
+    throw {
+      statusCode: ERRORS.USER_NOT_FOUND.code,
+      message: ERRORS.USER_NOT_FOUND.message.error,
+      description: ERRORS.USER_NOT_FOUND.message.error_description,
+    };
   }
 
   const hash = await bcrypt.hash(password, SALT_ROUNDS);
@@ -19,10 +23,18 @@ export const handleUpdateUser = async (email: string, password: string): Promise
 export async function handleDeleteUser(email: string) {
   const user = await (await db()).collection('users').findOne({ email });
   if (!user) {
-    throw { statusCode: ERRORS.USER_NOT_FOUND.code, message: ERRORS.USER_NOT_FOUND.message.error };
+    throw {
+      statusCode: ERRORS.USER_NOT_FOUND.code,
+      message: ERRORS.USER_NOT_FOUND.message.error,
+      description: ERRORS.USER_NOT_FOUND.message.error_description,
+    };
   }
   if (user.isDeleted) {
-    throw { statusCode: ERRORS.USER_ALREADY_DELETED.code, message: ERRORS.USER_ALREADY_DELETED.message.error };
+    throw {
+      statusCode: ERRORS.USER_ALREADY_DELETED.code,
+      message: ERRORS.USER_ALREADY_DELETED.message.error,
+      description: ERRORS.USER_ALREADY_DELETED.message.error_description,
+    };
   }
   await (await db()).collection('users').updateOne({ email }, { $set: { isDeleted: true, isVerified: false } });
 }
@@ -32,8 +44,9 @@ export const handleVerifyUser = async (email: string, verify: boolean): Promise<
 
   if (result.matchedCount !== 1 || result.modifiedCount !== 1) {
     throw {
-      statusCode: ERRORS.DATA_OPERATION_FAILURE.code,
-      message: ERRORS.DATA_OPERATION_FAILURE.message.error,
+      statusCode: ERRORS.FAILED_USER_VALIDATION.code,
+      message: ERRORS.FAILED_USER_VALIDATION.message.error,
+      description: ERRORS.FAILED_USER_VALIDATION.message.error_description,
     };
   }
 };
@@ -42,7 +55,11 @@ export async function handleUpdateUserProjects(data: UpdateProjectSchemaType) {
   const project = await (await db()).collection('projects').findOne({ projectSlug: data.projectSlug });
 
   if (!project) {
-    throw { statusCode: ERRORS.RESOURCE_NOT_FOUND.code, message: ERRORS.RESOURCE_NOT_FOUND.message.error };
+    throw {
+      statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
+      message: ERRORS.RESOURCE_NOT_FOUND.message.error,
+      description: ERRORS.RESOURCE_NOT_FOUND.message.error_description,
+    };
   }
 
   const newUsers = data.userAccess.filter(email => !project.userAccess.includes(email));
@@ -84,14 +101,22 @@ export async function handleUpdateDomains(slug: string, allowedDomains: string[]
     .findOne({ projectSlug: slug }, { projection: { allowedDomains: 1 } });
 
   if (!project) {
-    throw { statusCode: ERRORS.RESOURCE_NOT_FOUND.code, message: ERRORS.RESOURCE_NOT_FOUND.message.error };
+    throw {
+      statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
+      message: ERRORS.RESOURCE_NOT_FOUND.message.error,
+      description: ERRORS.RESOURCE_NOT_FOUND.message.error_description,
+    };
   }
 
   const sortedOriginal = project.allowedDomains.sort().join();
   const sortedNew = allowedDomains.sort().join();
 
   if (sortedOriginal === sortedNew) {
-    throw { statusCode: ERRORS.RESOURCE_CONFLICT.code, message: ERRORS.RESOURCE_CONFLICT.message.error };
+    throw {
+      statusCode: ERRORS.RESOURCE_CONFLICT.code,
+      message: ERRORS.RESOURCE_CONFLICT.message.error,
+      description: ERRORS.RESOURCE_CONFLICT.message.error_description,
+    };
   }
 
   await (await db()).collection('projects').updateOne({ projectSlug: slug }, { $set: { allowedDomains } });
@@ -106,7 +131,11 @@ export async function handleGetTokens(projectId: string): Promise<{ tokens: stri
   )) as unknown as { tokens: Token[] };
 
   if (!result) {
-    throw { statusCode: ERRORS.RESOURCE_NOT_FOUND.code, message: ERRORS.RESOURCE_NOT_FOUND.message.error };
+    throw {
+      statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
+      message: ERRORS.RESOURCE_NOT_FOUND.message.error,
+      description: ERRORS.RESOURCE_NOT_FOUND.message.error_description,
+    };
   }
 
   const tokens = result.tokens.map(token => token.name);
@@ -122,7 +151,11 @@ export async function handleCreateToken(projectId: string, tokenName: string): P
   };
 
   if (tokens?.tokens.some(token => token.name === tokenName)) {
-    throw { statusCode: ERRORS.RESOURCE_CONFLICT.code, message: MESSAGES_TEXT.TOKEN_WITH_SAME_NAME_EXISTS };
+    throw {
+      statusCode: ERRORS.RESOURCE_CONFLICT.code,
+      message: MESSAGES_TEXT.TOKEN_WITH_SAME_NAME_EXISTS,
+      description: ERRORS.RESOURCE_CONFLICT.message.error_description,
+    };
   }
 
   const token = crypto.randomBytes(16).toString('hex');
@@ -141,6 +174,7 @@ export async function handleCreateToken(projectId: string, tokenName: string): P
     throw {
       statusCode: ERRORS.DATA_OPERATION_FAILURE.code,
       message: ERRORS.DATA_OPERATION_FAILURE.message.error,
+      description: ERRORS.DATA_OPERATION_FAILURE.message.error_description,
     };
   }
 
@@ -159,6 +193,7 @@ export async function handleDeleteToken(projectId: string, tokenName: string): P
     throw {
       statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
       message: MESSAGES_TEXT.TOKEN_NOT_FOUND,
+      description: ERRORS.RESOURCE_NOT_FOUND.message.error_description,
     };
   }
 }

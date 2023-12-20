@@ -88,7 +88,11 @@ export const updateProjectImage = async (
 ): Promise<void> => {
   try {
     if (!req.file) {
-      throw { statusCode: ERRORS.MALFORMED_BODY.code, message: ERRORS.MALFORMED_BODY.message.error };
+      throw {
+        statusCode: ERRORS.MALFORMED_BODY.code,
+        message: ERRORS.MALFORMED_BODY.message.error,
+        description: ERRORS.MALFORMED_BODY.message.error_description,
+      };
     }
 
     await handleUpdateProjectImage(req.params.projectDataId, req.file);
@@ -126,7 +130,11 @@ export const createProjectData = async (
 ): Promise<void> => {
   try {
     if (!req.file) {
-      throw { statusCode: ERRORS.MALFORMED_BODY.code, message: ERRORS.MALFORMED_BODY.message.error };
+      throw {
+        statusCode: ERRORS.MALFORMED_BODY.code,
+        message: ERRORS.MALFORMED_BODY.message.error,
+        description: ERRORS.MALFORMED_BODY.message.error_description,
+      };
     }
     await handleCreateProjectData(req.params.slug, req.body, req.file, res.locals.user.email);
     res.status(STATUS.OK).json({
