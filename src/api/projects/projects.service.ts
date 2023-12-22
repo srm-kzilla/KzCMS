@@ -155,7 +155,7 @@ export const handleGetProject = async (projectSlug: string, user: UserType) => {
     };
   }
 
-  if (project.userAccess.length > 0 && !project.userAccess.includes(user.email)) {
+  if (!user.isAdmin && !project.userAccess.includes(user.email)) {
     throw {
       statusCode: ERRORS.UNAUTHORIZED.code,
       message: ERRORS.UNAUTHORIZED.message.error,
