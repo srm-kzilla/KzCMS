@@ -9,7 +9,7 @@ export const upload = multer({
   },
   storage: multer.diskStorage({
     destination: function (_, __, cb) {
-      const path = `./tmp/uploads`;
+      const path = `./tmp/uploads/`;
       fs.mkdirSync(path, { recursive: true });
       return cb(null, path);
     },

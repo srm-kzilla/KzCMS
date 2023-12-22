@@ -29,7 +29,7 @@ const S3_BASE_URL = `https://${config.AWS.bucketName}.s3.${config.AWS.region}.am
 const removeFileAfterUse = async (path: fs.PathLike) => {
   try {
     const unlinkFile = promisify(fs.unlink);
-    await unlinkFile(`./tmp/uploads/${path}`);
+    await unlinkFile(`./${path}`);
   } catch {
     throw {
       statusCode: ERRORS.SERVER_ERROR.code,
@@ -98,18 +98,12 @@ export const handleUpdateProjectData = async (id: string, data: ProjectDataUpdat
     },
   );
 
-export const handleUpdateProjectMetadata = async (slug: string, newName: string, newSlug: string) => {
-  const projectsCollection = (await db()).collection('projects');
-  const project = await projectsCollection.findOne({ projectSlug: slug });
-  if (!project) {
+  if (updatedProject.matchedCount !== 1 || updatedProject.modifiedCount !== 1) {
     throw {
-      statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
-      message: ERRORS.RESOURCE_NOT_FOUND.message.error,
+      statusCode: ERRORS.DATA_OPERATION_FAILURE.code,
+      message: ERRORS.DATA_OPERATION_FAILURE.message.error,
       description: ERRORS.RESOURCE_NOT_FOUND.message.error_description,
     };
-  }
-  if (!newSlug) {
-    newSlug = project.projectSlug;
   }
 };
 
@@ -163,9 +157,9 @@ export const handleGetProject = async (projectSlug: string, user: UserType) => {
 
   if (!user.isAdmin && !project.userAccess.includes(user.email)) {
     throw {
-      statusCode: ERRORS.FORBIDDEN_ACCESS_ERROR.code,
-      message: ERRORS.FORBIDDEN_ACCESS_ERROR.message.error,
-      description: ERRORS.FORBIDDEN_ACCESS_ERROR.message.error_description,
+      statusCode: ERRORS.UNAUTHORIZED.code,
+      message: ERRORS.UNAUTHORIZED.message.error,
+      description: ERRORS.UNAUTHORIZED.message.error_description,
     };
   }
 
@@ -255,10 +249,10 @@ export const handleCreateProjectData = async (
     author: userEmail,
   });
 
-  if (!project) {
+  if (result.acknowledged !== true) {
     throw {
-      statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
-      message: ERRORS.RESOURCE_NOT_FOUND.message.error,
+      statusCode: ERRORS.DATA_OPERATION_FAILURE.code,
+      message: ERRORS.DATA_OPERATION_FAILURE.message.error,
       description: ERRORS.RESOURCE_NOT_FOUND.message.error_description,
     };
   }
@@ -267,13 +261,8 @@ export const handleCreateProjectData = async (
 export const handleDeleteProjectData = async (id: string) => {
   const projectDataCollection = (await db()).collection<ProjectDataType>('project_data');
 
-  if (!data || !data.imageURL) {
-    throw {
-      statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
-      message: ERRORS.RESOURCE_NOT_FOUND.message.error,
-      description: ERRORS.RESOURCE_NOT_FOUND.message.error_description,
-    };
-  }
+  const projectDataId = new ObjectId(id);
+  const projectData = await projectDataCollection.findOne({ _id: projectDataId, isDeleted: false });
 
   if (!projectData) {
     throw {
@@ -283,32 +272,8 @@ export const handleDeleteProjectData = async (id: string) => {
     };
   }
 
-  try {
-    await s3Client.send(
-      new DeleteObjectCommand({
-        Bucket: config.AWS.bucketName,
-        Key: KEY[1],
-      }),
-    );
-  } catch (e) {
-    throw {
-      statusCode: ERRORS.DATA_OPERATION_FAILURE.code,
-      message: ERRORS.DATA_OPERATION_FAILURE.message.error,
-      description: ERRORS.DATA_OPERATION_FAILURE.message.error_description,
-    };
-  }
-
-  const result = await projectsCollection.findOneAndUpdate(
-    {
-      projectSlug: slug,
-    },
-    {
-      $pull: {
-        data: {
-          title,
-        },
-      } as UpdateFilter<ProjectDataType>,
-    },
+  const result = await projectDataCollection.updateOne(
+    { _id: projectDataId, isDeleted: false },
     {
       $set: {
         isDeleted: true,
@@ -329,13 +294,7 @@ export const handleUpdateProjectImage = async (id: string, file: Express.Multer.
   try {
     const projectDataCollection = (await db()).collection<ProjectDataType>('project_data');
 
-    if (!project) {
-      throw {
-        statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
-        message: ERRORS.RESOURCE_NOT_FOUND.message.error,
-        description: ERRORS.RESOURCE_NOT_FOUND.message.error_description,
-      };
-    }
+    const projectDataId = new ObjectId(id);
 
     const projectData = await projectDataCollection.findOne({
       _id: projectDataId,
@@ -343,21 +302,18 @@ export const handleUpdateProjectImage = async (id: string, file: Express.Multer.
     });
 
     if (!projectData) {
-      throw {
-        statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
-        message: ERRORS.RESOURCE_NOT_FOUND.message.error,
-        description: ERRORS.RESOURCE_NOT_FOUND.message.error_description,
-      };
+      throw { statusCode: ERRORS.RESOURCE_NOT_FOUND.code, message: ERRORS.RESOURCE_NOT_FOUND.message.error };
     }
 
-    const key = projectData.imageURL.match(LINK_REGEX_PATTERN);
+    if (projectData.imageURL) {
+      const key = projectData.imageURL.match(LINK_REGEX_PATTERN);
 
-    if (!key) {
-      throw {
-        statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
-        message: ERRORS.RESOURCE_NOT_FOUND.message.error,
-        description: ERRORS.RESOURCE_NOT_FOUND.message.error_description,
-      };
+      if (!key) {
+        throw {
+          statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
+          message: ERRORS.RESOURCE_NOT_FOUND.message.error,
+        };
+      }
 
       await s3Client.send(
         new DeleteObjectCommand({
@@ -401,6 +357,6 @@ export const handleUpdateProjectImage = async (id: string, file: Express.Multer.
       };
     }
   } finally {
-    await removeFileAfterUse(file.filename);
+    await removeFileAfterUse(file.path);
   }
 };
