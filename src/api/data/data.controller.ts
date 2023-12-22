@@ -4,10 +4,10 @@ import { ProjectIdType } from '@/shared/types';
 import { NextFunction, Request, Response } from 'express';
 
 export const getProjectData = async (req: Request<ProjectIdType>, res: Response, next: NextFunction) => {
-  const { id } = req.params;
+  const { projectId } = req.params;
 
   try {
-    const data = await handleGetProject(id);
+    const data = await handleGetProject(projectId);
     res.status(STATUS.OK).json({
       success: true,
       data,
