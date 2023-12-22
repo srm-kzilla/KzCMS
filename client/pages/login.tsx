@@ -6,13 +6,15 @@ import nookies, { setCookie } from "nookies";
 import { useRouter } from "next/router";
 import { type ChangeEvent, useState } from "react";
 import type { GetServerSidePropsContext } from "next";
+import { AxiosError } from "axios";
+import { toast } from "react-toastify";
 
 const Login = () => {
   const [user, setUser] = useState({
     email: "",
     password: "",
   });
-  const [error, setError] = useState<boolean>(false);
+  const [error, setError] = useState<string>("Something Went Wrong!");
   const router = useRouter();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -35,7 +37,12 @@ const Login = () => {
 
       await router.push("/");
     } catch (err) {
-      setError(!error);
+      if (err instanceof AxiosError) {
+        toast.error(err.response?.data.description);
+        setError(err.response?.data.description);
+        return;
+      }
+      setError("Something Went Wrong!");
     }
   };
 
@@ -74,6 +81,7 @@ const Login = () => {
                   placeholder="user@gmail.com"
                   name="email"
                   onChange={handleChange}
+                  required
                 />
               </div>
               <div>
@@ -83,6 +91,8 @@ const Login = () => {
                   placeholder="password"
                   name="password"
                   onChange={handleChange}
+                  minLength={6}
+                  required
                 />
               </div>
               <div>
@@ -103,7 +113,7 @@ const Login = () => {
               </div>
               {error && (
                 <div className="flex w-full justify-center">
-                  <h1 className="text-red-500">Something went wrong</h1>
+                  <h1 className="text-red-500"> {error} </h1>
                 </div>
               )}
             </div>

@@ -41,6 +41,13 @@ export const ERRORS = {
       error_description: 'User authorization failed',
     },
   },
+  USER_NOT_VERIFIED: {
+    code: 401,
+    message: {
+      error: 'User Not Verified',
+      error_description: 'User must be verified to login',
+    },
+  },
   INVALID_CREDENTIALS: {
     code: 401,
     message: {

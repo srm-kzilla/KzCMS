@@ -71,7 +71,6 @@ export default function EditData({
       router.reload();
     } catch (err) {
       setError(true);
-      console.log(err);
     }
   };
 

@@ -1,7 +1,7 @@
 import db from '@/loaders/database';
 import { SALT_ROUNDS } from '@/shared/constants';
 import generateToken from '@/shared/middlewares/jwt';
-import { UserSchemaType } from '@/shared/types';
+import { UserSchemaType, UserType } from '@/shared/types';
 import bcrypt from 'bcrypt';
 import { ERRORS } from '@/shared/errors';
 
@@ -30,13 +30,21 @@ export async function handleAddNewUser(signup: UserSchemaType) {
 }
 
 export async function handleExistingUser({ email, password }: UserSchemaType): Promise<string> {
-  const data = await (await db()).collection('users').findOne({ email: email });
+  const data = await (await db()).collection<UserType>('users').findOne({ email: email });
 
   if (!data) {
     throw {
       statusCode: ERRORS.USER_NOT_FOUND.code,
       message: ERRORS.USER_NOT_FOUND.message.error,
       description: ERRORS.USER_NOT_FOUND.message.error_description,
+    };
+  }
+
+  if (!data.isVerified) {
+    throw {
+      statusCode: ERRORS.USER_NOT_VERIFIED.code,
+      message: ERRORS.USER_NOT_VERIFIED.message.error,
+      description: ERRORS.USER_NOT_VERIFIED.message.error_description,
     };
   }
 

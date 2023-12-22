@@ -9,9 +9,31 @@ export function validateRequest(location: RequestLocation, schema: z.AnyZodObjec
     try {
       req[location] = await schema.parseAsync(req[location]);
       next();
-    } catch (error) {
-      const message = error;
-      return res.status(ERRORS.MALFORMED_BODY.code).json({ error: ERRORS.MALFORMED_BODY, message });
+    } catch (err) {
+      const [firstError] = err.errors;
+      if (firstError.message.includes('Required')) {
+        const missingParams = err.errors.map(error => error.path).join(', ');
+        next({
+          statusCode: ERRORS.MALFORMED_BODY.code,
+          message: ERRORS.MALFORMED_BODY.message.error,
+          description: `Missing required params: ${missingParams}`,
+        });
+      }
+
+      if (firstError.message.includes('Invalid')) {
+        const [first] = err.errors;
+        next({
+          statusCode: ERRORS.MALFORMED_BODY.code,
+          message: ERRORS.MALFORMED_BODY.message.error,
+          description: `Invalid ${first.path} provided`,
+        });
+      }
+
+      next({
+        statusCode: ERRORS.MALFORMED_BODY.code,
+        message: ERRORS.MALFORMED_BODY.message.error,
+        description: ERRORS.MALFORMED_BODY.message.error_description,
+      });
     }
   };
 }
