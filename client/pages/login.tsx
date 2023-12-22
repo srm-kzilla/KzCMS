@@ -14,7 +14,7 @@ const Login = () => {
     email: "",
     password: "",
   });
-  const [error, setError] = useState<string>("");
+  const [error, setError] = useState<string>("Something Went Wrong!");
   const router = useRouter();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -40,7 +40,9 @@ const Login = () => {
       if (err instanceof AxiosError) {
         toast.error(err.response?.data.description);
         setError(err.response?.data.description);
+        return;
       }
+      setError("Something Went Wrong!");
     }
   };
 
