@@ -14,7 +14,7 @@ const Login = () => {
     email: "",
     password: "",
   });
-  const [error, setError] = useState<string>("Something Went Wrong!");
+  const [error, setError] = useState<string>("");
   const router = useRouter();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -111,7 +111,7 @@ const Login = () => {
                   </Link>
                 </h1>
               </div>
-              {error && (
+              {error.trim() && (
                 <div className="flex w-full justify-center">
                   <h1 className="text-red-500"> {error} </h1>
                 </div>
