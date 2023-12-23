@@ -91,6 +91,13 @@ export const ERRORS = {
       error_description: 'Resource already exists',
     },
   },
+  USER_ALREADY_EXSIST: {
+    code: 409,
+    message: {
+      error: 'User Already Exists',
+      error_description: 'User with the same email already exists! Try Login?',
+    },
+  },
   USER_ALREADY_DELETED: {
     code: 409,
     message: {

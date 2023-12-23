@@ -7,11 +7,10 @@ export const addNewUser = async (req: Request<unknown, unknown, UserSchemaType>,
   const user = req.body;
   try {
     await handleAddNewUser(user);
-    const token = await handleExistingUser(user);
+
     res.status(STATUS.OK).json({
       success: true,
       message: MESSAGES_TEXT.CREATE_USER,
-      token,
     });
   } catch (error) {
     next(error);

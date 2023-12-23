@@ -9,9 +9,9 @@ export async function handleAddNewUser(signup: UserSchemaType) {
   const data = await (await db()).collection('users').findOne({ email: signup.email });
   if (data) {
     throw {
-      statusCode: ERRORS.RESOURCE_CONFLICT.code,
-      message: ERRORS.RESOURCE_CONFLICT.message.error,
-      description: ERRORS.RESOURCE_CONFLICT.message.error_description,
+      statusCode: ERRORS.USER_ALREADY_EXSIST.code,
+      message: ERRORS.USER_ALREADY_EXSIST.message.error,
+      description: ERRORS.USER_ALREADY_EXSIST.message.error_description,
     };
   }
   const collection = (await db()).collection('users');
