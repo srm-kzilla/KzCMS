@@ -21,23 +21,27 @@ export const UpdateProjectSchema = z.object({
 });
 
 export const TokenSchema = z.object({
+  projectId: z.string(),
   name: z.string(),
   token: z.string(),
+  isDeleted: z.boolean(),
+  createdAt: z.string(),
+  createdBy: z.string(),
+  lastUpdatedBy: z.string(),
 });
 
-export const TokenGetSchema = z.object({
-  projectId: z.string(),
+export const TokenGetSchema = TokenSchema.pick({
+  projectId: true,
 });
 
-export const TokenUpdateSchema = z.object({
-  projectId: z.string(),
-  name: z.string(),
+export const TokenUpdateSchema = TokenSchema.pick({
+  projectId: true,
+  name: true,
 });
 
 export type UpdateProjectSchemaType = z.infer<typeof UpdateProjectSchema>;
 export type VerifyUserType = z.infer<typeof VerifyUserSchema>;
 
 export type Token = z.infer<typeof TokenSchema>;
-export type TokenCreateSchemaType = Pick<Token, 'name'>;
 export type TokenGetSchemaType = z.infer<typeof TokenGetSchema>;
 export type TokenUpdateSchemaType = z.infer<typeof TokenUpdateSchema>;

@@ -8,6 +8,7 @@ import {
   handleVerifyUser,
 } from '@/api/admin/admin.service';
 import { MESSAGES_TEXT, STATUS } from '@/shared/constants';
+import { UserType } from '@/shared/types';
 import {
   TokenGetSchemaType,
   TokenUpdateSchemaType,
@@ -99,7 +100,8 @@ export const createToken = async (
 ) => {
   try {
     const { projectId, name } = req.body;
-    const { token } = await handleCreateToken(projectId, name);
+    const { user } = res.locals as { user: UserType };
+    const { token } = await handleCreateToken(projectId, name, user.email);
     res.status(STATUS.OK).json({
       success: true,
       message: MESSAGES_TEXT.CREATE_TOKEN,
@@ -117,7 +119,8 @@ export const deleteToken = async (
 ) => {
   try {
     const { projectId, name } = req.body;
-    await handleDeleteToken(projectId, name);
+    const { user } = res.locals as { user: UserType };
+    await handleDeleteToken(projectId, name, user.email);
     res.status(STATUS.OK).json({
       success: true,
       message: MESSAGES_TEXT.DELETE_TOKEN,
