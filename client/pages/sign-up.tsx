@@ -112,7 +112,7 @@ const SignUp = () => {
               </div>
               {error && (
                 <div className="flex w-full justify-center">
-                  <h1 className="text-red-500">Something went wrong</h1>
+                  <h1 className="text-red-500">{error}</h1>
                 </div>
               )}
             </div>
