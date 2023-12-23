@@ -94,8 +94,8 @@ export const ERRORS = {
   USER_ALREADY_EXSIST: {
     code: 409,
     message: {
-      error: 'User Already Exist',
-      error_description: 'User with the same email already exsist! Try Login?',
+      error: 'User Already Exists',
+      error_description: 'User with the same email already exists! Try Login?',
     },
   },
   USER_ALREADY_DELETED: {
