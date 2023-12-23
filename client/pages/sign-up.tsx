@@ -7,13 +7,14 @@ import { useRouter } from "next/router";
 import { type ChangeEvent, useState } from "react";
 import type { GetServerSidePropsContext } from "next";
 import { toast } from "react-toastify";
+import { AxiosError } from "axios";
 
 const SignUp = () => {
   const [user, setUser] = useState({
     email: "",
     password: "",
   });
-  const [error, setError] = useState<boolean>(false);
+  const [error, setError] = useState<string>("Something Went Wrong");
   const router = useRouter();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -35,7 +36,12 @@ const SignUp = () => {
         await router.push("/login");
       }, 5000);
     } catch (err) {
-      setError(!error);
+      if (err instanceof AxiosError) {
+        toast.error(err.response?.data.description);
+        setError(err.response?.data.description);
+        return;
+      }
+      setError("Something Went Wrong!");
     }
   };
 
@@ -74,6 +80,7 @@ const SignUp = () => {
                   placeholder="user@gmail.com"
                   name="email"
                   onChange={handleChange}
+                  required
                 />
               </div>
               <div>
@@ -83,6 +90,8 @@ const SignUp = () => {
                   placeholder="password"
                   name="password"
                   onChange={handleChange}
+                  minLength={6}
+                  required
                 />
               </div>
               <div>
