@@ -4,7 +4,6 @@ import { NextFunction, Request, Response } from 'express';
 import { MESSAGES_TEXT } from '../constants';
 import { ERRORS } from '../errors';
 import { ProjectIdType } from '../types';
-import { sha256 } from '../utils/hash';
 
 type RequestLocation = 'body' | 'params' | 'query';
 
@@ -23,10 +22,8 @@ export const validateToken = ({ idFrom }: { idFrom: RequestLocation }) => {
 
       const { projectId } = req[idFrom] as ProjectIdType;
 
-      const hashedToken = sha256.hash(token);
-
       const tokenExists = await (await db()).collection('tokens').findOne(
-        { projectId, token: hashedToken },
+        { projectId, token },
         {
           projection: {
             projectId: 1,

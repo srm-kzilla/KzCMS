@@ -2,7 +2,6 @@ import db from '@/loaders/database';
 import { MESSAGES_TEXT, SALT_ROUNDS } from '@/shared/constants';
 import { ERRORS } from '@/shared/errors';
 import { ProjectType, Token, UpdateProjectSchemaType } from '@/shared/types';
-import { sha256 } from '@/shared/utils/hash';
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';
 import { AnyBulkWriteOperation, Document, ObjectId } from 'mongodb';
@@ -183,7 +182,7 @@ export async function handleCreateToken(
   const result = await tokensCollection.insertOne({
     projectId,
     name: tokenName,
-    token: sha256.hash(token),
+    token,
     isDeleted: false,
     createdAt: new Date().toISOString(),
     createdBy: userEmail,
