@@ -3,7 +3,7 @@ import { MESSAGES_TEXT, SALT_ROUNDS } from '@/shared/constants';
 import { ERRORS } from '@/shared/errors';
 import { ProjectType, Token, UpdateProjectSchemaType } from '@/shared/types';
 import bcrypt from 'bcrypt';
-import crypto from 'crypto';
+import { nanoid } from 'nanoid';
 import { AnyBulkWriteOperation, Document, ObjectId } from 'mongodb';
 
 export const handleUpdateUser = async (email: string, password: string): Promise<void> => {
@@ -177,7 +177,7 @@ export async function handleCreateToken(
     };
   }
 
-  const token = crypto.randomBytes(16).toString('hex');
+  const token = nanoid();
 
   const result = await tokensCollection.insertOne({
     projectId,
