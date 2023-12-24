@@ -1,10 +1,10 @@
 import db from '@/loaders/database';
 import { MESSAGES_TEXT, SALT_ROUNDS } from '@/shared/constants';
 import { ERRORS } from '@/shared/errors';
-import { Token, UpdateProjectSchemaType } from '@/shared/types';
+import { ProjectType, Token, UpdateProjectSchemaType } from '@/shared/types';
 import bcrypt from 'bcrypt';
-import crypto from 'crypto';
-import { AnyBulkWriteOperation, Document } from 'mongodb';
+import { nanoid } from 'nanoid';
+import { AnyBulkWriteOperation, Document, ObjectId } from 'mongodb';
 
 export const handleUpdateUser = async (email: string, password: string): Promise<void> => {
   const data = await (await db()).collection('users').findOne({ email: email });
@@ -122,55 +122,74 @@ export async function handleUpdateDomains(slug: string, allowedDomains: string[]
   await (await db()).collection('projects').updateOne({ projectSlug: slug }, { $set: { allowedDomains } });
 }
 
-export async function handleGetTokens(projectId: string): Promise<{ tokens: string[] }> {
-  const result = (await (await db()).collection('tokens').findOne(
-    { projectId },
-    {
-      projection: { 'tokens.name': 1, _id: 0 },
-    },
-  )) as unknown as { tokens: Token[] };
+export async function handleGetTokens(projectId: string) {
+  const tokensCollection = (await db()).collection<Token>('tokens');
+  const tokens = await tokensCollection
+    .find(
+      { projectId, isDeleted: false },
+      {
+        projection: {
+          name: 1,
+          createdAt: 1,
+          createdBy: 1,
+        },
+      },
+    )
+    .toArray();
 
-  if (!result) {
+  return { tokens };
+}
+
+export async function handleCreateToken(
+  projectId: string,
+  tokenName: string,
+  userEmail: string,
+): Promise<{ token: string }> {
+  const projectsCollection = (await db()).collection<ProjectType>('projects');
+
+  const project = await projectsCollection.findOne({ _id: new ObjectId(projectId) }, { projection: { _id: 1 } });
+
+  if (!project) {
     throw {
-      statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
-      message: ERRORS.RESOURCE_NOT_FOUND.message.error,
-      description: ERRORS.RESOURCE_NOT_FOUND.message.error_description,
+      statusCode: ERRORS.PROJECT_NOT_FOUND.code,
+      message: ERRORS.PROJECT_NOT_FOUND.message.error,
+      description: ERRORS.PROJECT_NOT_FOUND.message.error_description,
     };
   }
 
-  const tokens = result.tokens.map(token => token.name);
+  const tokensCollection = (await db()).collection<Token>('tokens');
+  const tokens = await tokensCollection
+    .find(
+      { projectId, isDeleted: false },
+      {
+        projection: {
+          name: 1,
+        },
+      },
+    )
+    .toArray();
 
-  return { tokens: tokens };
-}
-
-export async function handleCreateToken(projectId: string, tokenName: string): Promise<{ token: string }> {
-  const tokens = (await (await db())
-    .collection('tokens')
-    .findOne({ projectId }, { projection: { 'tokens.name': 1 } })) as unknown as {
-    tokens: Omit<Token, 'token'>[];
-  };
-
-  if (tokens?.tokens.some(token => token.name === tokenName)) {
+  if (tokens.some(token => token.name === tokenName)) {
     throw {
       statusCode: ERRORS.RESOURCE_CONFLICT.code,
       message: MESSAGES_TEXT.TOKEN_WITH_SAME_NAME_EXISTS,
-      description: ERRORS.RESOURCE_CONFLICT.message.error_description,
+      description: MESSAGES_TEXT.TOKEN_WITH_SAME_NAME_EXISTS,
     };
   }
 
-  const token = crypto.randomBytes(16).toString('hex');
+  const token = nanoid();
 
-  const result = await (await db()).collection('tokens').updateOne(
-    { projectId },
-    {
-      $push: { tokens: { name: tokenName, token } },
-    },
-    {
-      upsert: true,
-    },
-  );
+  const result = await tokensCollection.insertOne({
+    projectId,
+    name: tokenName,
+    token,
+    isDeleted: false,
+    createdAt: new Date().toISOString(),
+    createdBy: userEmail,
+    lastUpdatedBy: userEmail,
+  });
 
-  if (!(result.matchedCount === 1 && result.modifiedCount === 1) && result.upsertedCount !== 1) {
+  if (!result.acknowledged) {
     throw {
       statusCode: ERRORS.DATA_OPERATION_FAILURE.code,
       message: ERRORS.DATA_OPERATION_FAILURE.message.error,
@@ -181,19 +200,18 @@ export async function handleCreateToken(projectId: string, tokenName: string): P
   return { token: token };
 }
 
-export async function handleDeleteToken(projectId: string, tokenName: string): Promise<void> {
-  const result = await (await db()).collection('tokens').updateOne(
-    { projectId },
-    {
-      $pull: { tokens: { name: tokenName } },
-    },
+export async function handleDeleteToken(projectId: string, tokenName: string, userEmail: string): Promise<void> {
+  const tokensCollection = (await db()).collection<Token>('tokens');
+  const result = await tokensCollection.updateOne(
+    { projectId, name: tokenName },
+    { $set: { isDeleted: true, lastUpdatedBy: userEmail } },
   );
 
   if (result.matchedCount !== 1 || result.modifiedCount !== 1) {
     throw {
-      statusCode: ERRORS.RESOURCE_NOT_FOUND.code,
-      message: MESSAGES_TEXT.TOKEN_NOT_FOUND,
-      description: ERRORS.RESOURCE_NOT_FOUND.message.error_description,
+      statusCode: ERRORS.DATA_OPERATION_FAILURE.code,
+      message: ERRORS.DATA_OPERATION_FAILURE.message.error,
+      description: ERRORS.DATA_OPERATION_FAILURE.message.error_description,
     };
   }
 }

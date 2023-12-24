@@ -69,12 +69,18 @@ export const ERRORS = {
       error_description: 'Resource was not found',
     },
   },
-
   USER_NOT_FOUND: {
     code: 404,
     message: {
       error: 'User Not Found',
       error_description: 'User does not exist',
+    },
+  },
+  PROJECT_NOT_FOUND: {
+    code: 404,
+    message: {
+      error: 'Project Not Found',
+      error_description: 'Project does not exist',
     },
   },
   ENDPOINT_NOT_FOUND: {

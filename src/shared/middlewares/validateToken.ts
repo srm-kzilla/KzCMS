@@ -3,7 +3,7 @@ import LoggerInstance from '@/loaders/logger';
 import { NextFunction, Request, Response } from 'express';
 import { MESSAGES_TEXT } from '../constants';
 import { ERRORS } from '../errors';
-import { ProjectIdType, Token } from '../types';
+import { ProjectIdType } from '../types';
 
 type RequestLocation = 'body' | 'params' | 'query';
 
@@ -22,13 +22,16 @@ export const validateToken = ({ idFrom }: { idFrom: RequestLocation }) => {
 
       const { projectId } = req[idFrom] as ProjectIdType;
 
-      const tokens = (await (await db()).collection('tokens').findOne({
-        projectId,
-      })) as unknown as {
-        tokens: Token[];
-      } | null;
+      const tokenExists = await (await db()).collection('tokens').findOne(
+        { projectId, token },
+        {
+          projection: {
+            projectId: 1,
+          },
+        },
+      );
 
-      if (!tokens || !tokens.tokens.find(t => t.token === token)) {
+      if (!tokenExists) {
         throw {
           statusCode: ERRORS.UNAUTHORIZED.code,
           message: MESSAGES_TEXT.INVALID_TOKEN_OR_PROJECT_NOT_EXISTS,
@@ -39,13 +42,11 @@ export const validateToken = ({ idFrom }: { idFrom: RequestLocation }) => {
       next();
     } catch (error) {
       LoggerInstance.error(error);
-      res
-        .status(error.statusCode ?? ERRORS.UNAUTHORIZED.code)
-        .json({
-          success: false,
-          message: error.message ?? ERRORS.UNAUTHORIZED.message.error,
-          description: ERRORS.UNAUTHORIZED.message.error_description,
-        });
+      res.status(error.statusCode ?? ERRORS.UNAUTHORIZED.code).json({
+        success: false,
+        message: error.message ?? ERRORS.UNAUTHORIZED.message.error,
+        description: ERRORS.UNAUTHORIZED.message.error_description,
+      });
     }
   };
 };
