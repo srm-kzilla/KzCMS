@@ -1,8 +1,9 @@
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import LinkIcon from "remixicon-react/LinkIcon";
 import type { ProjectItem } from "@/types";
+import EditData from "./editData";
 
 const ImageCard = (data: ProjectItem) => {
   const { imageURL, title, link, description, author } = data;
@@ -15,8 +16,24 @@ const ImageCard = (data: ProjectItem) => {
     }
   }, [router.isReady, router.query.project]);
 
+  const [addAssetState, setAddAssetState] = useState(false);
+
+  const handleAddAsset = () => {
+    setAddAssetState((prevState) => !prevState);
+  };
+
   return (
     <article>
+      {addAssetState ? (
+        <EditData
+          assetProjectId={data._id}
+          addAssetState={addAssetState}
+          setAddAssetState={setAddAssetState}
+          assetTitle={title}
+          assetDescription={description}
+          assetLink={link}
+        />
+      ) : null}
       <div className="group h-[300px] w-[320px] overflow-hidden rounded-xl [perspective:1000px] md:w-[400px]">
         <div className="relative h-full w-full shadow-xl transition-all duration-500 [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)] group-focus:[transform:rotateY(180deg)]">
           <div className="absolute inset-0 flex bg-slate-100">
@@ -40,7 +57,10 @@ const ImageCard = (data: ProjectItem) => {
               {description}
             </div>
             <div className="flex gap-2">
-              <button className="w-20 rounded-xl border-2 p-1 font-bold">
+              <button
+                className="w-20 rounded-xl border-2 p-1 font-bold"
+                onClick={handleAddAsset}
+              >
                 Edit
               </button>
               <button className="w-20 rounded-xl border-2 border-card-red p-1 font-bold text-card-red">
