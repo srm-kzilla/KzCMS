@@ -4,10 +4,15 @@ import React, { useEffect, useState } from "react";
 import LinkIcon from "remixicon-react/LinkIcon";
 import type { ProjectItem } from "@/types";
 import EditData from "./editData";
+import server from "@/utils/server";
+import { parseCookies } from "nookies";
 
 const ImageCard = (data: ProjectItem) => {
   const { imageURL, title, link, description, author } = data;
   const [, setProjectName] = useState<string>();
+
+  const cookies = parseCookies();
+  const { token } = cookies;
 
   const router = useRouter();
   useEffect(() => {
@@ -20,6 +25,19 @@ const ImageCard = (data: ProjectItem) => {
 
   const handleAddAsset = () => {
     setAddAssetState((prevState) => !prevState);
+  };
+
+  const handleDeleteAsset = async () => {
+    try {
+      await server.delete(`/api/projects/${data._id}/data`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      router.reload();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -63,7 +81,10 @@ const ImageCard = (data: ProjectItem) => {
               >
                 Edit
               </button>
-              <button className="w-20 rounded-xl border-2 border-card-red p-1 font-bold text-card-red">
+              <button
+                className="w-20 rounded-xl border-2 border-card-red p-1 font-bold text-card-red"
+                onClick={handleDeleteAsset}
+              >
                 Delete
               </button>
             </div>
