@@ -1,10 +1,10 @@
 import Layout from "@/components/Layout";
 import ProjectCard from "@/components/ProjectCard";
-import Head from "next/head";
-import server from "@/utils/server";
-import nookies from "nookies";
 import type { Project, User } from "@/types";
+import server from "@/utils/server";
 import type { GetServerSidePropsContext } from "next";
+import Head from "next/head";
+import nookies from "nookies";
 
 export default function Home({
   user,
@@ -27,7 +27,7 @@ export default function Home({
             <div className="flex h-fit w-full flex-col justify-center gap-5 md:flex-row md:flex-wrap md:justify-start">
               {projectList.length === 0 ? (
                 <h1 className="text-sm font-bold text-light md:text-base">
-                  You Don't Have Access To Any Projects.
+                  You Don&apos;t Have Access To Any Projects.
                 </h1>
               ) : (
                 projectList.map((project, key) => {
@@ -70,19 +70,20 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 
     const user: User = userResponse.data.data;
 
-    const projectListDataResponse = await server.get(
-      "/api/users/user/projects",
-      {
-        headers: {
-          Authorization: `Bearer ${cookies.token}`,
-        },
+    const projectListUrl = user.isAdmin
+      ? "/api/projects"
+      : "/api/users/user/projects";
+
+    const projectListDataResponse = await server.get(projectListUrl, {
+      headers: {
+        Authorization: `Bearer ${cookies.token}`,
       },
-    );
+    });
 
     return {
       props: {
         user,
-        projectList: projectListDataResponse.data.projects,
+        projectList: projectListDataResponse.data.data || [],
       },
     };
   } catch (err) {
