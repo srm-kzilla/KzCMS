@@ -1,5 +1,6 @@
-import Image from "next/image";
+import type { User } from "@/types";
 import axios from "axios";
+import Image from "next/image";
 import { useRouter } from "next/router";
 import { destroyCookie } from "nookies";
 import { useState } from "react";
@@ -11,7 +12,6 @@ import LogoutIcon from "remixicon-react/LogoutBoxRLineIcon";
 import MenuIcon from "remixicon-react/MenuLineIcon";
 import SettingsIcon from "remixicon-react/Settings4LineIcon";
 import UserIcon from "remixicon-react/UserLineIcon";
-import type { User } from "@/types";
 
 const Navbar = ({ user }: { user: User }) => {
   const [options, setOptions] = useState(false);
@@ -153,7 +153,9 @@ const Navbar = ({ user }: { user: User }) => {
                       <h1 className="text-sm font-bold">{user.email}</h1>
                     </div>
                   </div>
-                  <h1 className="text-xs text-light">Admin</h1>
+                  <h1 className="text-xs text-light">
+                    {user.isAdmin ? "Admin" : "Verified User"}
+                  </h1>
                 </div>
               </div>
               <div className="flex h-full items-start">
