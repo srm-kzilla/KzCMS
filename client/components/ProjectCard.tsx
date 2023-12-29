@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import type { ProjectItem } from "@/types";
 
 interface ProjectCardProps {
-  id: string;
+  _id: string;
   projectSlug: string;
   projectName: string;
   data: ProjectItem[];

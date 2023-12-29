@@ -7,7 +7,7 @@ export type ProjectItem = {
 };
 
 export type Project = {
-  id: string;
+  _id: string;
   projectSlug: string;
   projectName: string;
   data: ProjectItem[];

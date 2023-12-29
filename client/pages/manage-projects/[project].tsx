@@ -9,6 +9,7 @@ import { type FormEvent, useEffect, useRef, useState } from "react";
 import DeleteIcon from "remixicon-react/DeleteBin7LineIcon";
 import type { Project, User } from "@/types";
 import type { GetServerSidePropsContext } from "next";
+import { ManageTokens, Token } from "@/components/ManageTokens";
 
 interface userListDataType {
   createdAt: string;
@@ -27,10 +28,12 @@ interface selectOptionType {
 const ManageProject = ({
   user,
   projectData,
+  projectTokens,
   userList,
 }: {
   user: User;
   projectData: Project;
+  projectTokens: Token[];
   userList: userListDataType[];
 }) => {
   const router = useRouter();
@@ -118,6 +121,7 @@ const ManageProject = ({
               </button>
             </div>
           </div>
+          <ManageTokens tokens={projectTokens} projectId={projectData._id} />
           {deleteProjectModal && (
             <div className="absolute bottom-0 left-0 right-0 top-0 flex items-center justify-center bg-black/40 p-6">
               <div className="flex w-full flex-col gap-5 rounded-lg bg-secondary p-6 lg:w-[500px]">
@@ -362,6 +366,15 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
       },
     );
 
+    const projectTokensResponse = await server.get("/api/admin/tokens", {
+      headers: {
+        Authorization: `Bearer ${cookies.token}`,
+      },
+      data: {
+        projectId: projectList[0]._id,
+      },
+    });
+
     const filteredUserDataResponse: userListDataType[] =
       allUserDataResponse.data.data.filter((user: userListDataType) => {
         return !projectList[0].userAccess?.includes(user.email);
@@ -371,6 +384,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
       props: {
         user: userResponse.data.data as User,
         projectData: projectList[0],
+        projectTokens: projectTokensResponse.data.tokens as Token[],
         userList: filteredUserDataResponse,
       },
     };
