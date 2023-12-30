@@ -4,27 +4,19 @@ import { parseCookies } from "nookies";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 
-export default function EditData({
-  assetProjectId,
+export default function CreateData({
   addAssetState,
   setAddAssetState,
-  assetTitle,
-  assetDescription,
-  assetLink,
 }: {
-  assetProjectId?: string;
   addAssetState: boolean;
   setAddAssetState: React.Dispatch<React.SetStateAction<boolean>>;
-  assetTitle?: string;
-  assetDescription?: string;
-  assetLink?: string;
 }) {
   const router = useRouter();
   const [data, setData] = useState({
-    title: assetTitle || "",
-    description: assetDescription || "",
+    title: "",
+    description: "",
     image: new Blob(),
-    link: assetLink || "",
+    link: "",
   });
   const [error, setError] = useState(false);
 
@@ -45,41 +37,34 @@ export default function EditData({
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    const projectUrlRegex = /^https?:\/\/[\w.-]+\.[a-zA-Z]{2,}$/i;
+
+    if (!projectUrlRegex.test(data.link)) {
+      setError(true);
+      toast.error("Invalid Project URL!");
+      return;
+    }
+
+    if (!data.image.name.match(/\.(jpg|jpeg|png|gif)$/)) {
+      setError(true);
+      toast.error("Invalid Image!");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("title", data.title);
+    formData.append("description", data.description);
+    formData.append("image", data.image);
+    formData.append("link", data.link);
+
     try {
-      const projectUrlRegex = /^https?:\/\/[\w.-]+\.[a-zA-Z]{2,}$/i;
-
-      if (!projectUrlRegex.test(data.link)) {
-        setError(true);
-        toast.error("Invalid Project URL!");
-        return;
-      }
-
-      await server.patch(
-        `/api/projects/${assetProjectId}/data`,
-        {
-          title: data.title,
-          description: data.description,
-          link: data.link,
+      await server.post(`/api/projects/${router.query.project}`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
         },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      );
-
-      if (data.image.name && data.image.name.match(/\.(jpg|jpeg|png|gif)$/)) {
-        const formData = new FormData();
-        formData.append("image", data.image);
-
-        await server.patch(`/api/projects/${assetProjectId}/image`, formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${token}`,
-          },
-        });
-      }
+      });
 
       setAddAssetState(false);
       toast.success("Data Uploaded Successfully!");
@@ -104,7 +89,6 @@ export default function EditData({
                 type="text"
                 placeholder="Title"
                 name="title"
-                value={data.title}
                 onChange={handleChange}
                 required
               />
@@ -112,7 +96,6 @@ export default function EditData({
                 className="w-full rounded-xl bg-secondary px-5 py-4 outline-none"
                 placeholder="Description"
                 name="description"
-                value={data.description}
                 onChange={handleChange}
                 required
               />
@@ -122,13 +105,13 @@ export default function EditData({
                 name="image"
                 accept="image/*"
                 onChange={handleChange}
+                required
               />
               <input
                 className="w-full rounded-xl bg-secondary px-5 py-4 outline-none"
                 type="text"
                 placeholder="Project URL"
                 name="link"
-                value={data.link}
                 onChange={handleChange}
                 required
               />

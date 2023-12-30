@@ -1,4 +1,4 @@
-import EditData from "@/components/EditData";
+import CreateData from "@/components/createData";
 import ImageCardList from "@/components/ImageCardList";
 import Layout from "@/components/Layout";
 import Head from "next/head";
@@ -23,11 +23,7 @@ export default function Project({
   const [addAssetState, setAddAssetState] = useState(false);
 
   const handleAddAsset = () => {
-    if (!addAssetState) {
-      setAddAssetState(true);
-    } else if (addAssetState) {
-      setAddAssetState(false);
-    }
+    setAddAssetState((prevState) => !prevState);
   };
 
   return (
@@ -61,7 +57,7 @@ export default function Project({
                 )}
               </div>
 
-              <EditData
+              <CreateData
                 addAssetState={addAssetState}
                 setAddAssetState={setAddAssetState}
               />

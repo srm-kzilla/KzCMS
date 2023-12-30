@@ -1,4 +1,5 @@
 export type ProjectItem = {
+  _id: string;
   author?: string;
   description?: string;
   imageURL: string;
@@ -7,7 +8,7 @@ export type ProjectItem = {
 };
 
 export type Project = {
-  id: string;
+  _id: string;
   projectSlug: string;
   projectName: string;
   data: ProjectItem[];
@@ -17,7 +18,7 @@ export type Project = {
 };
 
 export type User = {
-  id: string;
+  _id: string;
   email: string;
   isAdmin: boolean;
   isVerified: boolean;
