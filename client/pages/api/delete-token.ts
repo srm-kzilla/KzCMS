@@ -1,4 +1,5 @@
 import server from "@/utils/server";
+import { AxiosError } from "axios";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { parseCookies } from "nookies";
 
@@ -6,14 +7,18 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
-  const parsedCookies = parseCookies({ req });
+  const parsedCookies = parseCookies({
+    req,
+  });
+
   if (req.method === "POST") {
     try {
-      const { email } = req.body;
+      const { projectId, name } = req.body;
       const { token } = parsedCookies;
-      await server.delete(`/api/admin/user`, {
+      await server.delete("/api/admin/tokens/delete", {
         data: {
-          email,
+          projectId,
+          name,
         },
         headers: {
           Authorization: `Bearer ${token}`,
@@ -21,9 +26,15 @@ export default async function handler(
       });
 
       return res.status(200).json({
-        message: "User Deleted Successfully",
+        message: "Project Deleted Successfully",
       });
     } catch (e) {
+      if (e instanceof AxiosError) {
+        return res
+          .status(e.response?.status ?? 500)
+          .json(e.response?.data ?? { message: e.message });
+      }
+
       return res.status(500).json({ error: e });
     }
   }
