@@ -5,8 +5,8 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "forceConsistentCasingInFileNames": true,
-    "moduleResolution": "node",
-    "module": "commonjs",
+    "moduleResolution": "Node",
+    "module": "ES2022",
     "pretty": true,
     "sourceMap": true,
     "outDir": "./build",
@@ -18,7 +18,7 @@
     "paths": {
       "@/*": ["./src/*"]
     },
-    "types": ["./env.d.ts"] 
+    "types": ["./env.d.ts"]
   },
   "include": ["./src/**/*"],
   "exclude": ["node_modules", "tests"]
