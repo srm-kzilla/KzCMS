@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import LinkIcon from "remixicon-react/LinkIcon";
 import type { ProjectItem } from "@/types";
-import EditData from "./editData";
+import EditData from "./EditData";
 import server from "@/utils/server";
 import { parseCookies } from "nookies";
 
