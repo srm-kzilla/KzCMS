@@ -37,7 +37,19 @@ export default function EditData({
       const link = String(formData.get("link"));
       const image = formData.get("image") as File | null;
 
-      if (title !== assetTitle || description !== assetDescription || link !== assetLink) {
+      const projectUrlRegex = /^https?:\/\/[\w.-]+\.[a-zA-Z]{2,}$/i;
+
+      if (!projectUrlRegex.test(link)) {
+        setError(true);
+        toast.error("Invalid Project URL!");
+        return;
+      }
+
+      if (
+        title !== assetTitle ||
+        description !== assetDescription ||
+        link !== assetLink
+      ) {
         await server.patch(
           `/api/projects/${assetProjectId}/data`,
           {
