@@ -145,11 +145,11 @@ const UserCard = ({
               onClick={() => {
                 verifyUser(email, !isVerified);
               }}
-              className="flex w-full items-center justify-center rounded-lg border-2 border-blue-500 px-6 py-2"
+              className={"flex w-full items-center justify-center rounded-lg border-2 px-6 py-2" + (isVerified ? " border-blue-500" : " border-green-500")}
             >
-              <h1 className="text-sm font-bold text-blue-500 md:text-base">
-                {isVerified ? "Unverify User" : "Verify User"}
-              </h1>
+            <h1 className={`text-sm font-bold md:text-base ${isVerified ? 'text-blue-500' : 'text-green-500'}`}>
+              {isVerified ? 'Unverify User' : 'Verify User'}
+            </h1>
             </button>
           </div>
         </div>
