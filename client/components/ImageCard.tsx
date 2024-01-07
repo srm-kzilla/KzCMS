@@ -60,6 +60,7 @@ const ImageCard = (data: ProjectItem) => {
               alt="Project data image"
               width={500}
               height={500}
+              style={{ objectFit: "contain" }}
               unoptimized
             ></Image>
           </div>
