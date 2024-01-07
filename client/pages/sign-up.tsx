@@ -48,7 +48,7 @@ const SignUp = () => {
   return (
     <>
       <Head>
-        <title>Signup</title>
+        <title>Sign Up</title>
       </Head>
       <div className="flex min-h-screen w-full flex-col bg-primary">
         <div className="flex h-[90px] w-full items-center gap-5 p-6">
@@ -70,7 +70,7 @@ const SignUp = () => {
             className="flex w-full flex-col items-center gap-5 p-6 lg:w-96"
           >
             <div>
-              <h1 className="text-2xl font-bold text-highlight">SignUp</h1>
+              <h1 className="text-2xl font-bold text-highlight">Sign Up</h1>
             </div>
             <div className="flex w-full flex-col gap-2">
               <div>
@@ -99,7 +99,7 @@ const SignUp = () => {
                   type="submit"
                   className="w-full rounded-lg bg-highlight p-2 text-xl font-medium"
                 >
-                  SignUp
+                  Sign Up
                 </button>
               </div>
               <div className="flex w-full justify-center">

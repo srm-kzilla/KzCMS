@@ -51,7 +51,7 @@ export async function getUserProjects(
     const projects = await handleGetUserProjects(email);
     return res.status(STATUS.OK).json({
       success: true,
-      projects,
+      data: projects,
     });
   } catch (error) {
     next(error);

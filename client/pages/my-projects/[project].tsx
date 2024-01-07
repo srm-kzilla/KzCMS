@@ -1,4 +1,4 @@
-import CreateData from "@/components/createData";
+import CreateData from "@/components/CreateData";
 import ImageCardList from "@/components/ImageCardList";
 import Layout from "@/components/Layout";
 import Head from "next/head";
