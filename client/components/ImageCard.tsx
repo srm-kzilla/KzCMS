@@ -61,7 +61,8 @@ const ImageCard = (data: ProjectItem) => {
               width={500}
               height={500}
               unoptimized
-            ></Image>
+              className="object-contain"
+            />
           </div>
           <div className="absolute inset-0 flex h-full w-full flex-col items-center justify-center gap-3 bg-black/80 px-3 py-5 text-center text-slate-200 [backface-visibility:hidden] [transform:rotateY(180deg)]">
             <div className="text-4xl font-bold">{title}</div>

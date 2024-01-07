@@ -20,64 +20,51 @@ export default function EditData({
   assetLink?: string;
 }) {
   const router = useRouter();
-  const [data, setData] = useState({
-    title: assetTitle || "",
-    description: assetDescription || "",
-    image: new Blob(),
-    link: assetLink || "",
-  });
+
   const [error, setError] = useState(false);
 
   const cookies = parseCookies();
   const { token } = cookies;
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
-    setData({
-      ...data,
-      [e.target.name]:
-        (e.target as HTMLInputElement).type === "file"
-          ? (e.target as HTMLInputElement).files?.[0]
-          : e.target.value,
-    });
-  };
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const dataUpdateSignal = new AbortController();
+    const imageUpdateSignal = new AbortController();
     try {
-      const projectUrlRegex = /^https?:\/\/[\w.-]+\.[a-zA-Z]{2,}$/i;
+      const formData = new FormData(e.currentTarget);
+      const title = String(formData.get("title"));
+      const description = String(formData.get("description"));
+      const link = String(formData.get("link"));
+      const image = formData.get("image") as File | null;
 
-      if (!projectUrlRegex.test(data.link)) {
-        setError(true);
-        toast.error("Invalid Project URL!");
-        return;
+      if (title !== assetTitle || description !== assetDescription || link !== assetLink) {
+        await server.patch(
+          `/api/projects/${assetProjectId}/data`,
+          {
+            title,
+            description,
+            link,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            signal: dataUpdateSignal.signal,
+          },
+        );
       }
 
-      await server.patch(
-        `/api/projects/${assetProjectId}/data`,
-        {
-          title: data.title,
-          description: data.description,
-          link: data.link,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      );
-
-      if (data.image.name && data.image.name.match(/\.(jpg|jpeg|png|gif)$/)) {
+      if (image?.name) {
         const formData = new FormData();
-        formData.append("image", data.image);
+        formData.append("image", image);
 
         await server.patch(`/api/projects/${assetProjectId}/image`, formData, {
           headers: {
             "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${token}`,
           },
+          signal: imageUpdateSignal.signal,
         });
       }
 
@@ -85,6 +72,8 @@ export default function EditData({
       toast.success("Data Uploaded Successfully!");
       router.reload();
     } catch (err) {
+      dataUpdateSignal.abort();
+      imageUpdateSignal.abort();
       setError(true);
     }
   };
@@ -97,44 +86,40 @@ export default function EditData({
             className="flex h-fit w-80 flex-col items-center justify-center gap-2 rounded-2xl bg-primary p-7 md:w-96"
             onSubmit={handleSubmit}
           >
-            <div className="text-xl font-bold">Add Asset</div>
+            <div className="text-xl font-bold">Edit Asset</div>
             <div className="flex w-full flex-col gap-3">
               <input
                 className="w-full rounded-xl bg-secondary px-5 py-4 outline-none"
                 type="text"
                 placeholder="Title"
                 name="title"
-                value={data.title}
-                onChange={handleChange}
+                defaultValue={assetTitle}
                 required
               />
               <textarea
                 className="w-full rounded-xl bg-secondary px-5 py-4 outline-none"
                 placeholder="Description"
                 name="description"
-                value={data.description}
-                onChange={handleChange}
+                defaultValue={assetDescription}
                 required
               />
               <input
                 className="w-full cursor-pointer rounded-xl bg-secondary pr-5 text-gray-400 file:py-4 focus:outline-none"
                 type="file"
                 name="image"
-                accept="image/*"
-                onChange={handleChange}
+                accept="image/jpeg, image/jpg, image/png, image/gif"
               />
               <input
                 className="w-full rounded-xl bg-secondary px-5 py-4 outline-none"
-                type="text"
+                type="url"
                 placeholder="Project URL"
                 name="link"
-                value={data.link}
-                onChange={handleChange}
+                defaultValue={assetLink}
                 required
               />
             </div>
             {error ? (
-              <p className="text-red-500">Something went wrong!</p>
+              <p className="text-red-500">Failed to update data</p>
             ) : null}
             <input
               type="submit"
