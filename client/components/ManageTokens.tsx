@@ -100,7 +100,7 @@ export function ManageTokens({
                       <span className="text-sm font-bold text-light">
                         Created by: {token.createdBy}
                       </span>
-                      <span className="text-sm font-bold text-light">
+                      <span className="text-sm font-bold text-light" suppressHydrationWarning>
                         {new Date(token.createdAt).toLocaleString()}
                       </span>
                     </div>
