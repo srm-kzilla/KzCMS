@@ -1,9 +1,8 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/router";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.min.css";
 import "@/styles/globals.css";
 import type { AppProps } from "next/app";
+import { ToastContainer } from "react-toast";
 
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
@@ -28,7 +27,7 @@ export default function App({ Component, pageProps }: AppProps) {
           },
         }}
       >
-        <ToastContainer theme="dark" />
+        <ToastContainer delay={5000} position="top-right" />
         <Component key={router.asPath} {...pageProps} />
       </motion.div>
     </AnimatePresence>

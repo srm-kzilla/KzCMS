@@ -1,7 +1,7 @@
 import axios, { AxiosError } from "axios";
 import { useRouter } from "next/router";
 import { FormEvent, MouseEvent, useState } from "react";
-import { toast } from "react-toastify";
+import { toast } from 'react-toast'
 import DeleteIcon from "remixicon-react/DeleteBin7LineIcon";
 
 export interface Token {

@@ -6,7 +6,7 @@ import nookies from "nookies";
 import { useRouter } from "next/router";
 import { type ChangeEvent, useState } from "react";
 import type { GetServerSidePropsContext } from "next";
-import { toast } from "react-toastify";
+import { toast } from 'react-toast'
 import { AxiosError } from "axios";
 
 const SignUp = () => {
