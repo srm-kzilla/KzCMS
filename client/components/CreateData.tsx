@@ -2,7 +2,7 @@ import server from "@/utils/server";
 import { useRouter } from "next/router";
 import { parseCookies } from "nookies";
 import React, { useState } from "react";
-import { toast } from "react-toastify";
+import { toast } from 'react-hot-toast'
 
 export default function CreateData({
   addAssetState,
