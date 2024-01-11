@@ -6,7 +6,7 @@ import nookies from "nookies";
 import { useRouter } from "next/router";
 import { type ChangeEvent, useState } from "react";
 import type { GetServerSidePropsContext } from "next";
-import { toast } from 'react-toast'
+import { toast } from 'react-hot-toast'
 import { AxiosError } from "axios";
 
 const SignUp = () => {
@@ -30,7 +30,7 @@ const SignUp = () => {
     try {
       await server.post("/api/auth/signup", user);
       toast.success("Account created successfully");
-      toast.info("Ask Admin to verify your account before login");
+      toast.success("Ask Admin to verify your account before login");
 
       setTimeout(async () => {
         await router.push("/login");
