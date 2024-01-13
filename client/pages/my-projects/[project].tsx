@@ -5,7 +5,7 @@ import Head from "next/head";
 import server from "@/utils/server";
 import nookies from "nookies";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AddCircleLineIcon from "remixicon-react/AddCircleLineIcon";
 import CloseCircleLineIcon from "remixicon-react/CloseCircleLineIcon";
 import type { AxiosResponse } from "axios";
@@ -21,6 +21,8 @@ export default function Project({
 }) {
   const router = useRouter();
   const [addAssetState, setAddAssetState] = useState(false);
+  const [projectDataState, setProjectDataState] =
+    useState<ProjectItem[]>(projectData);
 
   const handleAddAsset = () => {
     setAddAssetState((prevState) => !prevState);
@@ -62,7 +64,10 @@ export default function Project({
                 setAddAssetState={setAddAssetState}
               />
             </div>
-            <ImageCardList dataList={projectData} />
+            <ImageCardList
+              dataList={projectDataState}
+              setProjectDataState={setProjectDataState}
+            />
           </div>
         </div>
       </Layout>
