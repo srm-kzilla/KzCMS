@@ -5,7 +5,7 @@ import server from "@/utils/server";
 import axios from "axios";
 import nookies from "nookies";
 import { useRouter } from "next/router";
-import { type FormEvent, useState } from "react";
+import { type FormEvent, useState, useEffect } from "react";
 import type { Project, User } from "@/types";
 import type { GetServerSidePropsContext } from "next";
 
@@ -19,6 +19,7 @@ const Index = ({
   const [addProjectModal, setAddProjectModal] = useState<boolean>(false);
   const [projectName, setProjectName] = useState<string>("");
   const [typeName, setTypeName] = useState<string>("");
+  const [projectListState, setProjectListState] = useState<Project[]>(projectList); // [1
   const router = useRouter();
 
   const handleCreateProject = async (e: FormEvent) => {
@@ -61,8 +62,8 @@ const Index = ({
               </div>
             </div>
             <div className="flex h-fit w-full flex-col justify-center gap-5 md:flex-row md:flex-wrap md:justify-start">
-              {projectList.length !== 0 ? (
-                projectList.map((project, key) => {
+              {projectListState.length !== 0 ? (
+                projectListState.map((project, key) => {
                   return (
                     <div key={key}>
                       <ProjectCard

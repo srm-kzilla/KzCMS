@@ -10,6 +10,7 @@ import DeleteIcon from "remixicon-react/DeleteBin7LineIcon";
 import type { Project, User } from "@/types";
 import type { GetServerSidePropsContext } from "next";
 import { ManageTokens, Token } from "@/components/ManageTokens";
+import toast from "react-hot-toast";
 
 interface userListDataType {
   createdAt: string;
@@ -41,6 +42,8 @@ const ManageProject = ({
   const [selectOptions, setSelectOptions] = useState<selectOptionType[]>([]);
   const [userAccessArray, setUserAccessArray] = useState<string[]>([]);
   const [deleteProjectModal, setDeleteProjectModal] = useState<boolean>(false);
+  const [projectListState, setProjectListState] = useState<Project>(projectData);
+  const [userListState, setUserListState] = useState<userListDataType[]>(userList);
   const userAccessList = useRef<string[]>([]);
 
   const handleAddUserAccess = async (e: FormEvent<HTMLFormElement>) => {
@@ -63,9 +66,20 @@ const ManageProject = ({
         return user !== email;
       }),
     });
-
+    
     if (response.status === 200) {
-      router.reload();
+      setProjectListState((prevState) => {
+        return {
+          ...prevState,
+          userAccess: [
+            ...prevState.userAccess.filter((user) => {
+              return user !== email;
+            }),
+          ]
+        };
+      });
+    } else {
+      toast.error("Something went wrong");
     }
   };
 
@@ -81,18 +95,18 @@ const ManageProject = ({
   };
 
   useEffect(() => {
+    setUserListState(userList)
     setSelectOptions(
-      userList.map((user) => {
+      userListState.filter((element) => !projectListState.userAccess.includes(element.email)).map((user) => {
         return {
           value: user.email,
-          label: user.email,
+          label: user.email,  
         };
       }),
     );
-
-    userAccessList.current = projectData.userAccess;
-    setUserAccessArray(projectData.userAccess);
-  }, [projectData.userAccess, userList]);
+    userAccessList.current = projectListState.userAccess;
+    setUserAccessArray(projectListState.userAccess);
+  }, [projectListState.userAccess, userListState, userList]);
 
   return (
     <>
@@ -176,8 +190,8 @@ const ManageProject = ({
               </div>
             </div>
             <div className="flex flex-1 flex-col gap-5">
-              {projectData.userAccess.length !== 0 ? (
-                projectData.userAccess.map((user, key) => {
+              {projectListState.userAccess.length !== 0 ? (
+                projectListState.userAccess.map((user, key) => {
                   return (
                     <div
                       className="flex w-full justify-between rounded-lg bg-secondary p-4"
@@ -235,10 +249,12 @@ const ManageProject = ({
                         closeMenuOnSelect={false}
                         onChange={(e) => {
                           e.map((user: selectOptionType) => {
-                            setUserAccessArray((current) => [
-                              ...current,
-                              user.value,
-                            ]);
+                            if (!userAccessArray.includes(user.value)) {
+                              setUserAccessArray((current) => [
+                                ...current,
+                                user.value,
+                              ]);
+                            }
                           });
                         }}
                         styles={{
@@ -375,17 +391,12 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
       },
     });
 
-    const filteredUserDataResponse: userListDataType[] =
-      allUserDataResponse.data.data.filter((user: userListDataType) => {
-        return !projectList[0].userAccess?.includes(user.email);
-      });
-
     return {
       props: {
         user: userResponse.data.data as User,
         projectData: projectList[0],
         projectTokens: projectTokensResponse.data.tokens as Token[],
-        userList: filteredUserDataResponse,
+        userList: allUserDataResponse.data.data,
       },
     };
   } catch (err) {
