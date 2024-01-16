@@ -19,7 +19,7 @@ const Index = ({
   const [addProjectModal, setAddProjectModal] = useState<boolean>(false);
   const [projectName, setProjectName] = useState<string>("");
   const [typeName, setTypeName] = useState<string>("");
-  const [projectListState, setProjectListState] = useState<Project[]>(projectList); // [1
+  const [projectListState, setProjectListState] = useState<Project[]>(projectList);
   const router = useRouter();
 
   const handleCreateProject = async (e: FormEvent) => {

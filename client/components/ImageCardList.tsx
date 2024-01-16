@@ -1,6 +1,5 @@
 import ImageCard from "@/components/ImageCard";
 import type { ProjectItem } from "@/types";
-import { set } from "zod";
 
 interface DataCardListProps {
   dataList: ProjectItem[];

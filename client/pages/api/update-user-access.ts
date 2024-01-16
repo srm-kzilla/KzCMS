@@ -30,7 +30,6 @@ export default async function handler(
         message: "User's Access Updated Successfully",
       });
     } catch (e) {
-      // console.log(e);
       return res.status(500).json({ error: e });
     }
   }
