@@ -7,7 +7,13 @@ import EditData from "./EditData";
 import server from "@/utils/server";
 import { parseCookies } from "nookies";
 
-const ImageCard = (data: ProjectItem) => {
+const ImageCard = ({
+  data,
+  handleDeleteAssetFromList,
+}: {
+  data: ProjectItem;
+  handleDeleteAssetFromList: ( id: string ) => void;
+}) => {
   const { imageURL, title, link, description, author } = data;
   const [, setProjectName] = useState<string>();
 
@@ -29,12 +35,12 @@ const ImageCard = (data: ProjectItem) => {
 
   const handleDeleteAsset = async () => {
     try {
+      handleDeleteAssetFromList(data._id);
       await server.delete(`/api/projects/${data._id}/data`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      router.reload();
     } catch (error) {
       console.log(error);
     }

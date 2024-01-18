@@ -11,8 +11,9 @@ export default async function handler(
   if (req.method === "PATCH") {
     try {
       const { projectSlug, userAccess } = req.body;
+      console.log({projectSlug, userAccess});
       const { token } = parsedCookies;
-      await server.patch(
+      const response = await server.patch(
         `/api/admin/update/user-projects`,
         {
           projectSlug,
@@ -24,7 +25,7 @@ export default async function handler(
           },
         },
       );
-
+      console.log("RES", response.data);
       return res.status(200).json({
         message: "User's Access Updated Successfully",
       });
