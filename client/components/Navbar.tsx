@@ -169,7 +169,7 @@ const Navbar = ({ user }: { user: User }) => {
           </div>
         </div>
       </div>
-      <div className="absolute bottom-0 z-10 flex h-fit w-full flex-col gap-3 bg-primary p-3 lg:hidden">
+      <div className="sticky top-0 z-10 flex h-fit w-full flex-col gap-3 bg-primary p-3 lg:hidden">
         <div className="flex h-16 w-full items-center justify-between rounded-lg bg-secondary p-2">
           <div className="flex items-center gap-5">
             <div>
@@ -194,7 +194,7 @@ const Navbar = ({ user }: { user: User }) => {
           </div>
         </div>
         {mobileNav && (
-          <div className="flex h-fit w-full flex-col rounded-lg bg-secondary p-2">
+          <div className="flex h-fit w-full flex-col rounded-lg bg-secondary p-2 ">
             <div className="flex w-full flex-col gap-3">
               <div>
                 <h1 className="text-base font-bold text-highlight">MENU</h1>
