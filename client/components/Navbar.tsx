@@ -83,7 +83,7 @@ const Navbar = ({ user }: { user: User }) => {
                           size={20}
                         />
                       </div>
-                      <h1 className="text-text-secondary text-sm font-medium">
+                      <h1 className="text-text-secondary text-sm font-normal">
                         MANAGE PROJECTS
                       </h1>
                     </div>
