@@ -1,7 +1,7 @@
 import axios, { AxiosError } from "axios";
 import { useRouter } from "next/router";
 import { FormEvent, MouseEvent, useState } from "react";
-import { toast } from 'react-hot-toast'
+import { toast } from "react-hot-toast";
 import DeleteIcon from "remixicon-react/DeleteBin7LineIcon";
 
 export interface Token {
@@ -100,7 +100,10 @@ export function ManageTokens({
                       <span className="text-sm font-bold text-light">
                         Created by: {token.createdBy}
                       </span>
-                      <span className="text-sm font-bold text-light" suppressHydrationWarning>
+                      <span
+                        className="text-sm font-bold text-light"
+                        suppressHydrationWarning
+                      >
                         {new Date(token.createdAt).toLocaleString()}
                       </span>
                     </div>

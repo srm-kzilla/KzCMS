@@ -12,7 +12,7 @@ const ImageCard = ({
   handleDeleteAssetFromList,
 }: {
   data: ProjectItem;
-  handleDeleteAssetFromList: ( id: string ) => void;
+  handleDeleteAssetFromList: (id: string) => void;
 }) => {
   const { imageURL, title, link, description, author } = data;
   const [, setProjectName] = useState<string>();

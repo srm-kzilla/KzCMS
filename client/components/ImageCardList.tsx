@@ -18,16 +18,17 @@ const ImageCardList = ({
   return (
     <div className="mb-28 mt-12 flex w-full">
       <div className="flex h-fit flex-wrap justify-center gap-5 md:justify-start">
-        {dataList && dataList.map((card, index) => {
-          return (
-            <div key={index}>
-              <ImageCard
-                data={card}
-                handleDeleteAssetFromList={handleDeleteAssetFromList}
-              />
-            </div>
-          );
-        })}
+        {dataList &&
+          dataList.map((card, index) => {
+            return (
+              <div key={index}>
+                <ImageCard
+                  data={card}
+                  handleDeleteAssetFromList={handleDeleteAssetFromList}
+                />
+              </div>
+            );
+          })}
       </div>
     </div>
   );
