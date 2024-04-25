@@ -7,7 +7,7 @@ import { useRouter } from "next/router";
 import { type ChangeEvent, useState } from "react";
 import type { GetServerSidePropsContext } from "next";
 import { AxiosError } from "axios";
-import { toast } from 'react-hot-toast'
+import { toast } from "react-hot-toast";
 
 const Login = () => {
   const [user, setUser] = useState({
@@ -111,7 +111,7 @@ const Login = () => {
                   </Link>
                 </h1>
               </div>
-              {error.trim() && (
+              {error !== "" && (
                 <div className="flex w-full justify-center">
                   <h1 className="text-red-500"> {error} </h1>
                 </div>

@@ -6,7 +6,7 @@ import nookies from "nookies";
 import { useRouter } from "next/router";
 import { type ChangeEvent, useState } from "react";
 import type { GetServerSidePropsContext } from "next";
-import { toast } from 'react-hot-toast'
+import { toast } from "react-hot-toast";
 import { AxiosError } from "axios";
 
 const SignUp = () => {
@@ -110,7 +110,7 @@ const SignUp = () => {
                   </Link>
                 </h1>
               </div>
-              {error.trim() && (
+              {error !== "" && (
                 <div className="flex w-full justify-center">
                   <h1 className="text-red-500">{error}</h1>
                 </div>
