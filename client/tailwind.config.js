@@ -9,8 +9,7 @@ module.exports = {
     extend: {
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "button-idle-gradient":
-          "linear-gradient(to top right, #5653FF, #B10DFF)",
+        "button-idle-gradient": "linear-gradient(to top right, #5653FF, #B10DFF)",
         "button-hover-gradient": "linear-gradient(to right, #5653FF, #B10DFF)",
       },
       fontFamily: {

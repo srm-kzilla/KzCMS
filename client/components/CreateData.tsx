@@ -23,15 +23,11 @@ export default function CreateData({
   const cookies = parseCookies();
   const { token } = cookies;
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setData({
       ...data,
       [e.target.name]:
-        (e.target as HTMLInputElement).type === "file"
-          ? (e.target as HTMLInputElement).files?.[0]
-          : e.target.value,
+        (e.target as HTMLInputElement).type === "file" ? (e.target as HTMLInputElement).files?.[0] : e.target.value,
     });
   };
 
@@ -116,9 +112,7 @@ export default function CreateData({
                 required
               />
             </div>
-            {error ? (
-              <p className="text-red-500">Something went wrong!</p>
-            ) : null}
+            {error ? <p className="text-red-500">Something went wrong!</p> : null}
             <input
               type="submit"
               value="Submit"

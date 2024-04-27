@@ -39,13 +39,7 @@ const Navbar = ({ user }: { user: User }) => {
           <div className="flex w-full flex-col gap-10">
             <div className="flex items-center gap-5">
               <div>
-                <Image
-                  width={20}
-                  height={20}
-                  className="w-8"
-                  src="/srmkzilla-gradient-logo.svg"
-                  alt=""
-                />
+                <Image width={20} height={20} className="w-8" src="/srmkzilla-gradient-logo.svg" alt="" />
               </div>
               <div>
                 <h1 className="text-xl font-bold">KzCMS</h1>
@@ -65,9 +59,7 @@ const Navbar = ({ user }: { user: User }) => {
                   <div>
                     <MyProjectsIcon className="text-highlight" size={20} />
                   </div>
-                  <h1 className="text-text-secondary text-sm font-medium">
-                    MY PROJECTS
-                  </h1>
+                  <h1 className="text-text-secondary text-sm font-medium">MY PROJECTS</h1>
                 </div>
                 {user.isAdmin && (
                   <div>
@@ -78,14 +70,9 @@ const Navbar = ({ user }: { user: User }) => {
                       }}
                     >
                       <div>
-                        <ManageProjectIcon
-                          className="text-highlight"
-                          size={20}
-                        />
+                        <ManageProjectIcon className="text-highlight" size={20} />
                       </div>
-                      <h1 className="text-text-secondary text-sm font-medium">
-                        MANAGE PROJECTS
-                      </h1>
+                      <h1 className="text-text-secondary text-sm font-medium">MANAGE PROJECTS</h1>
                     </div>
                     <div
                       className="flex w-full cursor-pointer gap-2 rounded-md px-4 py-2 duration-300 hover:bg-secondary"
@@ -96,9 +83,7 @@ const Navbar = ({ user }: { user: User }) => {
                       <div>
                         <UserIcon className="text-highlight" size={20} />
                       </div>
-                      <h1 className="text-text-secondary text-sm font-medium">
-                        MANAGE USERS
-                      </h1>
+                      <h1 className="text-text-secondary text-sm font-medium">MANAGE USERS</h1>
                     </div>
                   </div>
                 )}
@@ -153,17 +138,11 @@ const Navbar = ({ user }: { user: User }) => {
                       <h1 className="text-sm font-bold">{user.email}</h1>
                     </div>
                   </div>
-                  <h1 className="text-xs text-light">
-                    {user.isAdmin ? "Admin" : "Verified User"}
-                  </h1>
+                  <h1 className="text-xs text-light">{user.isAdmin ? "Admin" : "Verified User"}</h1>
                 </div>
               </div>
               <div className="flex h-full items-start">
-                {options ? (
-                  <ArrowUpIcon size={15} />
-                ) : (
-                  <ArrowDownIcon size={15} />
-                )}
+                {options ? <ArrowUpIcon size={15} /> : <ArrowDownIcon size={15} />}
               </div>
             </div>
           </div>
@@ -173,13 +152,7 @@ const Navbar = ({ user }: { user: User }) => {
         <div className="flex h-16 w-full items-center justify-between rounded-lg bg-secondary p-2">
           <div className="flex items-center gap-5">
             <div>
-              <Image
-                width={20}
-                height={20}
-                className="w-8"
-                src="/srmkzilla-gradient-logo.svg"
-                alt=""
-              />
+              <Image width={20} height={20} className="w-8" src="/srmkzilla-gradient-logo.svg" alt="" />
             </div>
             <div>
               <h1 className="text-xl font-bold">KzCMS</h1>
@@ -209,9 +182,7 @@ const Navbar = ({ user }: { user: User }) => {
                   <div>
                     <MyProjectsIcon className="text-highlight" size={20} />
                   </div>
-                  <h1 className="text-text-secondary text-sm font-medium">
-                    MY PROJECTS
-                  </h1>
+                  <h1 className="text-text-secondary text-sm font-medium">MY PROJECTS</h1>
                 </div>
                 {user.isAdmin && (
                   <div>
@@ -222,14 +193,9 @@ const Navbar = ({ user }: { user: User }) => {
                       }}
                     >
                       <div>
-                        <ManageProjectIcon
-                          className="text-highlight"
-                          size={20}
-                        />
+                        <ManageProjectIcon className="text-highlight" size={20} />
                       </div>
-                      <h1 className="text-text-secondary text-sm font-medium">
-                        MANAGE PROJECTS
-                      </h1>
+                      <h1 className="text-text-secondary text-sm font-medium">MANAGE PROJECTS</h1>
                     </div>
                     <div
                       className="flex w-full cursor-pointer gap-2 rounded-md px-4 py-2 duration-300 hover:bg-secondary"
@@ -240,9 +206,7 @@ const Navbar = ({ user }: { user: User }) => {
                       <div>
                         <UserIcon className="text-highlight" size={20} />
                       </div>
-                      <h1 className="text-text-secondary text-sm font-medium">
-                        MANAGE USERS
-                      </h1>
+                      <h1 className="text-text-secondary text-sm font-medium">MANAGE USERS</h1>
                     </div>
                   </div>
                 )}
@@ -284,7 +248,7 @@ const Navbar = ({ user }: { user: User }) => {
             </div>
             <form
               className="flex h-full w-full flex-col gap-5"
-              onSubmit={(e) => {
+              onSubmit={e => {
                 e.preventDefault();
                 updateUserPassword(user.email, newPassword);
               }}
@@ -295,7 +259,7 @@ const Navbar = ({ user }: { user: User }) => {
                   type="text"
                   placeholder="New Password (At least 5 characters)"
                   pattern=".{5,}"
-                  onChange={(e) => {
+                  onChange={e => {
                     setNewPassword(e.target.value);
                   }}
                 />
@@ -305,9 +269,7 @@ const Navbar = ({ user }: { user: User }) => {
                   type="submit"
                   className="flex w-full items-center justify-center rounded-lg border-2 border-white px-6 py-2"
                 >
-                  <h1 className="text-sm font-bold text-white md:text-base">
-                    Update Password
-                  </h1>
+                  <h1 className="text-sm font-bold text-white md:text-base">Update Password</h1>
                 </button>
               </div>
               <div>

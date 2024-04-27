@@ -6,13 +6,10 @@ interface DataCardListProps {
   setProjectDataState: React.Dispatch<React.SetStateAction<ProjectItem[]>>;
 }
 
-const ImageCardList = ({
-  dataList,
-  setProjectDataState,
-}: DataCardListProps) => {
+const ImageCardList = ({ dataList, setProjectDataState }: DataCardListProps) => {
   const handleDeleteAssetFromList = (id: string) => {
-    setProjectDataState((prevState) => {
-      return prevState.filter((project) => project._id !== id);
+    setProjectDataState(prevState => {
+      return prevState.filter(project => project._id !== id);
     });
   };
   return (
@@ -22,10 +19,7 @@ const ImageCardList = ({
           dataList.map((card, index) => {
             return (
               <div key={index}>
-                <ImageCard
-                  data={card}
-                  handleDeleteAssetFromList={handleDeleteAssetFromList}
-                />
+                <ImageCard data={card} handleDeleteAssetFromList={handleDeleteAssetFromList} />
               </div>
             );
           })}

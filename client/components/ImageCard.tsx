@@ -30,7 +30,7 @@ const ImageCard = ({
   const [addAssetState, setAddAssetState] = useState(false);
 
   const handleAddAsset = () => {
-    setAddAssetState((prevState) => !prevState);
+    setAddAssetState(prevState => !prevState);
   };
 
   const handleDeleteAsset = async () => {
@@ -78,14 +78,9 @@ const ImageCard = ({
                 {link}
               </a>
             </div>
-            <div className="mb-2 font-semibold text-card-gray">
-              {description}
-            </div>
+            <div className="mb-2 font-semibold text-card-gray">{description}</div>
             <div className="flex gap-2">
-              <button
-                className="w-20 rounded-xl border-2 p-1 font-bold"
-                onClick={handleAddAsset}
-              >
+              <button className="w-20 rounded-xl border-2 p-1 font-bold" onClick={handleAddAsset}>
                 Edit
               </button>
               <button
@@ -95,9 +90,7 @@ const ImageCard = ({
                 Delete
               </button>
             </div>
-            {author ? (
-              <div className=" text-[#797979]">Last edited by : {author}</div>
-            ) : null}
+            {author ? <div className=" text-[#797979]">Last edited by : {author}</div> : null}
           </div>
         </div>
       </div>

@@ -8,13 +8,7 @@ interface ProjectCardProps {
   data: ProjectItem[];
 }
 
-const ProjectCard = ({
-  projectData,
-  redirectUrl,
-}: {
-  projectData: ProjectCardProps;
-  redirectUrl: string;
-}) => {
+const ProjectCard = ({ projectData, redirectUrl }: { projectData: ProjectCardProps; redirectUrl: string }) => {
   const router = useRouter();
   return (
     <div
@@ -24,9 +18,7 @@ const ProjectCard = ({
       }}
     >
       <div className="w-full overflow-hidden">
-        <h1 className="text-2xl font-bold">
-          {projectData.projectName.toUpperCase()}
-        </h1>
+        <h1 className="text-2xl font-bold">{projectData.projectName.toUpperCase()}</h1>
       </div>
       <div>
         {/* <h1 className="font-semibold text-xl">{projectData.data.length}</h1> */}

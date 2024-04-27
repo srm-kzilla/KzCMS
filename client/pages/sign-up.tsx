@@ -53,22 +53,14 @@ const SignUp = () => {
       <div className="flex min-h-screen w-full flex-col bg-primary">
         <div className="flex h-[90px] w-full items-center gap-5 p-6">
           <div>
-            <Image
-              src="/srmkzilla-gradient-logo.svg"
-              alt="/"
-              width={40}
-              height={40}
-            />
+            <Image src="/srmkzilla-gradient-logo.svg" alt="/" width={40} height={40} />
           </div>
           <div>
             <h1 className="text-2xl font-bold">KzCMS</h1>
           </div>
         </div>
         <div className="flex flex-1 items-center justify-center">
-          <form
-            onSubmit={handleSubmit}
-            className="flex w-full flex-col items-center gap-5 p-6 lg:w-96"
-          >
+          <form onSubmit={handleSubmit} className="flex w-full flex-col items-center gap-5 p-6 lg:w-96">
             <div>
               <h1 className="text-2xl font-bold text-highlight">Sign Up</h1>
             </div>
@@ -95,10 +87,7 @@ const SignUp = () => {
                 />
               </div>
               <div>
-                <button
-                  type="submit"
-                  className="w-full rounded-lg bg-highlight p-2 text-xl font-medium"
-                >
+                <button type="submit" className="w-full rounded-lg bg-highlight p-2 text-xl font-medium">
                   Sign Up
                 </button>
               </div>
