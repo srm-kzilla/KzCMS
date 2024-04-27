@@ -1,7 +1,7 @@
 import axios, { AxiosError } from "axios";
 import { useRouter } from "next/router";
 import { FormEvent, MouseEvent, useState } from "react";
-import { toast } from 'react-hot-toast'
+import { toast } from "react-hot-toast";
 import DeleteIcon from "remixicon-react/DeleteBin7LineIcon";
 
 export interface Token {
@@ -11,13 +11,7 @@ export interface Token {
   createdBy: string;
 }
 
-export function ManageTokens({
-  tokens,
-  projectId,
-}: {
-  tokens: Token[];
-  projectId: string;
-}) {
+export function ManageTokens({ tokens, projectId }: { tokens: Token[]; projectId: string }) {
   const [addTokenModal, setAddTokenModal] = useState<boolean>(false);
   const [generatedToken, setGeneratedToken] = useState("");
   const router = useRouter();
@@ -48,9 +42,7 @@ export function ManageTokens({
     }
   };
 
-  const handleTokenDelete = async (
-    event: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>,
-  ) => {
+  const handleTokenDelete = async (event: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
     const tokenName = event.currentTarget.dataset.name;
 
     try {
@@ -90,27 +82,18 @@ export function ManageTokens({
           {tokens.length !== 0 ? (
             tokens.map((token, key) => {
               return (
-                <div
-                  className="flex w-full justify-between rounded-lg bg-secondary p-4"
-                  key={key}
-                >
+                <div className="flex w-full justify-between rounded-lg bg-secondary p-4" key={key}>
                   <div className="flex w-full items-center justify-between">
                     <h1 className="text-xl font-bold">{token.name}</h1>
                     <div className="flex gap-4 px-8">
+                      <span className="text-sm font-bold text-light">Created by: {token.createdBy}</span>
                       <span className="text-sm font-bold text-light">
-                        Created by: {token.createdBy}
-                      </span>
-                      <span className="text-sm font-bold text-light" suppressHydrationWarning>
-                        {new Date(token.createdAt).toLocaleString()}
+                        {new Date(token.createdAt).toLocaleString('en-IN')}
                       </span>
                     </div>
                   </div>
                   <div>
-                    <button
-                      className="text-red-500"
-                      onClick={handleTokenDelete}
-                      data-name={token.name}
-                    >
+                    <button className="text-red-500" onClick={handleTokenDelete} data-name={token.name}>
                       <DeleteIcon />
                     </button>
                   </div>
@@ -126,9 +109,7 @@ export function ManageTokens({
                   }}
                   className="rounded-lg border-2 border-dashed border-light px-6 py-2"
                 >
-                  <h1 className="text-sm font-bold text-light md:text-base">
-                    + Create Token
-                  </h1>
+                  <h1 className="text-sm font-bold text-light md:text-base">+ Create Token</h1>
                 </button>
               </div>
             </div>
@@ -152,8 +133,7 @@ export function ManageTokens({
                   required
                 />
                 <p className="text-sm font-bold text-light">
-                  Copy this token and use it in your project, this token will be
-                  visible only once.
+                  Copy this token and use it in your project, this token will be visible only once.
                 </p>
                 <div className="flex gap-4">
                   <button
@@ -187,10 +167,7 @@ export function ManageTokens({
               <h1 className="text-2xl font-bold">Create a Token</h1>
             </div>
             <div>
-              <form
-                className="flex h-full w-full flex-col gap-5"
-                onSubmit={handleTokenAdd}
-              >
+              <form className="flex h-full w-full flex-col gap-5" onSubmit={handleTokenAdd}>
                 <input
                   className="w-full rounded-xl bg-secondary px-5 py-4 outline-none"
                   type="text"

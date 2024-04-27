@@ -2,7 +2,7 @@ import server from "@/utils/server";
 import { useRouter } from "next/router";
 import { parseCookies } from "nookies";
 import React, { useState } from "react";
-import { toast } from 'react-hot-toast'
+import { toast } from "react-hot-toast";
 
 export default function EditData({
   assetProjectId,
@@ -45,11 +45,7 @@ export default function EditData({
         return;
       }
 
-      if (
-        title !== assetTitle ||
-        description !== assetDescription ||
-        link !== assetLink
-      ) {
+      if (title !== assetTitle || description !== assetDescription || link !== assetLink) {
         await server.patch(
           `/api/projects/${assetProjectId}/data`,
           {
@@ -130,9 +126,7 @@ export default function EditData({
                 required
               />
             </div>
-            {error ? (
-              <p className="text-red-500">Failed to update data</p>
-            ) : null}
+            {error ? <p className="text-red-500">Failed to update data</p> : null}
             <input
               type="submit"
               value="Submit"

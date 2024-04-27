@@ -3,10 +3,7 @@ import { AxiosError } from "axios";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { parseCookies } from "nookies";
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse,
-) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const parsedCookies = parseCookies({
     req,
   });
@@ -30,9 +27,7 @@ export default async function handler(
       });
     } catch (e) {
       if (e instanceof AxiosError) {
-        return res
-          .status(e.response?.status ?? 500)
-          .json(e.response?.data ?? { message: e.message });
+        return res.status(e.response?.status ?? 500).json(e.response?.data ?? { message: e.message });
       }
 
       return res.status(500).json({ error: e });

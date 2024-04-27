@@ -5,21 +5,15 @@ import server from "@/utils/server";
 import axios from "axios";
 import nookies from "nookies";
 import { useRouter } from "next/router";
-import { type FormEvent, useState, useEffect } from "react";
+import { type FormEvent, useState } from "react";
 import type { Project, User } from "@/types";
 import type { GetServerSidePropsContext } from "next";
 
-const Index = ({
-  user,
-  projectList,
-}: {
-  user: User;
-  projectList: Project[];
-}) => {
+const Index = ({ user, projectList }: { user: User; projectList: Project[] }) => {
   const [addProjectModal, setAddProjectModal] = useState<boolean>(false);
   const [projectName, setProjectName] = useState<string>("");
   const [typeName, setTypeName] = useState<string>("");
-  const [projectListState, setProjectListState] = useState<Project[]>(projectList);
+  const [projectListState] = useState<Project[]>(projectList);
   const router = useRouter();
 
   const handleCreateProject = async (e: FormEvent) => {
@@ -44,9 +38,7 @@ const Index = ({
           <div className="flex h-full w-full flex-col gap-10">
             <div className="flex h-fit w-full flex-col gap-3 md:flex md:flex-row md:items-center md:justify-between">
               <div>
-                <h1 className="text-2xl font-bold lg:text-4xl">
-                  MANAGE PROJECTS
-                </h1>
+                <h1 className="text-2xl font-bold lg:text-4xl">MANAGE PROJECTS</h1>
               </div>
               <div>
                 <button
@@ -55,9 +47,7 @@ const Index = ({
                   }}
                   className="rounded-lg border-2 border-white px-6 py-2"
                 >
-                  <h1 className="text-sm font-bold md:text-base">
-                    + Create Project
-                  </h1>
+                  <h1 className="text-sm font-bold md:text-base">+ Create Project</h1>
                 </button>
               </div>
             </div>
@@ -66,10 +56,7 @@ const Index = ({
                 projectListState.map((project, key) => {
                   return (
                     <div key={key}>
-                      <ProjectCard
-                        projectData={project}
-                        redirectUrl={"/manage-projects"}
-                      />
+                      <ProjectCard projectData={project} redirectUrl={"/manage-projects"} />
                     </div>
                   );
                 })
@@ -82,9 +69,7 @@ const Index = ({
                       }}
                       className="rounded-lg border-2 border-dashed border-light px-6 py-2"
                     >
-                      <h1 className="text-sm font-bold text-light md:text-base">
-                        + Create Project
-                      </h1>
+                      <h1 className="text-sm font-bold text-light md:text-base">+ Create Project</h1>
                     </button>
                   </div>
                 </div>
@@ -97,16 +82,13 @@ const Index = ({
                     <h1 className="text-2xl font-bold">Create Project</h1>
                   </div>
                   <div>
-                    <form
-                      className="flex h-full w-full flex-col gap-5"
-                      onSubmit={handleCreateProject}
-                    >
+                    <form className="flex h-full w-full flex-col gap-5" onSubmit={handleCreateProject}>
                       <div>
                         <input
                           className="w-full rounded-lg bg-primary px-4 py-2 outline-none"
                           type="text"
                           placeholder="Project Name"
-                          onChange={(e) => {
+                          onChange={e => {
                             setProjectName(e.target.value);
                           }}
                           required={true}
@@ -117,7 +99,7 @@ const Index = ({
                           className="w-full rounded-lg bg-primary px-4 py-2 outline-none"
                           type="text"
                           placeholder="Type Name"
-                          onChange={(e) => {
+                          onChange={e => {
                             setTypeName(e.target.value);
                           }}
                           required={true}
@@ -128,9 +110,7 @@ const Index = ({
                           type="submit"
                           className="flex w-full items-center justify-center rounded-lg border-2 border-white px-6 py-2"
                         >
-                          <h1 className="text-sm font-bold md:text-base">
-                            Create Project
-                          </h1>
+                          <h1 className="text-sm font-bold md:text-base">Create Project</h1>
                         </button>
                       </div>
                       <div>
@@ -140,9 +120,7 @@ const Index = ({
                           }}
                           className="flex w-full items-center justify-center rounded-lg border-2 border-white px-6 py-2"
                         >
-                          <h1 className="text-sm font-bold md:text-base">
-                            Cancel
-                          </h1>
+                          <h1 className="text-sm font-bold md:text-base">Cancel</h1>
                         </button>
                       </div>
                     </form>
@@ -186,11 +164,9 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
       },
     });
 
-    const projectList: Project[] = projectListDataResponse.data.data.filter(
-      (project: { isDeleted: boolean }) => {
-        return !project.isDeleted;
-      },
-    );
+    const projectList: Project[] = projectListDataResponse.data.data.filter((project: { isDeleted: boolean }) => {
+      return !project.isDeleted;
+    });
 
     return {
       props: {

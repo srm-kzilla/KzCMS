@@ -38,7 +38,7 @@ const ManageUsers = ({ user, userList }: { user: User; userList: User[] }) => {
     }
   };
 
-  const filteredUserList = userList.filter((list) => list.email !== user.email);
+  const filteredUserList = userList.filter(list => list.email !== user.email);
 
   return (
     <>

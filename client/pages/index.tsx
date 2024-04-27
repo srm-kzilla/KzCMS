@@ -6,13 +6,7 @@ import type { GetServerSidePropsContext } from "next";
 import Head from "next/head";
 import nookies from "nookies";
 
-export default function Home({
-  user,
-  projectList,
-}: {
-  user: User;
-  projectList: Project[];
-}) {
+export default function Home({ user, projectList }: { user: User; projectList: Project[] }) {
   return (
     <>
       <Head>
@@ -33,10 +27,7 @@ export default function Home({
                 projectList.map((project, key) => {
                   return (
                     <div key={key}>
-                      <ProjectCard
-                        projectData={project}
-                        redirectUrl={"/my-projects"}
-                      />
+                      <ProjectCard projectData={project} redirectUrl={"/my-projects"} />
                     </div>
                   );
                 })
@@ -70,9 +61,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 
     const user: User = userResponse.data.data;
 
-    const projectListUrl = user.isAdmin
-      ? "/api/projects"
-      : "/api/users/user/projects";
+    const projectListUrl = user.isAdmin ? "/api/projects" : "/api/users/user/projects";
 
     const projectListDataResponse = await server.get(projectListUrl, {
       headers: {
