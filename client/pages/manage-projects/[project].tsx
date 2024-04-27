@@ -62,20 +62,20 @@ const ManageProject = ({
   const handleRemoveUserAccess = async (email: string) => {
     const response = await axios.patch("/api/update-user-access", {
       projectSlug: router.query.project,
-      userAccess: userAccessArray.filter((user) => {
+      userAccess: userAccessArray.filter(user => {
         return user !== email;
       }),
     });
-    
+
     if (response.status === 200) {
-      setProjectListState((prevState) => {
+      setProjectListState(prevState => {
         return {
           ...prevState,
           userAccess: [
-            ...prevState.userAccess.filter((user) => {
+            ...prevState.userAccess.filter(user => {
               return user !== email;
             }),
-          ]
+          ],
         };
       });
     } else {
@@ -95,14 +95,16 @@ const ManageProject = ({
   };
 
   useEffect(() => {
-    setUserListState(userList)
+    setUserListState(userList);
     setSelectOptions(
-      userListState.filter((element) => !projectListState.userAccess.includes(element.email)).map((user) => {
-        return {
-          value: user.email,
-          label: user.email,  
-        };
-      }),
+      userListState
+        .filter(element => !projectListState.userAccess.includes(element.email))
+        .map(user => {
+          return {
+            value: user.email,
+            label: user.email,
+          };
+        }),
     );
     userAccessList.current = projectListState.userAccess;
     setUserAccessArray(projectListState.userAccess);
@@ -117,9 +119,7 @@ const ManageProject = ({
         <div className="flex h-full w-full flex-col gap-10">
           <div className="flex h-fit w-full flex-col gap-5 md:flex md:flex-row md:justify-between">
             <div>
-              <h1 className="text-2xl font-bold lg:text-4xl">
-                {router.query.project?.toString().toUpperCase()}
-              </h1>
+              <h1 className="text-2xl font-bold lg:text-4xl">{router.query.project?.toString().toUpperCase()}</h1>
             </div>
             <div>
               <button
@@ -129,9 +129,7 @@ const ManageProject = ({
                 }}
               >
                 <DeleteIcon />
-                <h1 className="text-sm font-bold md:text-base">
-                  Delete Project
-                </h1>
+                <h1 className="text-sm font-bold md:text-base">Delete Project</h1>
               </button>
             </div>
           </div>
@@ -140,23 +138,16 @@ const ManageProject = ({
             <div className="absolute bottom-0 left-0 right-0 top-0 flex items-center justify-center bg-black/40 p-6">
               <div className="flex w-full flex-col gap-5 rounded-lg bg-secondary p-6 lg:w-[500px]">
                 <div className="flex w-full flex-col items-center justify-center">
-                  <h1 className="text-xl font-bold">
-                    Are you sure you want to delete{" "}
-                  </h1>
+                  <h1 className="text-xl font-bold">Are you sure you want to delete </h1>
                   <h1 className="text-xl font-bold">{router.query.project}?</h1>
                 </div>
-                <form
-                  className="flex h-full w-full flex-col gap-5"
-                  onSubmit={handleDeleteProject}
-                >
+                <form className="flex h-full w-full flex-col gap-5" onSubmit={handleDeleteProject}>
                   <div>
                     <button
                       type="submit"
                       className="flex w-full items-center justify-center rounded-lg border-2 border-red-500 px-6 py-2"
                     >
-                      <h1 className="text-sm font-bold text-red-500 md:text-base">
-                        Delete
-                      </h1>
+                      <h1 className="text-sm font-bold text-red-500 md:text-base">Delete</h1>
                     </button>
                   </div>
                   <div>
@@ -193,10 +184,7 @@ const ManageProject = ({
               {projectListState.userAccess.length !== 0 ? (
                 projectListState.userAccess.map((user, key) => {
                   return (
-                    <div
-                      className="flex w-full justify-between rounded-lg bg-secondary p-4"
-                      key={key}
-                    >
+                    <div className="flex w-full justify-between rounded-lg bg-secondary p-4" key={key}>
                       <div>
                         <h1 className="text-xl font-bold">{user}</h1>
                       </div>
@@ -222,9 +210,7 @@ const ManageProject = ({
                       }}
                       className="rounded-lg border-2 border-dashed border-light px-6 py-2"
                     >
-                      <h1 className="text-sm font-bold text-light md:text-base">
-                        + Add User
-                      </h1>
+                      <h1 className="text-sm font-bold text-light md:text-base">+ Add User</h1>
                     </button>
                   </div>
                 </div>
@@ -238,34 +224,28 @@ const ManageProject = ({
                   <h1 className="text-2xl font-bold">Add User</h1>
                 </div>
                 <div>
-                  <form
-                    className="flex h-full w-full flex-col gap-5"
-                    onSubmit={handleAddUserAccess}
-                  >
+                  <form className="flex h-full w-full flex-col gap-5" onSubmit={handleAddUserAccess}>
                     <div>
                       <Select
                         options={selectOptions}
                         isMulti
                         closeMenuOnSelect={false}
-                        onChange={(e) => {
+                        onChange={e => {
                           e.map((user: selectOptionType) => {
                             if (!userAccessArray.includes(user.value)) {
-                              setUserAccessArray((current) => [
-                                ...current,
-                                user.value,
-                              ]);
+                              setUserAccessArray(current => [...current, user.value]);
                             }
                           });
                         }}
                         styles={{
-                          menu: (provided) => ({
+                          menu: provided => ({
                             ...provided,
                             width: "100%",
                             color: "white",
                             fontWeight: "bold",
                             backgroundColor: "#1E1E1E",
                           }),
-                          option: (provided) => ({
+                          option: provided => ({
                             ...provided,
                             color: "white",
                             backgroundColor: "#1E1E1E",
@@ -277,7 +257,7 @@ const ManageProject = ({
                               cursor: "pointer",
                             },
                           }),
-                          control: (provided) => ({
+                          control: provided => ({
                             ...provided,
                             backgroundColor: "#1E1E1E",
                             border: "2px solid white",
@@ -285,18 +265,18 @@ const ManageProject = ({
                             color: "white",
                             fontWeight: "bold",
                           }),
-                          multiValue: (provided) => ({
+                          multiValue: provided => ({
                             ...provided,
                             backgroundColor: "white",
                             color: "white",
                             fontWeight: "bold",
                           }),
-                          multiValueLabel: (provided) => ({
+                          multiValueLabel: provided => ({
                             ...provided,
                             color: "#1E1E1E",
                             fontWeight: "bold",
                           }),
-                          multiValueRemove: (provided) => ({
+                          multiValueRemove: provided => ({
                             ...provided,
                             color: "#1E1E1E",
                             fontWeight: "bold",
@@ -315,9 +295,7 @@ const ManageProject = ({
                         type="submit"
                         className="flex w-full items-center justify-center rounded-lg border-2 border-white px-6 py-2"
                       >
-                        <h1 className="text-sm font-bold md:text-base">
-                          Add User
-                        </h1>
+                        <h1 className="text-sm font-bold md:text-base">Add User</h1>
                       </button>
                     </div>
                     <div>
@@ -327,9 +305,7 @@ const ManageProject = ({
                         }}
                         className="flex w-full items-center justify-center rounded-lg border-2 border-white px-6 py-2"
                       >
-                        <h1 className="text-sm font-bold md:text-base">
-                          Cancel
-                        </h1>
+                        <h1 className="text-sm font-bold md:text-base">Cancel</h1>
                       </button>
                     </div>
                   </form>
@@ -376,11 +352,9 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
       },
     });
 
-    const projectList: Project[] = projectListDataResponse.data.data.filter(
-      (project: Project) => {
-        return project.projectSlug === ctx.query.project;
-      },
-    );
+    const projectList: Project[] = projectListDataResponse.data.data.filter((project: Project) => {
+      return project.projectSlug === ctx.query.project;
+    });
 
     const projectTokensResponse = await server.get("/api/admin/tokens", {
       headers: {
