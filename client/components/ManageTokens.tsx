@@ -87,8 +87,8 @@ export function ManageTokens({ tokens, projectId }: { tokens: Token[]; projectId
                     <h1 className="text-xl font-bold">{token.name}</h1>
                     <div className="flex gap-4 px-8">
                       <span className="text-sm font-bold text-light">Created by: {token.createdBy}</span>
-                      <span className="text-sm font-bold text-light" suppressHydrationWarning>
-                        {new Date(token.createdAt).toLocaleString()}
+                      <span className="text-sm font-bold text-light">
+                        {new Date(token.createdAt).toLocaleString('en-IN')}
                       </span>
                     </div>
                   </div>
